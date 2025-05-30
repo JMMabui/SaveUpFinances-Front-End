@@ -1,0 +1,109 @@
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from 'react-router-dom'
+import { Dashboard } from './pages/dashboard'
+import { LoginPage } from './pages/LoginPage'
+import { CategoryManagement } from './components/CategoryManagement'
+import { BudgetManagement } from './components/BudgetManagement'
+import { CreditCardManagement } from './components/CreditCardManagement'
+import { IncomeSourceManagement } from './components/IncomeSourceManagement'
+import { InvestmentTracking } from './components/InvestmentTracking'
+import { ReportsDashboard } from './components/ReportsDashboard'
+import { useState } from 'react'
+
+function AppRoutes() {
+  const [userId, setUserId] = useState<number | null>(null)
+  const navigate = useNavigate()
+
+  const handleLogin = (id: number) => {
+    setUserId(id)
+    navigate('/dashboard')
+  }
+  const handleLogout = () => {
+    setUserId(null)
+    navigate('/login')
+  }
+
+  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+    if (!userId) return <Navigate to="/login" />
+    return <>{children}</>
+  }
+
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard userId={userId!} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/categories"
+        element={
+          <ProtectedRoute>
+            <CategoryManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/budgets"
+        element={
+          <ProtectedRoute>
+            <BudgetManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/credit-cards"
+        element={
+          <ProtectedRoute>
+            <CreditCardManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/income-sources"
+        element={
+          <ProtectedRoute>
+            <IncomeSourceManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/investments"
+        element={
+          <ProtectedRoute>
+            <InvestmentTracking />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          <ProtectedRoute>
+            <ReportsDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="*"
+        element={<Navigate to={userId ? '/dashboard' : '/login'} />}
+      />
+    </Routes>
+  )
+}
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  )
+}
