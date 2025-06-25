@@ -1,9 +1,9 @@
 import type React from 'react'
 import { useState } from 'react'
-import { Button } from './Button'
-import { Card } from './Card'
-import { TopNavigation } from './TopNavigation'
-import { mockCreditCards, mockCreditCardExpenses, mockCategories } from '../mocks/mockData'
+import { Button } from '../../components/Button'
+import { Card } from '../../components/Card'
+import { TopNavigation } from '../../components/TopNavigation'
+import { mockCreditCards, mockCreditCardExpenses, mockCategories } from '../../mocks/mockData'
 
 // Hook personalizado para calcular o total de despesas
 const useTotalExpenses = (expenses: CreditCardExpense[]) => {
@@ -397,7 +397,7 @@ const ExpenseModal: React.FC<ExpenseModalProps> = ({
               <label className="block text-sm font-medium mb-1">Data</label>
               <input
                 type="date"
-                value={formData.date.toISOString().split('T')[0]}
+                value={formData?.date?.toISOString().split('T')[0]}
                 onChange={e =>
                   setFormData({
                     ...formData,

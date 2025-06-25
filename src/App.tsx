@@ -7,13 +7,14 @@ import {
 } from 'react-router-dom'
 import { Dashboard } from './pages/dashboard'
 import { LoginPage } from './pages/LoginPage'
-import { CategoryManagement } from './components/CategoryManagement'
-import { BudgetManagement } from './components/BudgetManagement'
-import { CreditCardManagement } from './components/CreditCardManagement'
-import { IncomeSourceManagement } from './components/IncomeSourceManagement'
-import { InvestmentTracking } from './components/InvestmentTracking'
-import { ReportsDashboard } from './components/ReportsDashboard'
+import { CategoryManagement } from './pages/Category/CategoryManagement'
+import { BudgetManagement } from './pages/Budget/BudgetManagement'
+import { CreditCardManagement } from './pages/Creadit Card/CreditCardManagement'
+import { IncomeSourceManagement } from './pages/Income Source/IncomeSourceManagement'
+import { InvestmentTracking } from './pages/Investiment/InvestmentTracking'
+import { ReportsDashboard } from './pages/Report/ReportsDashboard'
 import { useState } from 'react'
+import { DebtManagement } from './pages/Debt/DebtManagement'
 
 function AppRoutes() {
   const [userId, setUserId] = useState<number | null>(null)
@@ -84,6 +85,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/debts" element={<ProtectedRoute> <DebtManagement/> </ProtectedRoute>}/>
       <Route
         path="/reports"
         element={

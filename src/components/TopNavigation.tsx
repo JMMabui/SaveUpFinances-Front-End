@@ -7,6 +7,7 @@ import {
   FiDollarSign,
   FiTrendingUp,
   FiBarChart2,
+  FiAlertCircle,
 } from 'react-icons/fi'
 
 const navigationItems = [
@@ -15,6 +16,7 @@ const navigationItems = [
   { label: 'Orçamentos', path: '/budgets', icon: FiCalendar },
   { label: 'Cartões de Crédito', path: '/credit-cards', icon: FiCreditCard },
   { label: 'Fontes de Renda', path: '/income-sources', icon: FiDollarSign },
+  { label: 'Dívidas', path: '/debts', icon: FiAlertCircle },
   { label: 'Investimentos', path: '/investments', icon: FiTrendingUp },
   { label: 'Relatórios', path: '/reports', icon: FiBarChart2 },
 ]

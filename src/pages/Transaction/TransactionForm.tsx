@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Button } from './Button'
-import { categories } from '../constants/categories'
+import { Button } from '../../components/Button'
+import { categories } from '../../constants/categories'
 
 interface TransactionFormProps {
   onSubmit: (data: TransactionFormData) => void

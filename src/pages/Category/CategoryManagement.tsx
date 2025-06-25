@@ -1,9 +1,9 @@
 import type React from 'react'
 import { useState } from 'react'
-import { Button } from './Button'
-import { Card } from './Card'
-import { TopNavigation } from './TopNavigation'
-import { mockCategories, TransactionType } from '../mocks/mockData'
+import { Button } from '../../components/Button'
+import { Card } from '../../components/Card'
+import { TopNavigation } from '../../components/TopNavigation'
+import { mockCategories, TransactionType } from '../../mocks/mockData'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 interface Category {

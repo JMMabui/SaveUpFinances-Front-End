@@ -1,3 +1,5 @@
+import { Debt } from "../types/Debt"
+
 export enum AccountType {
   CORRENTE = 'CORRENTE',
   POUPANCA = 'POUPANCA',
@@ -239,6 +241,53 @@ export const mockTransactionNotes = [
     createdAt: new Date(),
   },
 ]
+
+export const mockDebts: Debt[] = [
+  {
+    id: '1',
+    descricao: 'Empréstimo Banco',
+    valor: 1500,
+    credor: 'Banco XYZ',
+    dataVencimento: '2024-07-10',
+    status: 'pendente',
+    observacoes: 'Parcelado em 3x',
+  },
+  {
+    id: '2',
+    descricao: 'Cartão de Crédito',
+    valor: 800,
+    credor: 'Mastercard',
+    dataVencimento: '2024-07-05',
+    status: 'paga',
+    dataPagamento: '2024-07-01',
+  },
+  {
+    id: '3',
+    descricao: 'Empréstimo Pessoal',
+    valor: 500,
+    credor: 'João Silva',
+    dataVencimento: '2024-08-01',
+    status: 'pendente',
+  },
+  {
+    id: '4',
+    descricao: 'Financiamento Carro',
+    valor: 2000,
+    credor: 'Banco ABC',
+    dataVencimento: '2024-09-15',
+    status: 'pendente',
+    observacoes: 'Restam 2 parcelas',
+  },
+  {
+    id: '5',
+    descricao: 'Empréstimo Familiar',
+    valor: 300,
+    credor: 'Maria Oliveira',
+    dataVencimento: '2024-07-20',
+    status: 'paga',
+    dataPagamento: '2024-07-18',
+  },
+];
 
 // Funções auxiliares para gerar dados mock adicionais
 export const generateMockTransactions = (count: number) => {

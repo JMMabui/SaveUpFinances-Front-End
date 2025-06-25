@@ -1,5 +1,5 @@
-import { Button } from './Button';
-import { DateRangeFilter } from './DateRangeFilter';
+import { Button } from '../../components/Button';
+import { DateRangeFilter } from '../../components/DateRangeFilter';
 
 interface TransactionFiltersProps {
   selectedType: 'all' | 'income' | 'expense';

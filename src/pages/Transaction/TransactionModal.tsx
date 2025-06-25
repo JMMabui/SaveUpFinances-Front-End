@@ -1,5 +1,5 @@
 import { FiX } from 'react-icons/fi'
-import { Button } from './Button'
+import { Button } from '../../components/Button'
 import { TransactionForm } from './TransactionForm'
 import type { TransactionFormData } from './TransactionForm'
 

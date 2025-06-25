@@ -1,5 +1,5 @@
 import type { TransactionFormData } from './TransactionForm'
-import { Button } from './Button'
+import { Button } from '../../components/Button'
 
 interface TransactionListProps {
   transactions: TransactionFormData[]

@@ -3,16 +3,18 @@ import { Header } from '../components/Header'
 import { Aside } from '../components/Aside'
 import { TopNavigation } from '../components/TopNavigation'
 import { MonthlyChart } from '../components/MonthlyChart'
-import { TransactionList } from '../components/TransactionList'
-import { TransactionModal } from '../components/TransactionModal'
-import { TransactionFilters } from '../components/TransactionFilters'
+import { TransactionList } from './Transaction/TransactionList'
+import { TransactionModal } from './Transaction/TransactionModal'
+import { TransactionFilters } from './Transaction/TransactionFilters'
 import { FinancialSummary } from '../components/FinancialSummary'
 import { Button } from '../components/Button'
 import { FiPlus } from 'react-icons/fi'
 import { useMockData } from '../hooks/useMockData'
-import type { TransactionFormData } from '../components/TransactionForm'
-import { TransactionType } from '../mocks/mockData'
-import { mockTransactions, mockAccounts, mockCategories } from '../mocks/mockData'
+import type { TransactionFormData } from './Transaction/TransactionForm'
+import {TransactionType, mockTransactions, mockAccounts, mockCategories, mockDebts } from '../mocks/mockData'
+import { Pie } from 'react-chartjs-2';
+import { Chart, ArcElement } from 'chart.js';
+Chart.register(ArcElement);
 
 export interface DashboardProps {
   userId: number
@@ -30,10 +32,13 @@ export function Dashboard({ userId, onLogout }: DashboardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<TransactionFormData | undefined>()
 
+  const [transactions, setTransactions] = useState(mockTransactions);
+const [accounts] = useState(mockAccounts);
+const [categories] = useState(mockCategories);
+const [debts] = useState(mockDebts);
+
   const {
-    transactions,
-    accounts,
-    categories,
+   
     addTransaction,
     updateTransaction,
     deleteTransaction,
@@ -97,6 +102,26 @@ export function Dashboard({ userId, onLogout }: DashboardProps) {
 
   const monthlyTotals = calculateMonthlyTotals()
   const totalBalance = calculateTotalBalance()
+
+  const totalDividas = debts.reduce((acc, d) => acc + d.valor, 0);
+const totalDividasPagas = debts.filter(d => d.status === 'paga').reduce((acc, d) => acc + d.valor, 0);
+const totalDividasPendentes = debts.filter(d => d.status === 'pendente').reduce((acc, d) => acc + d.valor, 0);
+const qtdPagas = debts.filter(d => d.status === 'paga').length;
+const qtdPendentes = debts.filter(d => d.status === 'pendente').length;
+const pieData = {
+  labels: ['Pagas', 'Pendentes'],
+  datasets: [
+    {
+      data: [qtdPagas, qtdPendentes],
+      backgroundColor: ['#22c55e', '#f59e42'],
+      borderWidth: 1,
+    },
+  ],
+};
+const proximasDividas = debts
+  .filter(d => d.status === 'pendente')
+  .sort((a, b) => new Date(a.dataVencimento).getTime() - new Date(b.dataVencimento).getTime())
+  .slice(0, 3);
 
   return (
     <div className={`${theme === 'dark' ? 'dark bg-gray-900' : 'bg-gray-100'} min-h-screen`}>
@@ -185,6 +210,33 @@ export function Dashboard({ userId, onLogout }: DashboardProps) {
                 </div>
               </div>
 
+              <div className="bg-white rounded-lg shadow p-6 mt-6">
+                <h2 className="text-lg font-semibold mb-4 text-gray-900">Dívidas</h2>
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-4">
+                    <div>
+                      <div>Total: <b className="text-orange-700">{totalDividas}</b></div>
+                      <div>Pagas: <b className="text-green-600">{totalDividasPagas}</b></div>
+                      <div>Pendentes: <b className="text-orange-600">{totalDividasPendentes}</b></div>
+                    </div>
+                    <div className="w-32 h-32">
+                      <Pie data={pieData} />
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Próximas a vencer</h4>
+                    <ul className="space-y-1">
+                      {proximasDividas.map(divida => (
+                        <li key={divida.id} className="flex justify-between text-sm">
+                          <span>{divida.descricao}</span>
+                          <span className="text-orange-700">{new Date(divida.dataVencimento).toLocaleDateString()}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                   <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
@@ -205,6 +257,8 @@ export function Dashboard({ userId, onLogout }: DashboardProps) {
           </div>
         </main>
       </div>
+
+      
 
       <TransactionModal
         isOpen={isModalOpen}

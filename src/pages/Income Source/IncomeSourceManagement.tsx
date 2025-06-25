@@ -1,8 +1,8 @@
 import type React from 'react'
 import { useState } from 'react'
-import { Button } from './Button'
-import { Card } from './Card'
-import { TopNavigation } from './TopNavigation'
+import { Button } from '../../components/Button'
+import { Card } from '../../components/Card'
+import { TopNavigation } from '../../components/TopNavigation'
 
 interface IncomeSource {
   id: number

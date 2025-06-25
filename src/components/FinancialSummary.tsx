@@ -1,4 +1,4 @@
-import type { TransactionFormData } from './TransactionForm'
+import type { TransactionFormData } from '../pages/Transaction/TransactionForm'
 import { Card } from './Card'
 
 interface FinancialSummaryProps {

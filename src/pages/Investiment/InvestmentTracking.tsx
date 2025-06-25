@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Button } from './Button'
-import { Card } from './Card'
-import { mockTransactions, TransactionType } from '../mocks/mockData'
+import { Button } from '../../components/Button'
+import { Card } from '../../components/Card'
+import { mockTransactions, TransactionType } from '../../mocks/mockData'
+import { TopNavigation } from '../../components/TopNavigation'
 
 interface Investment {
   id: number
@@ -55,6 +56,9 @@ export function InvestmentTracking() {
 
   return (
     <div className="space-y-6">
+      
+      <TopNavigation />
+
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           Investimentos

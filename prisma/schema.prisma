@@ -193,3 +193,15 @@ model IncomeSource {
   user          User          @relation(fields: [userId], references: [id])
   transactions  Transaction[]
 }
+
+model Debt {
+  id            String   @id @default(uuid())
+  descricao     String
+  valor         Float
+  credor        String
+  dataVencimento DateTime
+  status        String   // 'pendente' ou 'paga'
+  observacoes   String?
+  dataPagamento DateTime?
+  createdAt     DateTime @default(now())
+}
