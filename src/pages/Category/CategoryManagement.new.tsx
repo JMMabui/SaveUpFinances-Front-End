@@ -276,29 +276,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
 
             <div>
               <label className="block text-sm font-medium mb-1">
-                Categoria Pai
-              </label>
-              <select
-                value={formData.parentId || ''}
-                onChange={e =>
-                  setFormData({
-                    ...formData,
-                    parentId: e.target.value ? Number(e.target.value) : undefined,
-                  })
-                }
-                className="w-full p-2 border rounded"
-              >
-                <option value="">Nenhuma (Categoria Principal)</option>
-                {mainCategories.map(cat => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.categoryName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">
                 Ícone
               </label>
               <div className="relative">

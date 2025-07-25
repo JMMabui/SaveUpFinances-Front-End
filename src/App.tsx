@@ -20,10 +20,7 @@ function AppRoutes() {
   const [userId, setUserId] = useState<number | null>(null)
   const navigate = useNavigate()
 
-  const handleLogin = (id: number) => {
-    setUserId(id)
-    navigate('/dashboard')
-  }
+ 
   const handleLogout = () => {
     setUserId(null)
     navigate('/login')
@@ -36,7 +33,7 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route
         path="/dashboard"
         element={
