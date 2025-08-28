@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { TopNavigation } from '../../components/TopNavigation'
+import { Header } from '@/components/Header'
 
 interface IncomeSource {
   id: number
@@ -57,7 +58,7 @@ export function IncomeSourceManagement() {
 
   return (
     <div className="p-4">
-      <TopNavigation />
+      <Header />
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Fontes de Renda</h2>
         <Button onClick={handleAddSource}>Nova Fonte</Button>

@@ -3,7 +3,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
 } from 'react-router-dom'
 import { Dashboard } from './pages/dashboard'
 import { LoginPage } from './pages/LoginPage'
@@ -13,21 +12,14 @@ import { CreditCardManagement } from './pages/Creadit Card/CreditCardManagement'
 import { IncomeSourceManagement } from './pages/Income Source/IncomeSourceManagement'
 import { InvestmentTracking } from './pages/Investiment/InvestmentTracking'
 import { ReportsDashboard } from './pages/Report/ReportsDashboard'
-import { useState } from 'react'
 import { DebtManagement } from './pages/Debt/DebtManagement'
 
 function AppRoutes() {
-  const [userId, setUserId] = useState<number | null>(null)
-  const navigate = useNavigate()
 
- 
-  const handleLogout = () => {
-    setUserId(null)
-    navigate('/login')
-  }
+  const token = localStorage.getItem('token')
 
   const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    if (!userId) return <Navigate to="/login" />
+    if (!token) return <Navigate to="/login" />
     return <>{children}</>
   }
 
@@ -38,7 +30,7 @@ function AppRoutes() {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard userId={userId!} onLogout={handleLogout} />
+            <Dashboard />
           </ProtectedRoute>
         }
       />
@@ -93,7 +85,7 @@ function AppRoutes() {
       />
       <Route
         path="*"
-        element={<Navigate to={userId ? '/dashboard' : '/login'} />}
+        element={<Navigate to={token ? '/dashboard' : '/login'} />}
       />
     </Routes>
   )

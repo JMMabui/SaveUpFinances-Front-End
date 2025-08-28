@@ -5,6 +5,7 @@ import { Card } from '../../components/Card'
 import { TopNavigation } from '../../components/TopNavigation'
 import { mockCategories, TransactionType } from '../../mocks/mockData'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { Header } from '@/components/Header'
 
 interface Category {
   id: number
@@ -70,7 +71,8 @@ export function CategoryManagement() {
 
   return (
     <div className="p-4">
-      <TopNavigation />
+      <Header />
+    
 
       <div className="space-y-6">
         <div className="flex justify-between items-center">

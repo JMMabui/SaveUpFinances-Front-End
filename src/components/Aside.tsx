@@ -8,16 +8,11 @@ import {
 } from 'react-icons/fi'
 import { Button } from './Button'
 import { AccountModal } from './AccountModal'
+import type { accountResponse } from '../HTTP/Type/account.type'
 
-interface Account {
-  id: number
-  name: string
-  type: string
-  balance: number
-}
 
 interface AsideProps {
-  accounts: Account[]
+  accounts: accountResponse[]
   totalBalance: number
   selectedAccount: string
   setSelectedAccount: (account: string) => void
@@ -60,7 +55,7 @@ export function Aside({ accounts, totalBalance, selectedAccount, setSelectedAcco
 
       <div className="space-y-2">
         {accounts.map(acc => {
-          const Icon = accountTypes.find(t => t.value === acc.type)?.icon || FiCreditCard
+          const Icon = accountTypes.find(t => t.value === acc.accountType)?.icon || FiCreditCard
           return (
             <div
               key={acc.id}
@@ -72,7 +67,7 @@ export function Aside({ accounts, totalBalance, selectedAccount, setSelectedAcco
                   className="text-slate-500 dark:text-slate-400"
                 />
                 <span className="font-medium text-gray-900 dark:text-gray-100">
-                  {acc.name}
+                  {acc.accountName}
                 </span>
               </div>
               <span className="font-bold text-emerald-500">

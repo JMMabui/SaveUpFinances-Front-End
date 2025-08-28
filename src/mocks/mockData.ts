@@ -1,4 +1,5 @@
-import { Debt } from "../types/Debt"
+import type { Debt } from "../types/Debt"
+
 
 export enum AccountType {
   CORRENTE = 'CORRENTE',

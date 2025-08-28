@@ -4,6 +4,7 @@ import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { TopNavigation } from '../../components/TopNavigation'
 import { mockCreditCards, mockCreditCardExpenses, mockCategories } from '../../mocks/mockData'
+import { Header } from '@/components/Header'
 
 // Hook personalizado para calcular o total de despesas
 const useTotalExpenses = (expenses: CreditCardExpense[]) => {
@@ -82,7 +83,7 @@ export function CreditCardManagement() {
   return (
     <div className="p-4">
       {/** Menu no topo*/}
-      <TopNavigation />
+      <Header />
 
       {/** */}
       <div className="flex justify-between items-center mb-6">

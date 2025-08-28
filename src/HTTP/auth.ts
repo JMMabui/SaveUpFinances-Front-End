@@ -1,35 +1,31 @@
 import { useMutation } from "@tanstack/react-query";
-import { env } from "../env";
-import { getAuthRequest } from "./Type/authType";
+import { authService } from "../lib/apiServices";
+import type { getAuthRequest } from "./Type/authType";
+import { useNavigate } from "react-router-dom";
 
-const baseURL = env.VITE_API_URL;
+export function useAuthCreate(redirectTo: string = '/dashboard') {
+  const navigate = useNavigate();
 
-export function authCreate() {
+  return useMutation({
+    mutationKey: ['authCreate'],
+    mutationFn: async (data: getAuthRequest) => {
+      return authService.login(data);
+    },
 
-    return useMutation({
-        mutationKey: ['authCreate'],
-        mutationFn: async (data: getAuthRequest) => {
-            const response = await fetch(`${baseURL}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+    onSuccess: (data) => {
+      console.log('Login successful:', data);
+      localStorage.setItem('token', data.data.token);
+      localStorage.setItem('userId', data.data.user.id);
+      navigate(redirectTo);
+    },
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const result = await response.json();
-            console.log('Response from authCreate:', result);
-            return result;
-        },
-
-        onSuccess: (data) => {
-            console.log('Login successful:', data);
-            localStorage.setItem('token', data.token);
-            // Aqui você pode adicionar lógica para redirecionar o usuário ou atualizar o estado global
-        }
-    });
+    onError: (error: any) => {
+      if (error.status === 401) {
+        alert('Login falhou: Email ou senha incorretos');
+      } else {
+        console.error('Login failed:', error);
+        alert(error.message || 'Ocorreu um erro durante o login. Por favor, tente novamente.');
+      }
+    },
+  });
 }

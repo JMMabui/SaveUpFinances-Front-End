@@ -10,7 +10,8 @@ import { Title } from '../components/Typography/Title';
 import logo from '../assets/logo principal de save up finances.png';
 import z from 'zod/v4';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authCreate } from '../HTTP/auth';
+import { useAuthCreate } from '../HTTP/auth';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -19,44 +20,31 @@ const createAuthSchema = z.object({
   password: z.string().min(6).max(100),
 });
 
-type createAuthForm = z.infer<typeof createAuthSchema>;
+type Form = z.infer<typeof createAuthSchema>;
 
-export function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  
+export function LoginPage() {  
 
-  const {mutateAsync: createAuth} = authCreate()
+  const {mutateAsync: createAuth, isPending} = useAuthCreate()
 
 
-  const createAuthForm = useForm({
+  const Form = useForm({
     resolver: zodResolver(createAuthSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   });
+  
 
 
-  async function handleSubmit({ email, password } : createAuthForm) {
-    setIsLoading(true);
-    // TODO: Implementar lógica de login
-    console.log('Login attempt:', { email, password });
-
-      await createAuth({ email, password });
-    setTimeout(() => setIsLoading(false), 1000);
-
-    // createAuthForm.reset();
-  };
-
-  //  const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   const user = users.find(u => u.email === email && u.password === password);
-  //   if (user) {
-  //     onLogin(user.id);
-  //   } else {
-  //     setError('Email ou senha inválidos');
-  //   }
-  // };
+ async function handleSubmit({ email, password }: Form) {
+  try {
+    await createAuth({ email, password });
+    Form.reset();
+  } catch (error) {
+    console.error("Erro no login:", error);
+  }
+}
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -74,12 +62,12 @@ export function LoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <Card className="py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form onSubmit={createAuthForm.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={Form.handleSubmit(handleSubmit)} className="space-y-6">
             <div>
               <Input
                 label="Email"
                 type="email"
-                {...createAuthForm.register('email')}
+                {...Form.register('email')}
                 placeholder="seu@email.com"
                 required
               />
@@ -89,7 +77,7 @@ export function LoginPage() {
               <Input
                 label="Senha"
                 type="password"
-                {...createAuthForm.register('password')}  
+                {...Form.register('password')}  
                 placeholder="••••••••"
                 required
               />
@@ -117,11 +105,11 @@ export function LoginPage() {
 
             <div>
               <Button
-                type="submit"
-                variant="primary"
-                size="large"
-                className="w-full"
-                isLoading={isLoading}
+                  type="submit"
+  variant="primary"
+  size="large"
+  className="w-full"
+  isLoading={isPending}
               >
                 Entrar
               </Button>

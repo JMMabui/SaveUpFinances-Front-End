@@ -11,6 +11,7 @@ import {
   mockDebts 
 } from '../../mocks/mockData';
 import { Pie } from 'react-chartjs-2';
+import { Header } from '@/components/Header';
 
 Chart.register(ArcElement);
 
@@ -132,7 +133,7 @@ export function ReportsDashboard() {
 
   return (
     <div className="p-4 bg-gradient-to-br from-blue-50 to-white min-h-screen">
-      <TopNavigation />
+      <Header />
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-extrabold text-gray-800">Relatórios Financeiros</h2>
         <select

@@ -1,14 +1,14 @@
-import { Link, useLocation } from 'react-router-dom'
 import {
-  FiPieChart,
-  FiList,
+  FiAlertCircle,
+  FiBarChart2,
   FiCalendar,
   FiCreditCard,
   FiDollarSign,
+  FiList,
+  FiPieChart,
   FiTrendingUp,
-  FiBarChart2,
-  FiAlertCircle,
 } from 'react-icons/fi'
+import { Link, useLocation } from 'react-router-dom'
 
 const navigationItems = [
   { label: 'Dashboard', path: '/dashboard', icon: FiPieChart },
@@ -26,7 +26,7 @@ export function TopNavigation() {
 
   return (
     <nav className="px-6 py-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="flex flex-nowrap md:flex-wrap gap-2 overflow-x-auto">
         {navigationItems.map(item => {
           const Icon = item.icon
           const isActive = location.pathname === item.path

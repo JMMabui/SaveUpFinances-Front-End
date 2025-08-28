@@ -5,6 +5,7 @@ import { DebtForm } from './DebtForm';
 import { DebtPaymentForm } from './DebtPaymentForm';
 import { TopNavigation } from '../../components/TopNavigation';
 import { mockDebts } from '../../mocks/mockData';
+import { Header } from '@/components/Header';
 
 export function DebtManagement() {
   const [debts, setDebts] = useState<Debt[]>(mockDebts); // Inicialmente vazio, pode ser mockado
@@ -64,7 +65,7 @@ export function DebtManagement() {
 
   return (
     <div>
-      <TopNavigation/>
+      <Header />
       {showForm ? (
         <DebtForm initialDebt={editingDebt!} onSave={handleSave} onCancel={handleCancel} />
       ) : payingDebt ? (

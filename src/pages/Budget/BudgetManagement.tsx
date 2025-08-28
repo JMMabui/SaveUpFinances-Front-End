@@ -8,6 +8,7 @@ import {
   TransactionType,
 } from '../../mocks/mockData'
 import { TopNavigation } from '../../components/TopNavigation'
+import { Header } from '@/components/Header'
 
 interface Budget {
   id: number
@@ -55,7 +56,8 @@ export function BudgetManagement() {
 
   return (
     <div className="space-y-6">
-      <TopNavigation />
+      <Header />
+
 
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
