@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { Button } from '../../components/Button'
-import { Card } from '../../components/Card'
+import { Card } from '@/components/ui/card'
 import {
   mockBudgets,
   mockCategories,
   mockTransactions,
   TransactionType,
 } from '../../mocks/mockData'
-import { TopNavigation } from '../../components/TopNavigation'
 import { Header } from '@/components/Header'
 
 interface Budget {

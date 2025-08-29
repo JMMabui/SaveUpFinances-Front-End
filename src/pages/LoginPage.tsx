@@ -1,17 +1,16 @@
 
-import { use, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Badge } from '../components/Badge/Badge';
 import { Button } from '../components/Button/Button';
-import { Card } from '../components/Card';
+import { Card } from '@/components/ui/card'
 import { Input } from '../components/Input/Input';
 import { Paragraph } from '../components/Typography/Paragraph';
 import { Title } from '../components/Typography/Title';
 import logo from '../assets/logo principal de save up finances.png';
 import z from 'zod/v4';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuthCreate } from '../HTTP/auth';
-import { useNavigate } from 'react-router-dom';
+import { useLogin } from '@/hooks/auth';
+
 
 
 
@@ -24,7 +23,7 @@ type Form = z.infer<typeof createAuthSchema>;
 
 export function LoginPage() {  
 
-  const {mutateAsync: createAuth, isPending} = useAuthCreate()
+  const {mutateAsync: createAuth, isPending} = useLogin()
 
 
   const Form = useForm({
@@ -106,10 +105,10 @@ export function LoginPage() {
             <div>
               <Button
                   type="submit"
-  variant="primary"
-  size="large"
-  className="w-full"
-  isLoading={isPending}
+                  variant="primary"
+                  size="large"
+                  className="w-full"
+                  isLoading={isPending}
               >
                 Entrar
               </Button>

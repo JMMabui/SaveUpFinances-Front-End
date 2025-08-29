@@ -1,3 +1,5 @@
+import { env } from "@/env";
+
 // Environment configuration
 export const environment = {
   development: {
@@ -7,7 +9,7 @@ export const environment = {
     enableMockData: false,
   },
   production: {
-    apiUrl: process.env.VITE_API_URL || 'https://api.saveupfinances.com',
+    apiUrl: env.VITE_API_URL || 'https://api.saveupfinances.com',
     timeout: 30000,
     enableLogging: false,
     enableMockData: false,

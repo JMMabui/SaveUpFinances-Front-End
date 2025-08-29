@@ -1,8 +1,7 @@
 import type React from 'react'
 import { useState } from 'react'
 import { Button } from '../../components/Button'
-import { Card } from '../../components/Card'
-import { TopNavigation } from '../../components/TopNavigation'
+import { Card } from '@/components/ui/card'
 import { Header } from '@/components/Header'
 
 interface IncomeSource {

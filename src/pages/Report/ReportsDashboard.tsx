@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Card } from '../../components/Card'
+import { Card } from '@/components/ui/card'
 import { TopNavigation } from '../../components/TopNavigation'
 import { Line } from 'react-chartjs-2';
 import { Chart, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from 'chart.js';

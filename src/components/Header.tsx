@@ -5,12 +5,10 @@ import { FiLogOut, FiUser } from 'react-icons/fi';
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/NavigatorBar/navigation-menu"
 import {
   FiAlertCircle,
@@ -24,53 +22,46 @@ import {
 } from 'react-icons/fi'
 import { BiMoneyWithdraw } from 'react-icons/bi';
 import { HiOutlineAdjustments } from 'react-icons/hi';
+import { useLogout } from '@/hooks/auth';
 
 export function checkUserLoggedIn() {
   const userId = localStorage.getItem('userId');
-  if (!userId) {
-
-    window.location.href = '/login';
-    return false;
-  }
   return !!userId;
 };
-
 export function Header() {
   const navigate = useNavigate();
   const userId = checkUserLoggedIn() ? localStorage.getItem('userId') : null;
   if (!userId) {
     navigate('/login');
-    return null; // or a placeholder/header for non-logged-in users
+    return null;
   }
   const user = getUserById(userId);
-
-  function onLogout() {
-    localStorage.removeItem('userId');
-    localStorage.removeItem('token');
-    navigate('/login');
-    window.location.reload();
-  }
+  const onLogout = useLogout();
 
   return (
-   <header className="flex flex-wrap items-center justify-between px-6 py-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+    <header className="flex flex-wrap items-center justify-between px-6 py-4 
+      bg-gradient-to-r from-green-500 via-green-400 to-yellow-400 
+      dark:from-green-700 dark:via-green-600 dark:to-yellow-600
+      border-b border-green-300 dark:border-gray-700 shadow-md">
+      
       {/* Perfil do usuário */}
       <div className="flex items-center gap-4">
         {user.data?.data.avatar ? (
           <img
             src={user.data?.data.avatar}
             alt={`Avatar de ${user.data?.data.name}`}
-            className="w-10 h-10 rounded-full border-2 border-gray-300 dark:border-gray-600 object-cover"
+            className="w-10 h-10 rounded-full border-2 border-white dark:border-gray-700 object-cover shadow-sm"
           />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-            <FiUser className="w-6 h-6 text-gray-500 dark:text-gray-400" />
+          <div className="w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800 flex items-center justify-center">
+            <FiUser className="w-6 h-6 text-white dark:text-gray-300" />
           </div>
         )}
         <div className="flex flex-col">
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-semibold text-white">
             {user.data?.data.name || 'Usuário'}
           </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-sm text-white/80">
             {user.data?.data.email || 'Não logado'}
           </span>
         </div>
@@ -78,54 +69,63 @@ export function Header() {
 
       {/* Menu de navegação */}
       <div className="mt-4 md:mt-0">
-        <NavigationMenu>
+        <NavigationMenu viewport={false}>
           <NavigationMenuList className="flex gap-4">
             <NavigationMenuItem>
-              <NavigationMenuLink href="/dashboard" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <NavigationMenuLink 
+                href="/dashboard" 
+                className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors"
+              >
                 <FiPieChart /> Dashboard
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <NavigationMenuTrigger className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors">
                 <HiOutlineAdjustments />
                 Planejamento Financeiro
               </NavigationMenuTrigger>
-              <NavigationMenuContent className="flex flex-col gap-2 p-2">
-                <NavigationMenuLink href="/budgets" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <NavigationMenuContent className="flex flex-col gap-2 p-2 bg-white/90 dark:bg-gray-800 rounded-md shadow-md">
+                <NavigationMenuLink href="/budgets" className="flex items-center gap-2 hover:text-green-600 transition-colors">
                   <FiCalendar /> Orçamentos
                 </NavigationMenuLink>
-                <NavigationMenuLink href="/categories" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                <NavigationMenuLink href="/categories" className="flex items-center gap-2 hover:text-green-600 transition-colors">
                   <FiList /> Categorias
                 </NavigationMenuLink>
               </NavigationMenuContent>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="flex items-center gap-2 hover:text-blue-600 transition-colors">
-                <BiMoneyWithdraw/> Finanças Pessoais
+              <NavigationMenuTrigger className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors">
+                <BiMoneyWithdraw /> Finanças Pessoais
               </NavigationMenuTrigger>
-              <NavigationMenuContent className="flex flex-col gap-2 p-2">
-                <NavigationMenuLink href="/income-sources" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <NavigationMenuContent className="flex flex-col gap-2 p-2 bg-white/90 dark:bg-gray-800 rounded-md shadow-md">
+                <NavigationMenuLink href="/income-sources" className="flex items-center gap-2 hover:text-green-600 transition-colors">
                   <FiDollarSign /> Fontes de Renda
                 </NavigationMenuLink>
-                <NavigationMenuLink href="/credit-cards" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                <NavigationMenuLink href="/credit-cards" className="flex items-center gap-2 hover:text-green-600 transition-colors">
                   <FiCreditCard /> Cartões de Crédito
                 </NavigationMenuLink>
-                <NavigationMenuLink href="/debts" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+                <NavigationMenuLink href="/debts" className="flex items-center gap-2 hover:text-red-500 transition-colors">
                   <FiAlertCircle /> Dívidas
                 </NavigationMenuLink>
               </NavigationMenuContent>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuLink href="/investments" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <NavigationMenuLink 
+                href="/investments" 
+                className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors"
+              >
                 <FiTrendingUp /> Investimentos
               </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuLink href="/reports" className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <NavigationMenuLink 
+                href="/reports" 
+                className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors"
+              >
                 <FiBarChart2 /> Relatórios
               </NavigationMenuLink>
             </NavigationMenuItem>
@@ -139,12 +139,15 @@ export function Header() {
           type="button"
           variant="secondary"
           size="sm"
-          onClick={onLogout}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors rounded-md"
+          onClick={() => onLogout.mutate()}
+          className="flex items-center gap-2 px-3 py-2 text-sm font-medium 
+            text-green-700 bg-white dark:bg-gray-800 dark:text-white 
+            hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors rounded-md shadow-sm"
         >
           <FiLogOut className="w-4 h-4" />
           Sair
         </Button>
       </div>
-    </header>)
+    </header>
+  );
 }

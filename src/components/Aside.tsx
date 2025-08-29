@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import {
   FiPlus,
   FiPieChart,
-  FiTrendingUp,
   FiDollarSign,
   FiCreditCard,
 } from 'react-icons/fi'
