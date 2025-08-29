@@ -1,103 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { ArrowUpRight, ArrowDownLeft, MoreHorizontal } from 'lucide-react';
 import { COLORS } from '../constants/colors';
-
-interface Transaction {
-  id: string;
-  description: string;
-  amount: number;
-  type: 'income' | 'expense';
-  category: string;
-  date: string;
-  color: string;
-}
+import { useGetTransactionsByUser } from '@/HTTP/transactions';
+import { useGetCategories } from '@/HTTP/categories';
 
 export function RecentTransactions() {
-  const transactions: Transaction[] = [
-    {
-      id: '1',
-      description: 'Salário Mensal',
-      amount: 8500,
-      type: 'income',
-      category: 'Rendimento',
-      date: '2024-01-15',
-      color: COLORS.green[500],
-    },
-    {
-      id: '2',
-      description: 'Supermercado',
-      amount: 320,
-      type: 'expense',
-      category: 'Alimentação',
-      date: '2024-01-14',
-      color: COLORS.blue[500],
-    },
-    {
-      id: '3',
-      description: 'Combustível',
-      amount: 180,
-      type: 'expense',
-      category: 'Transporte',
-      date: '2024-01-13',
-      color: COLORS.yellow[500],
-    },
-    {
-      id: '4',
-      description: 'Freelance Design',
-      amount: 1200,
-      type: 'income',
-      category: 'Rendimento Extra',
-      date: '2024-01-12',
-      color: COLORS.green[400],
-    },
-    {
-      id: '5',
-      description: 'Restaurante',
-      amount: 85,
-      type: 'expense',
-      category: 'Alimentação',
-      date: '2024-01-11',
-      color: COLORS.blue[500],
-    },
-    {
-      id: '6',
-      description: 'Netflix',
-      amount: 45,
-      type: 'expense',
-      category: 'Entretenimento',
-      date: '2024-01-10',
-      color: COLORS.yellow[400],
-    },
-  ];
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const { data: transactionsData } = useGetTransactionsByUser(userId)
+  const { data: categoriesData } = useGetCategories()
+
+  const transactions = (transactionsData?.data || []).slice(0, 8)
+  const categories = categoriesData?.data || []
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    if (date.toDateString() === today.toDateString()) {
-      return 'Hoje';
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return 'Ontem';
-    } else {
-      return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-    }
+    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
   };
 
-  const getCategoryColor = (category: string) => {
-    const categoryColors: { [key: string]: string } = {
-      'Alimentação': COLORS.green[500],
-      'Transporte': COLORS.blue[500],
-      'Entretenimento': COLORS.yellow[500],
-      'Rendimento': COLORS.green[600],
-      'Rendimento Extra': COLORS.green[400],
-      'Moradia': COLORS.black[600],
-      'Saúde': COLORS.blue[400],
-      'Educação': COLORS.yellow[600],
-    };
-    return categoryColors[category] || COLORS.black[500];
+  const getCategoryColor = (categoryId: string) => {
+    const idx = categories.findIndex((c: any) => c?.id === categoryId)
+    const palette = [COLORS.green[500], COLORS.blue[500], COLORS.yellow[500], COLORS.black[600], COLORS.green[400], COLORS.yellow[600]]
+    return palette[idx >= 0 ? idx % palette.length : 0]
   };
+
+  const getCategoryName = (categoryId: string) => {
+    return categories.find((c: any) => c?.id === categoryId)?.categoryName || 'Categoria'
+  }
 
   return (
     <Card className="">
@@ -108,7 +36,7 @@ export function RecentTransactions() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {transactions.map((transaction) => (
+          {transactions.map((transaction: any) => (
             <div
               key={transaction.id}
               className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
@@ -116,10 +44,10 @@ export function RecentTransactions() {
               <div className="flex items-center gap-3">
                 <div
                   className={`p-2 rounded-full ${
-                    transaction.type === 'income' ? 'bg-green-100' : 'bg-red-100'
+                    transaction.amount >= 0 ? 'bg-green-100' : 'bg-red-100'
                   }`}
                 >
-                  {transaction.type === 'income' ? (
+                  {transaction.amount >= 0 ? (
                     <ArrowDownLeft className="w-4 h-4 text-green-600" />
                   ) : (
                     <ArrowUpRight className="w-4 h-4 text-red-600" />
@@ -133,12 +61,12 @@ export function RecentTransactions() {
                   <div className="flex items-center gap-2">
                     <span
                       className="text-xs px-2 py-1 rounded-full text-white"
-                      style={{ backgroundColor: getCategoryColor(transaction.category) }}
+                      style={{ backgroundColor: getCategoryColor(transaction.categoryId) }}
                     >
-                      {transaction.category}
+                      {getCategoryName(transaction.categoryId)}
                     </span>
                     <span className="text-xs text-gray-500">
-                      {formatDate(transaction.date)}
+                      {formatDate(transaction.date as string)}
                     </span>
                   </div>
                 </div>
@@ -147,11 +75,11 @@ export function RecentTransactions() {
               <div className="flex items-center gap-2">
                 <span
                   className={`font-semibold text-sm ${
-                    transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                    transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'
                   }`}
                 >
-                  {transaction.type === 'income' ? '+' : '-'}
-                  {transaction.amount.toLocaleString()} Mt
+                  {transaction.amount >= 0 ? '+' : '-'}
+                  {Math.abs(transaction.amount).toLocaleString()} Mt
                 </span>
                 <button className="p-1 hover:bg-gray-200 rounded-full transition-colors">
                   <MoreHorizontal className="w-4 h-4 text-gray-400" />

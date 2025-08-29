@@ -6,42 +6,43 @@ import {
 } from "@/components/ui/card"
 import { CheckCircle, XCircle } from "lucide-react"
 import { COLORS } from '../constants/colors'
-
-type ResumeItem = {
-  title: string
-  value: string
-  color: string
-}
+import { useGetIncomeByUser } from '@/HTTP/income'
+import { useGetExpensesByUser } from '@/HTTP/expenses'
 
 export function FinancesResume() {
-  const resume: ResumeItem[] = [
-    { title: "Saldo Actual", value: "1000 Mt", color: COLORS.green[600] },
-    { title: "Despesas Totais", value: "500 Mt", color: COLORS.blue[600] },
-    { title: "Rendimento Mensal", value: "200 Mt", color: COLORS.yellow[600] },
-  ]
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
 
-  // Função auxiliar para converter "1000 Mt" -> 1000
-  const toNumber = (str: string) =>
-    parseFloat(str.replace(/[^\d.-]/g, "")) || 0
+  const { data: incomeData, isLoading: loadingIncome } = useGetIncomeByUser(userId)
+  const { data: expensesData, isLoading: loadingExpenses } = useGetExpensesByUser(userId)
 
-  const saldo = toNumber(resume.find((i) => i.title === "Saldo Actual")?.value || "0")
-  const despesas = toNumber(resume.find((i) => i.title === "Despesas Totais")?.value || "0")
-  const rendimento = toNumber(resume.find((i) => i.title === "Rendimento Mensal")?.value || "0")
+  const incomes = incomeData?.data || []
+  const expenses = expensesData?.data || []
 
-  // Cálculo da situação financeira
-  const situacaoFinanceira = saldo + rendimento - despesas
-  const situationPositive = situacaoFinanceira > 0
+  const totalIncome = incomes.reduce((sum: number, i: any) => sum + (i?.amount || 0), 0)
+  const totalExpenses = expenses.reduce((sum: number, e: any) => sum + (e?.amount || 0), 0)
+  const saldo = totalIncome - totalExpenses
+
+  const situationPositive = saldo >= 0
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {resume.map((item) => (
-        <FinanceCard
-          key={item.title}
-          title={item.title}
-          value={item.value}
-          color={item.color}
-        />
-      ))}
+      <FinanceCard
+        title="Saldo Actual"
+        value={loadingIncome || loadingExpenses ? "..." : `${saldo.toLocaleString()} Mt`}
+        color={COLORS.green[600]}
+      />
+
+      <FinanceCard
+        title="Despesas Totais"
+        value={loadingExpenses ? "..." : `${totalExpenses.toLocaleString()} Mt`}
+        color={COLORS.blue[600]}
+      />
+
+      <FinanceCard
+        title="Rendimento Mensal"
+        value={loadingIncome ? "..." : `${totalIncome.toLocaleString()} Mt`}
+        color={COLORS.yellow[600]}
+      />
 
       <Card
         className="text-white"
@@ -60,7 +61,7 @@ export function FinancesResume() {
             {situationPositive ? "Positivo" : "Negativo"}
           </p>
           <p className="text-sm opacity-80">
-            Resultado: {situacaoFinanceira} Mt
+            Resultado: {loadingIncome || loadingExpenses ? '...' : `${saldo.toLocaleString()} Mt`}
           </p>
         </CardContent>
       </Card>

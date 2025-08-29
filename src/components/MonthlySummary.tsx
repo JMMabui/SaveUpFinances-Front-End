@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Calendar, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { Calendar, TrendingUp, TrendingDown } from 'lucide-react';
 import { COLORS } from '../constants/colors';
+import { useGetIncomeByUser } from '@/HTTP/income';
+import { useGetExpensesByUser } from '@/HTTP/expenses';
 
 interface MonthlyData {
   month: string;
@@ -10,21 +12,51 @@ interface MonthlyData {
   balance: number;
 }
 
-export function MonthlySummary() {
-  const monthlyData: MonthlyData[] = [
-    { month: 'Jan', income: 8500, expenses: 4200, savings: 4300, balance: 15000 },
-    { month: 'Fev', income: 8200, expenses: 3800, savings: 4400, balance: 19400 },
-    { month: 'Mar', income: 8800, expenses: 4100, savings: 4700, balance: 24100 },
-    { month: 'Abr', income: 8600, expenses: 3900, savings: 4700, balance: 28800 },
-    { month: 'Mai', income: 9000, expenses: 4200, savings: 4800, balance: 33600 },
-    { month: 'Jun', income: 8700, expenses: 4000, savings: 4700, balance: 38300 },
-  ];
+function monthLabel(date: Date) {
+  return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '')
+}
 
-  const currentMonth = monthlyData[monthlyData.length - 1];
-  const previousMonth = monthlyData[monthlyData.length - 2];
+export function MonthlySummary() {
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const { data: incomeData } = useGetIncomeByUser(userId)
+  const { data: expensesData } = useGetExpensesByUser(userId)
+
+  const incomes = (incomeData?.data || []).map((i: any) => ({ ...i, date: new Date(i.date) }))
+  const expenses = (expensesData?.data || []).map((e: any) => ({ ...e, date: new Date(e.date) }))
+
+  const now = new Date()
+  const months: Date[] = []
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    months.push(d)
+  }
+
+  const monthlyData: MonthlyData[] = months.map((m) => {
+    const month = m.getMonth()
+    const year = m.getFullYear()
+
+    const monthIncome = incomes.filter((i: any) => i.date.getMonth() === month && i.date.getFullYear() === year)
+      .reduce((sum: number, i: any) => sum + (i.amount || 0), 0)
+
+    const monthExpenses = expenses.filter((e: any) => e.date.getMonth() === month && e.date.getFullYear() === year)
+      .reduce((sum: number, e: any) => sum + (e.amount || 0), 0)
+
+    const savings = Math.max(monthIncome - monthExpenses, 0)
+
+    return {
+      month: monthLabel(m),
+      income: monthIncome,
+      expenses: monthExpenses,
+      savings,
+      balance: savings,
+    }
+  })
+
+  const currentMonth = monthlyData[monthlyData.length - 1] || { income: 0, expenses: 0, savings: 0, balance: 0, month: '' }
+  const previousMonth = monthlyData[monthlyData.length - 2] || { income: 0, expenses: 0, savings: 0, balance: 0, month: '' }
 
   const getChangePercentage = (current: number, previous: number) => {
-    if (previous === 0) return 0;
+    if (!previous) return 0;
     return ((current - previous) / previous) * 100;
   };
 
@@ -53,7 +85,6 @@ export function MonthlySummary() {
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          {/* Métricas principais */}
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-3 rounded-lg" style={{ backgroundColor: COLORS.green[50] }}>
               <div className="text-2xl font-bold text-gray-900">
@@ -78,7 +109,6 @@ export function MonthlySummary() {
             </div>
           </div>
 
-          {/* Gráfico de linha simples */}
           <div className="space-y-3">
             <div className="flex justify-between text-sm text-gray-600">
               <span>Evolução do Saldo (6 meses)</span>
@@ -88,13 +118,13 @@ export function MonthlySummary() {
             <div className="relative h-32">
               <div className="absolute inset-0 flex items-end justify-between">
                 {monthlyData.map((data, index) => {
-                  const height = (data.balance / Math.max(...monthlyData.map(d => d.balance))) * 100;
+                  const height = (data.balance / Math.max(...monthlyData.map(d => d.balance || 1))) * 100;
                   return (
                     <div key={index} className="flex flex-col items-center">
                       <div
                         className="w-8 rounded-t-sm transition-all duration-300 hover:opacity-80"
                         style={{
-                          height: `${height}%`,
+                          height: `${Math.max(height, 4)}%`,
                           backgroundColor: COLORS.green[500],
                           minHeight: '4px'
                         }}
@@ -107,7 +137,6 @@ export function MonthlySummary() {
             </div>
           </div>
 
-          {/* Resumo de poupança */}
           <div className="p-3 rounded-lg border border-gray-200">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">Poupança Mensal</span>
@@ -119,13 +148,13 @@ export function MonthlySummary() {
               <div
                 className="h-2 rounded-full transition-all duration-300"
                 style={{
-                  width: `${(currentMonth.savings / currentMonth.income) * 100}%`,
+                  width: `${currentMonth.income ? (currentMonth.savings / currentMonth.income) * 100 : 0}%`,
                   backgroundColor: COLORS.yellow[500],
                 }}
               />
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              {((currentMonth.savings / currentMonth.income) * 100).toFixed(1)}% do rendimento
+              {currentMonth.income ? ((currentMonth.savings / currentMonth.income) * 100).toFixed(1) : '0.0'}% do rendimento
             </div>
           </div>
         </div>

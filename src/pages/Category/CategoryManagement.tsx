@@ -1,27 +1,27 @@
 import type React from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button } from '../../components/Button'
 import { Card } from '@/components/ui/card'
-import { mockCategories, TransactionType } from '../../mocks/mockData'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { Header } from '@/components/Header'
+import { useGetCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from '@/HTTP/categories'
+import { COLORS } from '@/constants/colors'
 
 interface Category {
-  id: number
+  id: string
   categoryName: string
-  categoryType: TransactionType
-  icon: string
-  color: string
-  parentId?: number
-  order: number
+  categoryType: 'income' | 'expense' | 'investment'
+  icon: string | null
+  color: string | null
+  parentId?: string | null
+  order?: number
 }
 
 const COMMON_ICONS = ['💰', '🏠', '🍽️', '🚗', '🛒', '🏥', '🎮', '✈️', '📚', '🎁', '💼', '🎯']
 
 export function CategoryManagement() {
-  const [categories, setCategories] = useState<Category[]>(
-    mockCategories.map((cat, index) => ({ ...cat, order: index }))
-  )
+  const { data } = useGetCategories()
+  const categoriesData: Category[] = data?.data || []
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
@@ -35,47 +35,29 @@ export function CategoryManagement() {
     setIsModalOpen(true)
   }
 
-  const handleDeleteCategory = (categoryId: number) => {
-    // Remove a categoria e suas subcategorias
-    setCategories(categories.filter(c => c.id !== categoryId && c.parentId !== categoryId))
+  const deleteCategory = useDeleteCategory()
+
+  const handleDeleteCategory = (categoryId: string) => {
+    deleteCategory.mutate(categoryId)
   }
 
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return
-
-    const items = Array.from(categories)
-    const [reorderedItem] = items.splice(result.source.index, 1)
-    items.splice(result.destination.index, 0, reorderedItem)
-
-    // Atualiza a ordem das categorias
-    const updatedItems = items.map((item, index) => ({
-      ...item,
-      order: index
-    }))
-
-    setCategories(updatedItems)
-  }
-
-  const getSubcategories = (parentId: number) => {
-    return categories
+  const getSubcategories = (parentId: string) => {
+    return categoriesData
       .filter(c => c.parentId === parentId)
-      .sort((a, b) => a.order - b.order)
   }
 
   const getMainCategories = () => {
-    return categories
+    return categoriesData
       .filter(c => !c.parentId)
-      .sort((a, b) => a.order - b.order)
   }
 
   return (
     <div className="p-4">
       <Header />
-    
 
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-2xl font-bold" style={{ color: COLORS.black[800] }}>
             Categorias
           </h2>
           <Button onClick={handleAddCategory} className="flex items-center gap-2">
@@ -83,119 +65,84 @@ export function CategoryManagement() {
           </Button>
         </div>
 
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="categories">
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="space-y-4"
-              >
-                {getMainCategories().map((category, index) => (
-                  <Draggable
-                    key={category.id}
-                    draggableId={category.id.toString()}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Card>
-                          <div className="p-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <span className="text-2xl">{category.icon}</span>
-                                <div>
-                                  <h3 className="font-medium text-gray-900 dark:text-gray-100">
-                                    {category.categoryName}
-                                  </h3>
-                                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    {category.categoryType === TransactionType.RECEITA ? 'Receita' : 
-                                     category.categoryType === TransactionType.DESPESA ? 'Despesa' : 'Investimento'}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  onClick={() => handleEditCategory(category)}
-                                >
-                                  Editar
-                                </Button>
-                                <Button
-                                  variant="danger"
-                                  size="sm"
-                                  onClick={() => handleDeleteCategory(category.id)}
-                                >
-                                  Excluir
-                                </Button>
-                              </div>
-                            </div>
+        <div className="space-y-4">
+          {getMainCategories().map((category) => (
+            <Card key={category.id} className="border" style={{ borderColor: COLORS.blue[100] }}>
+              <div className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{category.icon || '📁'}</span>
+                    <div>
+                      <h3 className="font-medium" style={{ color: COLORS.black[800] }}>
+                        {category.categoryName}
+                      </h3>
+                      <p className="text-sm" style={{ color: COLORS.black[500] }}>
+                        {category.categoryType === 'income' ? 'Receita' : 
+                         category.categoryType === 'expense' ? 'Despesa' : 'Investimento'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleEditCategory(category)}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleDeleteCategory(category.id)}
+                    >
+                      Excluir
+                    </Button>
+                  </div>
+                </div>
 
-                            {/* Subcategorias */}
-                            {getSubcategories(category.id).length > 0 && (
-                              <div className="mt-4 pl-8 space-y-2">
-                                {getSubcategories(category.id).map(subcategory => (
-                                  <div
-                                    key={subcategory.id}
-                                    className="flex items-center justify-between p-2 bg-gray-50 rounded"
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-xl">{subcategory.icon}</span>
-                                      <span className="text-sm">{subcategory.categoryName}</span>
-                                    </div>
-                                    <div className="flex gap-2">
-                                      <Button
-                                        variant="secondary"
-                                        size="xs"
-                                        onClick={() => handleEditCategory(subcategory)}
-                                      >
-                                        Editar
-                                      </Button>
-                                      <Button
-                                        variant="danger"
-                                        size="xs"
-                                        onClick={() => handleDeleteCategory(subcategory.id)}
-                                      >
-                                        Excluir
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </Card>
+                {getSubcategories(category.id).length > 0 && (
+                  <div className="mt-4 pl-8 space-y-2">
+                    {getSubcategories(category.id).map(subcategory => (
+                      <div
+                        key={subcategory.id}
+                        className="flex items-center justify-between p-2 rounded"
+                        style={{ backgroundColor: COLORS.black[50] }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">{subcategory.icon || '📁'}</span>
+                          <span className="text-sm" style={{ color: COLORS.black[700] }}>{subcategory.categoryName}</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="secondary"
+                            size="xs"
+                            onClick={() => handleEditCategory(subcategory)}
+                          >
+                            Editar
+                          </Button>
+                          <Button
+                            variant="danger"
+                            size="xs"
+                            onClick={() => handleDeleteCategory(subcategory.id)}
+                          >
+                            Excluir
+                          </Button>
+                        </div>
                       </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {isModalOpen && (
         <CategoryModal
           category={selectedCategory}
-          categories={categories}
+          categories={categoriesData}
           onClose={() => setIsModalOpen(false)}
-          onSave={category => {
-            if (selectedCategory) {
-              setCategories(categories.map(c => 
-                c.id === selectedCategory.id ? { ...category, id: c.id } as Category : c
-              ))
-            } else {
-              setCategories([...categories, { ...category, id: Date.now(), order: categories.length } as Category])
-            }
-            setIsModalOpen(false)
-          }}
         />
       )}
     </div>
@@ -206,49 +153,64 @@ interface CategoryModalProps {
   category: Category | null
   categories: Category[]
   onClose: () => void
-  onSave: (category: Partial<Category>) => void
 }
 
 const CategoryModal: React.FC<CategoryModalProps> = ({
   category,
   categories,
   onClose,
-  onSave,
 }) => {
   const [formData, setFormData] = useState<Partial<Category>>(
     category || {
       categoryName: '',
-      categoryType: TransactionType.DESPESA,
+      categoryType: 'expense',
       icon: '',
       color: '#000000',
       parentId: undefined,
     }
   )
-  const [showIconPicker, setShowIconPicker] = useState(false)
 
   const mainCategories = categories.filter(c => !c.parentId)
+
+  const createCategory = useCreateCategory()
+  const updateCategory = useUpdateCategory(category?.id || '')
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4">
+        <h3 className="text-xl font-bold mb-4" style={{ color: COLORS.black[800] }}>
           {category ? 'Editar Categoria' : 'Nova Categoria'}
         </h3>
 
         <form
           onSubmit={e => {
             e.preventDefault()
-            onSave(formData)
+            if (category) {
+              updateCategory.mutate({
+                categoryName: formData.categoryName!,
+                categoryType: formData.categoryType!,
+                icon: formData.icon || null,
+                color: formData.color || null,
+              } as any)
+            } else {
+              createCategory.mutate({
+                categoryName: formData.categoryName!,
+                categoryType: formData.categoryType!,
+                icon: formData.icon || null,
+                color: formData.color || null,
+              } as any)
+            }
+            onClose()
           }}
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Nome da Categoria
               </label>
               <input
                 type="text"
-                value={formData.categoryName}
+                value={formData.categoryName || ''}
                 onChange={e =>
                   setFormData({ ...formData, categoryName: e.target.value })
                 }
@@ -258,25 +220,25 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Tipo</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>Tipo</label>
               <select
                 value={formData.categoryType}
                 onChange={e =>
                   setFormData({
                     ...formData,
-                    categoryType: e.target.value as TransactionType,
+                    categoryType: e.target.value as Category['categoryType'],
                   })
                 }
                 className="w-full p-2 border rounded"
               >
-                <option value="RECEITA">Receita</option>
-                <option value="DESPESA">Despesa</option>
-                <option value="INVESTIMENTO">Investimento</option>
+                <option value="income">Receita</option>
+                <option value="expense">Despesa</option>
+                <option value="investment">Investimento</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Categoria Pai
               </label>
               <select
@@ -284,7 +246,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
                 onChange={e =>
                   setFormData({
                     ...formData,
-                    parentId: e.target.value ? Number(e.target.value) : undefined,
+                    parentId: e.target.value || undefined,
                   })
                 }
                 className="w-full p-2 border rounded"
@@ -299,43 +261,24 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Ícone
               </label>
               <div className="relative">
                 <button
                   type="button"
-                  onClick={() => setShowIconPicker(!showIconPicker)}
                   className="w-full p-2 border rounded flex items-center justify-between"
                 >
                   <span className="text-2xl">{formData.icon || 'Selecione um ícone'}</span>
-                  <span>▼</span>
                 </button>
-                {showIconPicker && (
-                  <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg p-2 grid grid-cols-6 gap-2">
-                    {COMMON_ICONS.map(icon => (
-                      <button
-                        key={icon}
-                        type="button"
-                        onClick={() => {
-                          setFormData({ ...formData, icon })
-                          setShowIconPicker(false)
-                        }}
-                        className="p-2 hover:bg-gray-100 rounded text-2xl"
-                      >
-                        {icon}
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Cor</label>
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>Cor</label>
               <input
                 type="color"
-                value={formData.color}
+                value={(formData.color as string) || '#000000'}
                 onChange={e =>
                   setFormData({ ...formData, color: e.target.value })
                 }

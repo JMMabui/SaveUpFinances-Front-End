@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { COLORS } from '../constants/colors';
+import { useGetExpensesByUser } from '@/HTTP/expenses';
+import { useGetCategories } from '@/HTTP/categories';
 
-interface ExpenseCategory {
+interface ExpenseCategoryAgg {
   name: string;
   amount: number;
   percentage: number;
@@ -9,15 +11,32 @@ interface ExpenseCategory {
 }
 
 export function ExpenseChart() {
-  const categories: ExpenseCategory[] = [
-    { name: 'Alimentação', amount: 450, percentage: 30, color: COLORS.green[500] },
-    { name: 'Transporte', amount: 300, percentage: 20, color: COLORS.blue[500] },
-    { name: 'Entretenimento', amount: 225, percentage: 15, color: COLORS.yellow[500] },
-    { name: 'Moradia', amount: 375, percentage: 25, color: COLORS.black[600] },
-    { name: 'Outros', amount: 150, percentage: 10, color: COLORS.green[300] },
-  ];
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const { data: expensesData } = useGetExpensesByUser(userId)
+  const { data: categoriesData } = useGetCategories()
 
-  const totalExpenses = categories.reduce((sum, cat) => sum + cat.amount, 0);
+  const expenses = expensesData?.data || []
+  const categories = categoriesData?.data || []
+
+  const totalExpenses = expenses.reduce((sum: number, e: any) => sum + (e?.amount || 0), 0)
+
+  const categoryMap = new Map<string, { name: string; amount: number }>()
+  for (const e of expenses) {
+    const cat = categories.find((c: any) => c?.id === e?.categoryId)
+    const key = cat?.id || e?.categoryId || 'outros'
+    const name = cat?.categoryName || 'Outros'
+    const prev = categoryMap.get(key)?.amount || 0
+    categoryMap.set(key, { name, amount: prev + (e?.amount || 0) })
+  }
+
+  const palette = [COLORS.green[500], COLORS.blue[500], COLORS.yellow[500], COLORS.black[600], COLORS.green[300]]
+
+  const categoriesAgg: ExpenseCategoryAgg[] = Array.from(categoryMap.values()).map((v, idx) => ({
+    name: v.name,
+    amount: v.amount,
+    percentage: totalExpenses ? Math.round((v.amount / totalExpenses) * 100) : 0,
+    color: palette[idx % palette.length],
+  }))
 
   return (
     <Card className="">
@@ -26,18 +45,17 @@ export function ExpenseChart() {
           Despesas por Categoria
         </CardTitle>
         <p className="text-sm text-gray-600">
-          Total: {totalExpenses} Mt
+          Total: {totalExpenses.toLocaleString()} Mt
         </p>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* Gráfico de barras */}
           <div className="space-y-3">
-            {categories.map((category, index) => (
+            {categoriesAgg.map((category, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium text-gray-700">{category.name}</span>
-                  <span className="text-gray-600">{category.amount} Mt</span>
+                  <span className="text-gray-600">{category.amount.toLocaleString()} Mt</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
@@ -55,10 +73,9 @@ export function ExpenseChart() {
             ))}
           </div>
 
-          {/* Legenda */}
           <div className="pt-4 border-t border-gray-200">
             <div className="grid grid-cols-2 gap-2 text-xs">
-              {categories.map((category, index) => (
+              {categoriesAgg.map((category, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div
                     className="w-3 h-3 rounded-full"

@@ -29,12 +29,12 @@ export const API_ENDPOINTS = {
 
   // Accounts
   ACCOUNTS: {
-    BASE: '/account',
-    BY_ID: (id: string) => `/account/${id}`,
-    BY_USER_ID: (userId: string) => `/account/${userId}`,
-    CREATE: '/account',
-    UPDATE: (id: string) => `/account/${id}`,
-    DELETE: (id: string) => `/account/${id}`,
+    BASE: '/accounts',
+    BY_ID: (id: string) => `/accounts/${id}`,
+    BY_USER_ID: (userId: string) => `/accounts/${userId}`,
+    CREATE: '/accounts',
+    UPDATE: (id: string) => `/accounts/${id}`,
+    DELETE: (id: string) => `/accounts/${id}`,
   },
 
   // Transactions

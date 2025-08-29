@@ -1,6 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { accountService } from "../lib/apiServices";
 import type { accountRequest, accountResponse } from "./Type/account.type";
+import { apiService } from "../lib/apiServices";
+
+const BASE = "/accounts" as const;
+
+export function getAccounts() {
+  return useQuery({
+    queryKey: ['get-accounts-all'],
+    queryFn: async () => apiService.get<accountResponse[]>(BASE),
+  });
+}
 
 export function getAccountsByUserId(userId: string) {
   return useQuery({
@@ -27,6 +37,7 @@ export function useCreateAccount() {
     mutationFn: async (data: accountRequest | Partial<accountRequest>) => accountService.create(data as Partial<accountResponse>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['get-accounts-all'] });
     },
   });
 }
@@ -38,6 +49,7 @@ export function useUpdateAccount(id: string) {
     mutationFn: async (data: Partial<accountRequest>) => accountService.update(id, data as Partial<accountResponse>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['get-accounts-all'] });
       queryClient.invalidateQueries({ queryKey: ['get-account-by-id', id] });
     },
   });
@@ -50,6 +62,7 @@ export function useDeleteAccount() {
     mutationFn: async (id: string) => accountService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['get-accounts-all'] });
     },
   });
 }

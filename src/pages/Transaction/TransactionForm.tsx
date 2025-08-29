@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Button } from '../../components/Button'
-import { categories } from '../../constants/categories'
+import { useGetCategories, useGetCategoriesByType } from '@/HTTP/categories'
+import { getAccountsByUserId } from '@/HTTP/account'
 
 interface TransactionFormProps {
   onSubmit: (data: TransactionFormData) => void
@@ -44,6 +45,27 @@ export function TransactionForm({
       debitAccount: '',
     }
   )
+
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const { data: categoriesAll } = useGetCategories()
+  const categories = categoriesAll?.data || []
+
+  const filteredCategories = useMemo(() => {
+    return categories
+      .filter((c: any) => c?.categoryType === formData.type)
+      .map((c: any) => ({ id: c.id, label: c.categoryName }))
+  }, [categories, formData.type])
+
+  const { data: accountsApi } = getAccountsByUserId(userId)
+  const accountsFromApi = Array.isArray(accountsApi?.data)
+    ? (accountsApi?.data as any[]).map(acc => ({
+        label: acc.accountName,
+        type: acc.accountType,
+        balance: acc.balance,
+      }))
+    : []
+
+  const availableAccounts = accounts.length ? accounts : accountsFromApi
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -120,7 +142,7 @@ export function TransactionForm({
         </select>
       </div>
 
-      {formData.type === 'expense' && accounts.length > 0 && (
+      {formData.type === 'expense' && availableAccounts.length > 0 && (
         <div>
           <label
             htmlFor="debitAccount"
@@ -137,7 +159,7 @@ export function TransactionForm({
             className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
             <option value="">Selecione uma conta</option>
-            {accounts.map(account => (
+            {availableAccounts.map(account => (
               <option key={account.type} value={account.type}>
                 {account.label} - MT {account.balance.toLocaleString()}
               </option>
@@ -162,7 +184,7 @@ export function TransactionForm({
           className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         >
           <option value="">Selecione uma categoria</option>
-          {categories[formData.type].map(category => (
+          {filteredCategories.map(category => (
             <option key={category.id} value={category.id}>
               {category.label}
             </option>

@@ -1,26 +1,37 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button } from '../../components/Button'
 import { Card } from '@/components/ui/card'
-import {
-  mockBudgets,
-  mockCategories,
-  mockTransactions,
-  TransactionType,
-} from '../../mocks/mockData'
 import { Header } from '@/components/Header'
+import { useGetBudgetsByUser, useCreateBudget, useUpdateBudget, useDeleteBudget } from '@/HTTP/budget'
+import { useGetCategories } from '@/HTTP/categories'
+import { useGetExpensesByUser } from '@/HTTP/expenses'
+import { COLORS } from '@/constants/colors'
 
-interface Budget {
-  id: number
-  categoryId: number
+interface BudgetFormState {
+  id?: string
+  categoryId: string
   month: number
   year: number
   limit: number
 }
 
 export function BudgetManagement() {
-  const [budgets, setBudgets] = useState<Budget[]>(mockBudgets)
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+
+  const { data: budgetsQuery } = useGetBudgetsByUser(userId)
+  const { data: categoriesQuery } = useGetCategories()
+  const { data: expensesQuery } = useGetExpensesByUser(userId)
+
+  const createBudget = useCreateBudget()
+  const updateBudget = useUpdateBudget('')
+  const deleteBudget = useDeleteBudget()
+
+  const budgets = budgetsQuery?.data || []
+  const categories = categoriesQuery?.data || []
+  const expenses = expensesQuery?.data || []
+
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null)
+  const [selectedBudget, setSelectedBudget] = useState<BudgetFormState | null>(null)
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-MZ', {
@@ -31,39 +42,44 @@ export function BudgetManagement() {
     }).format(value)
   }
 
-  const calculateCategoryExpenses = (categoryId: number) => {
-    const currentMonth = new Date().getMonth() + 1
-    const currentYear = new Date().getFullYear()
-
-    return mockTransactions
-      .filter(
-        t =>
+  const calculateCategoryExpenses = (categoryId: string, month: number, year: number) => {
+    return expenses
+      .filter((t: any) => {
+        const d = new Date(t.date)
+        return (
           t.categoryId === categoryId &&
-          t.type === TransactionType.DESPESA &&
-          t.month === currentMonth &&
-          t.year === currentYear
-      )
-      .reduce((sum, t) => sum + t.amount, 0)
+          d.getMonth() + 1 === month &&
+          d.getFullYear() === year
+        )
+      })
+      .reduce((sum: number, t: any) => sum + (t.amount || 0), 0)
   }
 
   const getProgressColor = (spent: number, limit: number) => {
-    const percentage = (spent / limit) * 100
-    if (percentage >= 100) return 'bg-red-500'
-    if (percentage >= 80) return 'bg-yellow-500'
-    return 'bg-green-500'
+    const percentage = limit ? (spent / limit) * 100 : 0
+    if (percentage >= 100) return COLORS.black[600]
+    if (percentage >= 80) return COLORS.yellow[600]
+    return COLORS.green[600]
   }
 
   return (
     <div className="space-y-6">
       <Header />
 
-
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        <h2 className="text-2xl font-bold" style={{ color: COLORS.black[800] }}>
           Orçamentos
         </h2>
         <Button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setSelectedBudget({
+              categoryId: '',
+              month: new Date().getMonth() + 1,
+              year: new Date().getFullYear(),
+              limit: 0,
+            })
+            setIsModalOpen(true)
+          }}
           className="flex items-center gap-2"
         >
           Novo Orçamento
@@ -71,21 +87,21 @@ export function BudgetManagement() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {budgets.map(budget => {
-          const category = mockCategories.find(c => c.id === budget.categoryId)
-          const spent = calculateCategoryExpenses(budget.categoryId)
-          const percentage = Math.min((spent / budget.limit) * 100, 100)
+        {budgets.map((budget: any) => {
+          const category = categories.find((c: any) => c.id === budget.categoryId)
+          const spent = calculateCategoryExpenses(budget.categoryId, budget.month, budget.year)
+          const percentage = Math.min(budget.limit ? (spent / budget.limit) * 100 : 0, 100)
 
           return (
-            <Card key={budget.id}>
+            <Card key={budget.id} className="border" style={{ borderColor: COLORS.blue[100] }}>
               <div className="p-4">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                      {category?.categoryName}
+                    <h3 className="text-lg font-semibold" style={{ color: COLORS.black[800] }}>
+                      {category?.categoryName || 'Categoria'}
                     </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {category?.icon} {category?.categoryType}
+                    <p className="text-sm" style={{ color: COLORS.black[500] }}>
+                      {budget.month}/{budget.year}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -93,7 +109,13 @@ export function BudgetManagement() {
                       variant="secondary"
                       size="sm"
                       onClick={() => {
-                        setSelectedBudget(budget)
+                        setSelectedBudget({
+                          id: budget.id,
+                          categoryId: budget.categoryId,
+                          month: budget.month,
+                          year: budget.year,
+                          limit: budget.limit,
+                        })
                         setIsModalOpen(true)
                       }}
                     >
@@ -102,11 +124,7 @@ export function BudgetManagement() {
                     <Button
                       variant="danger"
                       size="sm"
-                      onClick={() =>
-                        setBudgets(budgets =>
-                          budgets.filter(b => b.id !== budget.id)
-                        )
-                      }
+                      onClick={() => deleteBudget.mutate(budget.id)}
                     >
                       Excluir
                     </Button>
@@ -115,39 +133,39 @@ export function BudgetManagement() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 dark:text-gray-400">
+                    <span style={{ color: COLORS.black[500] }}>
                       Limite:
                     </span>
-                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                    <span className="font-medium" style={{ color: COLORS.black[800] }}>
                       {formatCurrency(budget.limit)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 dark:text-gray-400">
+                    <span style={{ color: COLORS.black[500] }}>
                       Gasto:
                     </span>
-                    <span className="font-medium text-red-600 dark:text-red-400">
+                    <span className="font-medium" style={{ color: COLORS.yellow[700] }}>
                       {formatCurrency(spent)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500 dark:text-gray-400">
+                    <span style={{ color: COLORS.black[500] }}>
                       Restante:
                     </span>
-                    <span className="font-medium text-green-600 dark:text-green-400">
+                    <span className="font-medium" style={{ color: COLORS.green[700] }}>
                       {formatCurrency(budget.limit - spent)}
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-4">
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: COLORS.black[200] }}>
                     <div
-                      className={`h-full ${getProgressColor(spent, budget.limit)}`}
-                      style={{ width: `${percentage}%` }}
+                      className="h-full"
+                      style={{ width: `${percentage}%`, backgroundColor: getProgressColor(spent, budget.limit) }}
                     />
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-sm mt-1" style={{ color: COLORS.black[500] }}>
                     {percentage.toFixed(1)}% do orçamento utilizado
                   </p>
                 </div>
@@ -160,57 +178,59 @@ export function BudgetManagement() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-4">
-              {selectedBudget ? 'Editar Orçamento' : 'Novo Orçamento'}
+            <h3 className="text-xl font-semibold mb-4" style={{ color: COLORS.black[800] }}>
+              {selectedBudget?.id ? 'Editar Orçamento' : 'Novo Orçamento'}
             </h3>
             <form
               onSubmit={e => {
                 e.preventDefault()
+                if (!selectedBudget) return
+                if (selectedBudget.id) {
+                  updateBudget.mutate({
+                    ...(selectedBudget as any),
+                  })
+                } else {
+                  createBudget.mutate({
+                    userId,
+                    categoryId: selectedBudget.categoryId,
+                    month: selectedBudget.month,
+                    year: selectedBudget.year,
+                    limit: selectedBudget.limit,
+                  } as any)
+                }
+                setIsModalOpen(false)
+                setSelectedBudget(null)
               }}
             >
               <div className="">
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                   Categoria
                 </label>
                 <select
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border rounded"
                   value={selectedBudget?.categoryId || ''}
                   onChange={e => {
-                    const newBudget: Budget = {
-                      id: selectedBudget?.id || Date.now(),
-                      categoryId: Number(e.target.value),
-
-                      month: selectedBudget?.month || new Date().getMonth() + 1,
-                      year: selectedBudget?.year || new Date().getFullYear(),
-                      limit: selectedBudget?.limit || 0,
-                    }
-                    setSelectedBudget(newBudget)
+                    setSelectedBudget(prev => prev ? { ...prev, categoryId: e.target.value } : prev)
                   }}
                 >
                   <option value="">Selecione uma categoria</option>
-                  {mockCategories.map(category => (
+                  {categories.map((category: any) => (
                     <option key={category.id} value={category.id}>
                       {category.categoryName}
                     </option>
                   ))}
                 </select>
 
-                <label className="block text-sm font-medium mt-4 mb-1">
+                <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
                   Mês
                 </label>
 
                 <select
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border rounded"
                   value={selectedBudget?.month || ''}
                   onChange={e => {
-                    const newBudget: Budget = {
-                      id: selectedBudget?.id || Date.now(),
-                      categoryId: selectedBudget?.categoryId || 0,
-                      month: Number(e.target.value),
-                      year: selectedBudget?.year || new Date().getFullYear(),
-                      limit: selectedBudget?.limit || 0,
-                    }
-                    setSelectedBudget(newBudget)
+                    const val = Number(e.target.value)
+                    setSelectedBudget(prev => prev ? { ...prev, month: val } : prev)
                   }}
                 >
                   <option value="">Selecione um mês</option>
@@ -223,47 +243,34 @@ export function BudgetManagement() {
                   ))}
                 </select>
 
-                <label className="block text-sm font-medium mt-4 mb-1">
+                <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
                   Ano
                 </label>
                 <select
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className="w-full p-2 border rounded"
                   value={selectedBudget?.year || ''}
                   onChange={e => {
-                    const newBudget: Budget = {
-                      id: selectedBudget?.id || Date.now(),
-                      categoryId: selectedBudget?.categoryId || 0,
-                      month: selectedBudget?.month || new Date().getMonth() + 1,
-                      year: Number(e.target.value),
-
-                      limit: selectedBudget?.limit || 0,
-                    }
-                    setSelectedBudget(newBudget)
+                    const val = Number(e.target.value)
+                    setSelectedBudget(prev => prev ? { ...prev, year: val } : prev)
                   }}
                 >
                   <option value="">Selecione um ano</option>
                   {Array.from({ length: 11 }, (_, i) => (
-                    <option key={i} value={2025 + i}>
-                      {2025 + i}
+                    <option key={i} value={2020 + i}>
+                      {2020 + i}
                     </option>
                   ))}
                 </select>
-                <label className="block text-sm font-medium mt-4 mb-1">
+                <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
                   Limite
                 </label>
                 <input
                   type="number"
-                  className="w-full p-2 border border-gray-300 rounded"
-                  value={selectedBudget?.limit || ''}
+                  className="w-full p-2 border rounded"
+                  value={selectedBudget?.limit ?? ''}
                   onChange={e => {
-                    const newBudget: Budget = {
-                      id: selectedBudget?.id || Date.now(),
-                      categoryId: selectedBudget?.categoryId || 0,
-                      month: selectedBudget?.month || new Date().getMonth() + 1,
-                      year: selectedBudget?.year || new Date().getFullYear(),
-                      limit: Number(e.target.value),
-                    }
-                    setSelectedBudget(newBudget)
+                    const val = Number(e.target.value)
+                    setSelectedBudget(prev => prev ? { ...prev, limit: val } : prev)
                   }}
                   placeholder="Defina o limite do orçamento"
                   required
@@ -284,19 +291,6 @@ export function BudgetManagement() {
                 <Button
                   type="submit"
                   className="ml-2"
-                  onClick={() => {
-                    if (selectedBudget?.id) {
-                      setBudgets(budgets =>
-                        budgets.map(b =>
-                          b.id === selectedBudget.id ? selectedBudget : b
-                        )
-                      )
-                    } else if (selectedBudget) {
-                      setBudgets([...budgets, selectedBudget])
-                    }
-                    setIsModalOpen(false)
-                    setSelectedBudget(null)
-                  }}
                 >
                   {selectedBudget?.id ? 'Salvar' : 'Criar Orçamento'}
                 </Button>

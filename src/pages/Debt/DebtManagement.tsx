@@ -4,54 +4,55 @@ import { DebtList } from './DebtList';
 import { DebtForm } from './DebtForm';
 import { DebtPaymentForm } from './DebtPaymentForm';
 import { TopNavigation } from '../../components/TopNavigation';
-import { mockDebts } from '../../mocks/mockData';
 import { Header } from '@/components/Header';
+import { useGetDebtsByUser, useCreateDebt, useUpdateDebt } from '@/HTTP/debts';
+import { useCreateDebtPayment } from '@/HTTP/debts-payments';
 
 export function DebtManagement() {
-  const [debts, setDebts] = useState<Debt[]>(mockDebts); // Inicialmente vazio, pode ser mockado
-  const [editingDebt, setEditingDebt] = useState<Debt | null>(null);
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+
+  const { data } = useGetDebtsByUser(userId);
+  const createDebt = useCreateDebt();
+  const updateDebt = useUpdateDebt('');
+  const createPayment = useCreateDebtPayment();
+
+  const debtsApi = data?.data || [];
+  const [editingDebt, setEditingDebt] = useState<any | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [payingDebt, setPayingDebt] = useState<Debt | null>(null);
+  const [payingDebt, setPayingDebt] = useState<any | null>(null);
 
   function handleAdd() {
     setEditingDebt(null);
     setShowForm(true);
   }
 
-  function handleEdit(debt: Debt) {
+  function handleEdit(debt: any) {
     setEditingDebt(debt);
     setShowForm(true);
   }
 
-  function handleSave(debt: Debt) {
-    setDebts(prev => {
-      const exists = prev.find(d => d.id === debt.id);
-      if (exists) {
-        return prev.map(d => d.id === debt.id ? debt : d);
-      }
-      return [...prev, debt];
-    });
+  function handleSave(debt: any) {
+    if (debt?.id) {
+      updateDebt.mutate({ ...debt });
+    } else {
+      createDebt.mutate({ ...debt, userId });
+    }
     setShowForm(false);
   }
 
   function handlePay(debtId: string) {
-    const debt = debts.find(d => d.id === debtId);
+    const debt = debtsApi.find((d: any) => d.id === debtId);
     if (debt) setPayingDebt(debt);
   }
 
   function handleSavePayment(data: { valorPago: number; dataPagamento: string; observacoes?: string }) {
-    setDebts(prev => prev.map(d => {
-      if (payingDebt && d.id === payingDebt.id) {
-        // Se valor pago >= valor da dívida, marca como paga
-        if (data.valorPago >= d.valor) {
-          return { ...d, status: 'paga', dataPagamento: data.dataPagamento, observacoes: data.observacoes };
-        } else {
-          // Se for pagamento parcial, subtrai do valor e mantém pendente
-          return { ...d, valor: d.valor - data.valorPago, observacoes: data.observacoes };
-        }
-      }
-      return d;
-    }));
+    if (!payingDebt) return;
+    createPayment.mutate({
+      amount: data.valorPago,
+      date: data.dataPagamento,
+      debtId: payingDebt.id,
+      notes: data.observacoes,
+    } as any)
     setPayingDebt(null);
   }
 
@@ -69,9 +70,9 @@ export function DebtManagement() {
       {showForm ? (
         <DebtForm initialDebt={editingDebt!} onSave={handleSave} onCancel={handleCancel} />
       ) : payingDebt ? (
-        <DebtPaymentForm valorOriginal={payingDebt.valor} onSave={handleSavePayment} onCancel={handleCancelPayment} />
+        <DebtPaymentForm valorOriginal={payingDebt.amount} onSave={handleSavePayment} onCancel={handleCancelPayment} />
       ) : (
-        <DebtList debts={debts} onAdd={handleAdd} onEdit={handleEdit} onPay={handlePay} />
+        <DebtList debts={debtsApi as any} onAdd={handleAdd} onEdit={handleEdit} onPay={handlePay} />
       )}
     </div>
   );

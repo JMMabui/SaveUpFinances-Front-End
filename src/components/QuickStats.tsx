@@ -1,17 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { TrendingUp, TrendingDown, DollarSign, PiggyBank, CreditCard, AlertTriangle } from 'lucide-react';
 import { COLORS } from '../constants/colors';
+import { getAccountsByUserId } from '@/HTTP/account';
+import { useGetIncomeByUser } from '@/HTTP/income';
+import { useGetExpensesByUser } from '@/HTTP/expenses';
+import { useGetDebtsByUser } from '@/HTTP/debts';
+import { useGetCreditCardsByUser } from '@/HTTP/credit-card';
 
 interface QuickStatProps {
   title: string;
   value: string;
-  change: string;
-  changeType: 'positive' | 'negative' | 'neutral';
+  change?: string;
+  changeType?: 'positive' | 'negative' | 'neutral';
   icon: React.ReactNode;
   color: string;
 }
 
-const QuickStat = ({ title, value, change, changeType, icon, color }: QuickStatProps) => {
+const QuickStat = ({ title, value, change, changeType = 'neutral', icon, color }: QuickStatProps) => {
   const getChangeColor = () => {
     switch (changeType) {
       case 'positive':
@@ -44,46 +49,65 @@ const QuickStat = ({ title, value, change, changeType, icon, color }: QuickStatP
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold text-gray-900">{value}</div>
-        <div className={`flex items-center gap-1 text-sm ${getChangeColor()}`}>
-          {getChangeIcon()}
-          <span>{change}</span>
-        </div>
+        {change && (
+          <div className={`flex items-center gap-1 text-sm ${getChangeColor()}`}>
+            {getChangeIcon()}
+            <span>{change}</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 };
 
 export function QuickStats() {
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+
+  const { data: accountsData } = getAccountsByUserId(userId)
+  const { data: incomeData } = useGetIncomeByUser(userId)
+  const { data: expensesData } = useGetExpensesByUser(userId)
+  const { data: debtsData } = useGetDebtsByUser(userId)
+  const { data: creditCardsData } = useGetCreditCardsByUser(userId)
+
+  const accounts = accountsData?.data || []
+  const totalBalance = Array.isArray(accounts)
+    ? accounts.reduce((sum: number, acc: any) => sum + (acc?.balance || 0), 0)
+    : 0
+
+  const incomes = incomeData?.data || []
+  const expenses = expensesData?.data || []
+  const totalIncome = incomes.reduce((sum: number, i: any) => sum + (i?.amount || 0), 0)
+  const totalExpenses = expenses.reduce((sum: number, e: any) => sum + (e?.amount || 0), 0)
+  const savings = Math.max(totalIncome - totalExpenses, 0)
+
+  const debts = debtsData?.data || []
+  const pendingDebts = debts.filter((d: any) => d?.status === 'pending')
+  const pendingDebtsAmount = pendingDebts.reduce((sum: number, d: any) => sum + (d?.amount || 0), 0)
+
+  const creditCards = creditCardsData?.data || []
+
   const stats = [
     {
       title: 'Saldo Total',
-      value: '15,420 Mt',
-      change: '+12.5%',
-      changeType: 'positive' as const,
+      value: `${totalBalance.toLocaleString()} Mt`,
       icon: <DollarSign className="w-5 h-5" />,
       color: COLORS.green[600],
     },
     {
-      title: 'Poupança',
-      value: '8,750 Mt',
-      change: '+8.2%',
-      changeType: 'positive' as const,
+      title: 'Poupança (estimada)',
+      value: `${savings.toLocaleString()} Mt`,
       icon: <PiggyBank className="w-5 h-5" />,
       color: COLORS.blue[600],
     },
     {
-      title: 'Cartão de Crédito',
-      value: '2,180 Mt',
-      change: '-5.1%',
-      changeType: 'negative' as const,
+      title: 'Cartões de Crédito',
+      value: `${Array.isArray(creditCards) ? creditCards.length : 0}`,
       icon: <CreditCard className="w-5 h-5" />,
       color: COLORS.yellow[600],
     },
     {
       title: 'Dívidas Pendentes',
-      value: '1,200 Mt',
-      change: '-15.3%',
-      changeType: 'positive' as const,
+      value: `${pendingDebtsAmount.toLocaleString()} Mt`,
       icon: <AlertTriangle className="w-5 h-5" />,
       color: COLORS.black[600],
     },

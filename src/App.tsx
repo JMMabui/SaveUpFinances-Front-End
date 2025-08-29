@@ -13,6 +13,7 @@ import { IncomeSourceManagement } from './pages/Income Source/IncomeSourceManage
 import { InvestmentTracking } from './pages/Investiment/InvestmentTracking'
 import { ReportsDashboard } from './pages/Report/ReportsDashboard'
 import { DebtManagement } from './pages/Debt/DebtManagement'
+import { AccountsPage } from './pages/Accounts/AccountsPage'
 
 function AppRoutes() {
 
@@ -63,6 +64,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <IncomeSourceManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accounts"
+        element={
+          <ProtectedRoute>
+            <AccountsPage />
           </ProtectedRoute>
         }
       />

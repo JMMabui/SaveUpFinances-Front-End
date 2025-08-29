@@ -1,28 +1,40 @@
 import type React from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button } from '../../components/Button'
 import { Card } from '@/components/ui/card'
 import { Header } from '@/components/Header'
+import { useGetIncomeSourcesByUser, useCreateIncomeSource, useUpdateIncomeSource, useDeleteIncomeSource } from '@/HTTP/income-sources'
+import { useGetIncomeByUser } from '@/HTTP/income'
+import { COLORS } from '@/constants/colors'
 
 interface IncomeSource {
-  id: number
+  id: string
   name: string
-  transactions: Transaction[]
+  frequency?: string
+  startDate?: string
+  endDate?: string | null
+  userId?: string
 }
 
 interface Transaction {
-  id: number
+  id: string
   amount: number
   date: string
   description: string
+  sourceId: string
 }
 
 export function IncomeSourceManagement() {
-  const [incomeSources, setIncomeSources] = useState<IncomeSource[]>([])
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+
+  const { data: sourcesQuery } = useGetIncomeSourcesByUser(userId)
+  const { data: incomesQuery } = useGetIncomeByUser(userId)
+
+  const sources: IncomeSource[] = sourcesQuery?.data || []
+  const incomes: Transaction[] = incomesQuery?.data || []
+
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedSource, setSelectedSource] = useState<IncomeSource | null>(
-    null
-  )
+  const [selectedSource, setSelectedSource] = useState<IncomeSource | null>(null)
 
   const handleAddSource = () => {
     setSelectedSource(null)
@@ -34,49 +46,44 @@ export function IncomeSourceManagement() {
     setIsModalOpen(true)
   }
 
-  const calculateTotalIncome = (transactions: Transaction[]) => {
-    return transactions.reduce(
-      (total, transaction) => total + transaction.amount,
-      0
-    )
+  const deleteSource = useDeleteIncomeSource()
+
+  const calculateTotalIncome = (sourceId: string) => {
+    return incomes.filter(t => t.sourceId === sourceId).reduce((total, t) => total + (t.amount || 0), 0)
   }
 
-  const calculateMonthlyIncome = (transactions: Transaction[]) => {
-    const currentMonth = new Date().getMonth()
-    const currentYear = new Date().getFullYear()
-
-    return transactions
-      .filter(transaction => {
-        const date = new Date(transaction.date)
-        return (
-          date.getMonth() === currentMonth && date.getFullYear() === currentYear
-        )
+  const calculateMonthlyIncome = (sourceId: string) => {
+    const now = new Date()
+    const month = now.getMonth()
+    const year = now.getFullYear()
+    return incomes
+      .filter(t => {
+        const d = new Date(t.date)
+        return t.sourceId === sourceId && d.getMonth() === month && d.getFullYear() === year
       })
-      .reduce((total, transaction) => total + transaction.amount, 0)
+      .reduce((total, t) => total + (t.amount || 0), 0)
   }
 
   return (
     <div className="p-4">
       <Header />
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Fontes de Renda</h2>
+        <h2 className="text-2xl font-bold" style={{ color: COLORS.black[800] }}>Fontes de Renda</h2>
         <Button onClick={handleAddSource}>Nova Fonte</Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {incomeSources.map(source => (
-          <Card key={source.id} className="p-4">
+        {sources.map(source => (
+          <Card key={source.id} className="p-4 border" style={{ borderColor: COLORS.blue[100] }}>
             <div className="space-y-4">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-semibold">{source.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    Total: R${' '}
-                    {calculateTotalIncome(source.transactions).toFixed(2)}
+                  <h3 className="font-semibold" style={{ color: COLORS.black[800] }}>{source.name}</h3>
+                  <p className="text-sm" style={{ color: COLORS.black[600] }}>
+                    Total: {calculateTotalIncome(source.id).toLocaleString()} Mt
                   </p>
-                  <p className="text-sm text-gray-600">
-                    Este mês: R${' '}
-                    {calculateMonthlyIncome(source.transactions).toFixed(2)}
+                  <p className="text-sm" style={{ color: COLORS.black[600] }}>
+                    Este mês: {calculateMonthlyIncome(source.id).toLocaleString()} Mt
                   </p>
                 </div>
                 <Button
@@ -88,26 +95,28 @@ export function IncomeSourceManagement() {
               </div>
 
               <div>
-                <h4 className="font-medium mb-2">Últimas Transações</h4>
+                <h4 className="font-medium mb-2" style={{ color: COLORS.black[700] }}>Últimas Transações</h4>
                 <div className="space-y-2">
-                  {source.transactions.slice(0, 3).map(transaction => (
-                    <div
-                      key={transaction.id}
-                      className="flex justify-between items-center p-2 bg-gray-50 rounded"
-                    >
-                      <div>
-                        <p className="font-medium">{transaction.description}</p>
-                        <p className="text-sm text-gray-600">
-                          {new Date(transaction.date).toLocaleDateString(
-                            'pt-BR'
-                          )}
-                        </p>
+                  {incomes
+                    .filter(t => t.sourceId === source.id)
+                    .slice(0, 3)
+                    .map(transaction => (
+                      <div
+                        key={transaction.id}
+                        className="flex justify-between items-center p-2 rounded"
+                        style={{ backgroundColor: COLORS.black[50] }}
+                      >
+                        <div>
+                          <p className="font-medium" style={{ color: COLORS.black[800] }}>{transaction.description}</p>
+                          <p className="text-sm" style={{ color: COLORS.black[600] }}>
+                            {new Date(transaction.date).toLocaleDateString('pt-BR')}
+                          </p>
+                        </div>
+                        <span className="font-medium" style={{ color: COLORS.green[700] }}>
+                          {transaction.amount.toLocaleString()} Mt
+                        </span>
                       </div>
-                      <span className="font-medium">
-                        R$ {transaction.amount.toFixed(2)}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             </div>
@@ -119,13 +128,6 @@ export function IncomeSourceManagement() {
         <IncomeSourceModal
           source={selectedSource}
           onClose={() => setIsModalOpen(false)}
-          onSave={source => {
-            // Handle save logic here
-            source.id
-            source.name
-            source.transactions
-            setIsModalOpen(false)
-          }}
         />
       )}
     </div>
@@ -135,13 +137,11 @@ export function IncomeSourceManagement() {
 interface IncomeSourceModalProps {
   source: IncomeSource | null
   onClose: () => void
-  onSave: (source: Partial<IncomeSource>) => void
 }
 
 const IncomeSourceModal: React.FC<IncomeSourceModalProps> = ({
   source,
   onClose,
-  onSave,
 }) => {
   const [formData, setFormData] = useState<Partial<IncomeSource>>(
     source || {
@@ -149,27 +149,37 @@ const IncomeSourceModal: React.FC<IncomeSourceModalProps> = ({
     }
   )
 
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const createSource = useCreateIncomeSource()
+  const updateSource = useUpdateIncomeSource(source?.id || '')
+  const deleteSource = useDeleteIncomeSource()
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4">
+        <h3 className="text-xl font-bold mb-4" style={{ color: COLORS.black[800] }}>
           {source ? 'Editar Fonte de Renda' : 'Nova Fonte de Renda'}
         </h3>
 
         <form
           onSubmit={e => {
             e.preventDefault()
-            onSave(formData)
+            if (source) {
+              updateSource.mutate({ name: formData.name! })
+            } else {
+              createSource.mutate({ name: formData.name!, userId } as any)
+            }
+            onClose()
           }}
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Nome da Fonte
               </label>
               <input
                 type="text"
-                value={formData.name}
+                value={formData.name || ''}
                 onChange={e =>
                   setFormData({ ...formData, name: e.target.value })
                 }
@@ -180,7 +190,10 @@ const IncomeSourceModal: React.FC<IncomeSourceModalProps> = ({
           </div>
 
           <div className="flex justify-end gap-2 mt-6">
-            <Button variant="outline" onClick={onClose}>
+            {source && (
+              <Button variant="danger" type="button" onClick={() => { deleteSource.mutate(source.id); onClose() }}>Excluir</Button>
+            )}
+            <Button variant="outline" onClick={onClose} type="button">
               Cancelar
             </Button>
             <Button type="submit">Salvar</Button>

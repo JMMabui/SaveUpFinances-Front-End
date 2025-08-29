@@ -106,6 +106,9 @@ export function Header() {
                 <NavigationMenuLink href="/credit-cards" className="flex items-center gap-2 hover:text-green-600 transition-colors">
                   <FiCreditCard /> Cartões de Crédito
                 </NavigationMenuLink>
+                <NavigationMenuLink href="/accounts" className="flex items-center gap-2 hover:text-green-600 transition-colors">
+                  <FiList /> Contas
+                </NavigationMenuLink>
                 <NavigationMenuLink href="/debts" className="flex items-center gap-2 hover:text-red-500 transition-colors">
                   <FiAlertCircle /> Dívidas
                 </NavigationMenuLink>
