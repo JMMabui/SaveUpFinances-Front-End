@@ -1,3 +1,8 @@
+import { accountBalanceResponse } from "./account-balance.type";
+import { accountSourceResponse } from "./account-source.type";
+import { bankResponde } from "./banks.type";
+import { debtPaymentsResponse } from "./debts-payments.type";
+import { TransactionResponse } from "./transactions.type";
 
 enum AccountType {
     CURRENT = 'current',
@@ -22,7 +27,7 @@ enum Currency {
   CAD = 'CAD',
 }
 
-interface account {
+export interface account {
     accountType: AccountType;
     accountName: string;
     accountHolderName: string;
@@ -35,10 +40,17 @@ interface account {
     isDefault: boolean;
     isJoint: boolean;
     createdAt: Date;
+    updatedAt: Date;
 }
 
-export interface accountResponse {
-   accounts: account[];
+export interface accountsResponse {
+   accounts: ({
+    bank: bankResponde[] ,
+    AccountBalance: accountBalanceResponse [],
+    AccountSource: accountSourceResponse[],
+    transactions: TransactionResponse[],
+    DebtPayment: debtPaymentsResponse[],  
+   }& account[]);
    totalAmount: number;
 }
 
@@ -70,5 +82,4 @@ export interface accountRequest {
     isDefault?: boolean;
     isJoint?: boolean;
 }
-
 

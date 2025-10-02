@@ -18,6 +18,7 @@ interface Investment {
 export function InvestmentTracking() {
   const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const { data } = useGetInvestmentsByUser(userId)
+  console.log("dados de useGetInvestmentsByUser: ", data)
   const investments: Investment[] = data?.data || []
 
   const totalInvested = useMemo(() => investments.reduce((sum, i) => sum + (i.amount || 0), 0), [investments])

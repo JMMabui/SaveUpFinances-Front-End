@@ -1,9 +1,7 @@
 import  { useState } from 'react';
-import { Debt } from '../../types/Debt';
 import { DebtList } from './DebtList';
 import { DebtForm } from './DebtForm';
 import { DebtPaymentForm } from './DebtPaymentForm';
-import { TopNavigation } from '../../components/TopNavigation';
 import { Header } from '@/components/Header';
 import { useGetDebtsByUser, useCreateDebt, useUpdateDebt } from '@/HTTP/debts';
 import { useCreateDebtPayment } from '@/HTTP/debts-payments';

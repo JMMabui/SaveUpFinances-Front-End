@@ -16,3 +16,13 @@ export interface budgetRequest {
     categoryId: string;
     limit: number;
 }
+
+export interface budgetUpdateRequest {
+    id?: string;
+    userId?: string
+    month?: number;
+    year?: number;
+    categoryId?: string;
+    limit?: number;
+    updatedAt?: Date;
+}

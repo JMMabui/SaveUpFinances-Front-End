@@ -1,10 +1,11 @@
 import type React from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from '../../components/Button'
 import { Card } from '@/components/ui/card'
 import { Header } from '@/components/Header'
 import { useGetCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from '@/HTTP/categories'
 import { COLORS } from '@/constants/colors'
+import { useForm } from 'react-hook-form'
 
 interface Category {
   id: string
@@ -14,6 +15,12 @@ interface Category {
   color: string | null
   parentId?: string | null
   order?: number
+}
+
+interface CategoryModalProps {
+  category: Category | null
+  categories: Category[]
+  onClose: () => void
 }
 
 const COMMON_ICONS = ['💰', '🏠', '🍽️', '🚗', '🛒', '🏥', '🎮', '✈️', '📚', '🎁', '💼', '🎯']
@@ -149,31 +156,60 @@ export function CategoryManagement() {
   )
 }
 
-interface CategoryModalProps {
-  category: Category | null
-  categories: Category[]
-  onClose: () => void
-}
 
-const CategoryModal: React.FC<CategoryModalProps> = ({
+
+export const CategoryModal: React.FC<CategoryModalProps> = ({
   category,
   categories,
   onClose,
 }) => {
-  const [formData, setFormData] = useState<Partial<Category>>(
-    category || {
+  const { register, handleSubmit, reset } = useForm<Category>({
+    defaultValues: {
       categoryName: '',
       categoryType: 'expense',
       icon: '',
       color: '#000000',
       parentId: undefined,
-    }
-  )
+    },
+  })
 
   const mainCategories = categories.filter(c => !c.parentId)
 
   const createCategory = useCreateCategory()
   const updateCategory = useUpdateCategory(category?.id || '')
+
+  // Atualiza valores ao abrir modal
+  useEffect(() => {
+    if (category) {
+      reset(category)
+    } else {
+      reset({
+        categoryName: '',
+        categoryType: 'expense',
+        icon: '',
+        color: '#000000',
+        parentId: undefined,
+      })
+    }
+  }, [category, reset])
+
+  const onSubmit = (data: Category) => {
+    if (category) {
+      updateCategory.mutate({
+        ...data,
+        id: category.id,
+        icon: data.icon || null,
+        color: data.color || null,
+      } as any)
+    } else {
+      createCategory.mutate({
+        ...data,
+        icon: data.icon || null,
+        color: data.color || null,
+      } as any)
+    }
+    onClose()
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -182,53 +218,26 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           {category ? 'Editar Categoria' : 'Nova Categoria'}
         </h3>
 
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            if (category) {
-              updateCategory.mutate({
-                categoryName: formData.categoryName!,
-                categoryType: formData.categoryType!,
-                icon: formData.icon || null,
-                color: formData.color || null,
-              } as any)
-            } else {
-              createCategory.mutate({
-                categoryName: formData.categoryName!,
-                categoryType: formData.categoryType!,
-                icon: formData.icon || null,
-                color: formData.color || null,
-              } as any)
-            }
-            onClose()
-          }}
-        >
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
+            {/* Nome */}
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Nome da Categoria
               </label>
               <input
                 type="text"
-                value={formData.categoryName || ''}
-                onChange={e =>
-                  setFormData({ ...formData, categoryName: e.target.value })
-                }
+                {...register('categoryName', { required: true })}
                 className="w-full p-2 border rounded"
-                required
+                placeholder="Ex: Alimentação"
               />
             </div>
 
+            {/* Tipo */}
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>Tipo</label>
               <select
-                value={formData.categoryType}
-                onChange={e =>
-                  setFormData({
-                    ...formData,
-                    categoryType: e.target.value as Category['categoryType'],
-                  })
-                }
+                {...register('categoryType', { required: true })}
                 className="w-full p-2 border rounded"
               >
                 <option value="income">Receita</option>
@@ -237,18 +246,13 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
               </select>
             </div>
 
+            {/* Categoria Pai */}
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Categoria Pai
               </label>
               <select
-                value={formData.parentId || ''}
-                onChange={e =>
-                  setFormData({
-                    ...formData,
-                    parentId: e.target.value || undefined,
-                  })
-                }
+                {...register('parentId')}
                 className="w-full p-2 border rounded"
               >
                 <option value="">Nenhuma (Categoria Principal)</option>
@@ -260,35 +264,32 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
               </select>
             </div>
 
+            {/* Ícone */}
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Ícone
               </label>
-              <div className="relative">
-                <button
-                  type="button"
-                  className="w-full p-2 border rounded flex items-center justify-between"
-                >
-                  <span className="text-2xl">{formData.icon || 'Selecione um ícone'}</span>
-                </button>
-              </div>
+              <input
+                type="text"
+                {...register('icon')}
+                className="w-full p-2 border rounded"
+                placeholder="Ex: 🍔"
+              />
             </div>
 
+            {/* Cor */}
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>Cor</label>
               <input
                 type="color"
-                value={(formData.color as string) || '#000000'}
-                onChange={e =>
-                  setFormData({ ...formData, color: e.target.value })
-                }
+                {...register('color')}
                 className="w-full p-2 border rounded"
               />
             </div>
           </div>
 
           <div className="flex justify-end gap-2 mt-6">
-            <Button variant="secondary" onClick={onClose}>
+            <Button variant="secondary" type="button" onClick={onClose}>
               Cancelar
             </Button>
             <Button type="submit">Salvar</Button>
@@ -297,4 +298,4 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
       </div>
     </div>
   )
-} 
+}

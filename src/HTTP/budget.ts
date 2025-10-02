@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiService } from "../lib/apiServices";
-import type { budgetRequest, budgetResponse } from "./Type/budget.type";
+import type { budgetRequest, budgetResponse, budgetUpdateRequest } from "./Type/budget.type";
 
 const BASE = "/budget" as const;
 
@@ -35,7 +35,7 @@ export function useUpdateBudget(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["budget", "update", id],
-    mutationFn: async (data: Partial<budgetRequest>) => apiService.put<budgetResponse>(`${BASE}/${id}`, data),
+    mutationFn: async (data: budgetUpdateRequest) => apiService.put<budgetResponse>(`${BASE}/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["budget"] });
       queryClient.invalidateQueries({ queryKey: ["budget", "by-id", id] });

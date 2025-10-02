@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import { Button } from '../../components/Button'
 import { Card } from '@/components/ui/card'
 import { Header } from '@/components/Header'
@@ -33,27 +34,44 @@ export function BudgetManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedBudget, setSelectedBudget] = useState<BudgetFormState | null>(null)
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-MZ', {
+  const { register, handleSubmit, reset } = useForm<BudgetFormState>({
+    defaultValues: {
+      categoryId: '',
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
+      limit: 0,
+    }
+  })
+
+  // Quando abrir o modal, atualiza os valores
+  useEffect(() => {
+    if (selectedBudget) {
+      reset(selectedBudget)
+    } else {
+      reset({
+        categoryId: '',
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+        limit: 0,
+      })
+    }
+  }, [selectedBudget, reset])
+
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('pt-MZ', {
       style: 'currency',
       currency: 'MZN',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value)
-  }
 
-  const calculateCategoryExpenses = (categoryId: string, month: number, year: number) => {
-    return expenses
+  const calculateCategoryExpenses = (categoryId: string, month: number, year: number) =>
+    expenses
       .filter((t: any) => {
         const d = new Date(t.date)
-        return (
-          t.categoryId === categoryId &&
-          d.getMonth() + 1 === month &&
-          d.getFullYear() === year
-        )
+        return t.categoryId === categoryId && d.getMonth() + 1 === month && d.getFullYear() === year
       })
       .reduce((sum: number, t: any) => sum + (t.amount || 0), 0)
-  }
 
   const getProgressColor = (spent: number, limit: number) => {
     const percentage = limit ? (spent / limit) * 100 : 0
@@ -62,22 +80,29 @@ export function BudgetManagement() {
     return COLORS.green[600]
   }
 
+  const onSubmit = (data: BudgetFormState) => {
+    console.log("dados do budget", data)
+    if (selectedBudget?.id) {
+      updateBudget.mutate({ ...data, id: selectedBudget.id })
+    } else {
+      createBudget.mutate({ ...data, userId })
+    }
+    setIsModalOpen(false)
+    setSelectedBudget(null)
+  }
+
   return (
     <div className="space-y-6">
       <Header />
 
+      {/* Título + botão novo */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold" style={{ color: COLORS.black[800] }}>
           Orçamentos
         </h2>
         <Button
           onClick={() => {
-            setSelectedBudget({
-              categoryId: '',
-              month: new Date().getMonth() + 1,
-              year: new Date().getFullYear(),
-              limit: 0,
-            })
+            setSelectedBudget(null)
             setIsModalOpen(true)
           }}
           className="flex items-center gap-2"
@@ -86,6 +111,7 @@ export function BudgetManagement() {
         </Button>
       </div>
 
+      {/* Grid de orçamentos */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {budgets.map((budget: any) => {
           const category = categories.find((c: any) => c.id === budget.categoryId)
@@ -109,13 +135,7 @@ export function BudgetManagement() {
                       variant="secondary"
                       size="sm"
                       onClick={() => {
-                        setSelectedBudget({
-                          id: budget.id,
-                          categoryId: budget.categoryId,
-                          month: budget.month,
-                          year: budget.year,
-                          limit: budget.limit,
-                        })
+                        setSelectedBudget(budget)
                         setIsModalOpen(true)
                       }}
                     >
@@ -131,33 +151,29 @@ export function BudgetManagement() {
                   </div>
                 </div>
 
+                {/* Infos */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span style={{ color: COLORS.black[500] }}>
-                      Limite:
-                    </span>
+                    <span style={{ color: COLORS.black[500] }}>Limite:</span>
                     <span className="font-medium" style={{ color: COLORS.black[800] }}>
                       {formatCurrency(budget.limit)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span style={{ color: COLORS.black[500] }}>
-                      Gasto:
-                    </span>
+                    <span style={{ color: COLORS.black[500] }}>Gasto:</span>
                     <span className="font-medium" style={{ color: COLORS.yellow[700] }}>
                       {formatCurrency(spent)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span style={{ color: COLORS.black[500] }}>
-                      Restante:
-                    </span>
+                    <span style={{ color: COLORS.black[500] }}>Restante:</span>
                     <span className="font-medium" style={{ color: COLORS.green[700] }}>
                       {formatCurrency(budget.limit - spent)}
                     </span>
                   </div>
                 </div>
 
+                {/* Barra de progresso */}
                 <div className="mt-4">
                   <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: COLORS.black[200] }}>
                     <div
@@ -175,107 +191,68 @@ export function BudgetManagement() {
         })}
       </div>
 
+      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4" style={{ color: COLORS.black[800] }}>
               {selectedBudget?.id ? 'Editar Orçamento' : 'Novo Orçamento'}
             </h3>
-            <form
-              onSubmit={e => {
-                e.preventDefault()
-                if (!selectedBudget) return
-                if (selectedBudget.id) {
-                  updateBudget.mutate({
-                    ...(selectedBudget as any),
-                  })
-                } else {
-                  createBudget.mutate({
-                    userId,
-                    categoryId: selectedBudget.categoryId,
-                    month: selectedBudget.month,
-                    year: selectedBudget.year,
-                    limit: selectedBudget.limit,
-                  } as any)
-                }
-                setIsModalOpen(false)
-                setSelectedBudget(null)
-              }}
-            >
-              <div className="">
-                <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
-                  Categoria
-                </label>
-                <select
-                  className="w-full p-2 border rounded"
-                  value={selectedBudget?.categoryId || ''}
-                  onChange={e => {
-                    setSelectedBudget(prev => prev ? { ...prev, categoryId: e.target.value } : prev)
-                  }}
-                >
-                  <option value="">Selecione uma categoria</option>
-                  {categories.map((category: any) => (
-                    <option key={category.id} value={category.id}>
-                      {category.categoryName}
-                    </option>
-                  ))}
-                </select>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
+                Categoria
+              </label>
+              <select
+                className="w-full p-2 border rounded"
+                {...register('categoryId', { required: true })}
+              >
+                <option value="">Selecione uma categoria</option>
+                {categories.map((category: any) => (
+                  <option key={category.id} value={category.id}>
+                    {category.categoryName}
+                  </option>
+                ))}
+              </select>
 
-                <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
-                  Mês
-                </label>
+              <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
+                Mês
+              </label>
+              <select
+                className="w-full p-2 border rounded"
+                {...register('month', { required: true, valueAsNumber: true })}
+              >
+                <option value="">Selecione um mês</option>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i} value={i + 1}>
+                    {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                  </option>
+                ))}
+              </select>
 
-                <select
-                  className="w-full p-2 border rounded"
-                  value={selectedBudget?.month || ''}
-                  onChange={e => {
-                    const val = Number(e.target.value)
-                    setSelectedBudget(prev => prev ? { ...prev, month: val } : prev)
-                  }}
-                >
-                  <option value="">Selecione um mês</option>
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <option key={i} value={i + 1}>
-                      {new Date(0, i).toLocaleString('default', {
-                        month: 'long',
-                      })}
-                    </option>
-                  ))}
-                </select>
+              <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
+                Ano
+              </label>
+              <select
+                className="w-full p-2 border rounded"
+                {...register('year', { required: true, valueAsNumber: true })}
+              >
+                <option value="">Selecione um ano</option>
+                {Array.from({ length: 11 }, (_, i) => (
+                  <option key={i} value={2020 + i}>
+                    {2020 + i}
+                  </option>
+                ))}
+              </select>
 
-                <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
-                  Ano
-                </label>
-                <select
-                  className="w-full p-2 border rounded"
-                  value={selectedBudget?.year || ''}
-                  onChange={e => {
-                    const val = Number(e.target.value)
-                    setSelectedBudget(prev => prev ? { ...prev, year: val } : prev)
-                  }}
-                >
-                  <option value="">Selecione um ano</option>
-                  {Array.from({ length: 11 }, (_, i) => (
-                    <option key={i} value={2020 + i}>
-                      {2020 + i}
-                    </option>
-                  ))}
-                </select>
-                <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
-                  Limite
-                </label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded"
-                  value={selectedBudget?.limit ?? ''}
-                  onChange={e => {
-                    const val = Number(e.target.value)
-                    setSelectedBudget(prev => prev ? { ...prev, limit: val } : prev)
-                  }}
-                  placeholder="Defina o limite do orçamento"
-                  required
-                />
-              </div>
+              <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
+                Limite
+              </label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded"
+                placeholder="Defina o limite do orçamento"
+                {...register('limit', { required: true, valueAsNumber: true })}
+              />
 
               <div className="mt-6 flex justify-end">
                 <Button
@@ -288,10 +265,7 @@ export function BudgetManagement() {
                 >
                   Cancelar
                 </Button>
-                <Button
-                  type="submit"
-                  className="ml-2"
-                >
+                <Button type="submit" className="ml-2">
                   {selectedBudget?.id ? 'Salvar' : 'Criar Orçamento'}
                 </Button>
               </div>
