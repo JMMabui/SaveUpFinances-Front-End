@@ -4,20 +4,77 @@ import type { ApiResponse } from '../HTTP/Type/response.type';
 import type { AuthResponse, getAuthRequest } from '../HTTP/Type/authType';
 import type { userResponse } from '../HTTP/Type/user.type';
 import type { accountResponse } from '../HTTP/Type/account.type';
+import type { accountBalanceResponse } from '../HTTP/Type/account-balance.type';
+import type { accountSourceResponse } from '../HTTP/Type/account-source.type';
+import type { bankResponde } from '../HTTP/Type/banks.type';
+import type { budgetResponse } from '../HTTP/Type/budget.type';
+import type { categoriesResponse } from '../HTTP/Type/categories.type';
+import type { creditCardResponse } from '../HTTP/Type/credit-card.type';
+import type { debtPaymentsResponse } from '../HTTP/Type/debts-payments.type';
+import type { debtsResponse } from '../HTTP/Type/debts.type';
+import type { expensesResponse } from '../HTTP/Type/expenses.type';
+import type { incomeSourcesResponse } from '../HTTP/Type/income-sources.type';
+import type { incomeResponse } from '../HTTP/Type/income.type';
+import type { investmentGoalResponse } from '../HTTP/Type/investment-goal.type';
+import type { investmentResponse } from '../HTTP/Type/investment.type';
+import type { TransactionResponse } from '../HTTP/Type/transactions.type';
+import type { TransactionAttachmentResponse } from '../HTTP/Type/transactions-attachment.type';
 
 // Auth Services
 export const authService = {
   login: async (data: getAuthRequest): Promise<ApiResponse<AuthResponse>> => {
-    return apiClient.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, data);
+    const response = await apiClient.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, data);
+    
+    // Armazenar token e refreshToken
+    if (response.data && response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      
+      if (response.data.refreshToken) {
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+      }
+      
+      if (response.data.user && response.data.user.id) {
+        localStorage.setItem('userId', response.data.user.id);
+      }
+    }
+    
+    return response;
   },
 
   logout: async (): Promise<void> => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    try {
+      // Tenta fazer logout no servidor
+      const token = localStorage.getItem('token');
+      if (token) {
+        await apiClient.post<ApiResponse<void>>(API_ENDPOINTS.AUTH.LOGOUT);
+      }
+    } catch (error) {
+      console.error('Erro ao fazer logout no servidor:', error);
+    } finally {
+      // Limpa dados locais independente do resultado do logout no servidor
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('userId');
+    }
   },
 
   refreshToken: async (): Promise<ApiResponse<AuthResponse>> => {
-    return apiClient.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.REFRESH);
+    const refreshToken = localStorage.getItem('refreshToken');
+    const response = await apiClient.post<ApiResponse<AuthResponse>>(
+      API_ENDPOINTS.AUTH.REFRESH, 
+      { refreshToken }
+    );
+    
+    // Atualizar token
+    if (response.data && response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      
+      if (response.data.refreshToken) {
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+      }
+    }
+    
+    return response;
   },
 
   register: async (data: any): Promise<ApiResponse<AuthResponse>> => {
@@ -30,6 +87,17 @@ export const authService = {
 
   resetPassword: async (token: string, password: string): Promise<ApiResponse<void>> => {
     return apiClient.post<ApiResponse<void>>(API_ENDPOINTS.AUTH.RESET_PASSWORD, { token, password });
+  },
+  
+  changePassword: async (oldPassword: string, newPassword: string): Promise<ApiResponse<void>> => {
+    return apiClient.post<ApiResponse<void>>(API_ENDPOINTS.USERS.CHANGE_PASSWORD, { 
+      oldPassword, 
+      newPassword 
+    });
+  },
+  
+  getCurrentUser: async (): Promise<ApiResponse<userResponse>> => {
+    return apiClient.get<ApiResponse<userResponse>>(API_ENDPOINTS.USERS.PROFILE);
   },
 };
 
@@ -91,6 +159,156 @@ export const accountService = {
 
   delete: async (id: string): Promise<ApiResponse<void>> => {
     return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.ACCOUNTS.DELETE(id));
+  },
+};
+
+// Account Balance Services
+export const accountBalanceService = {
+  getAll: async (): Promise<ApiResponse<accountBalanceResponse[]>> => {
+    return apiClient.get<ApiResponse<accountBalanceResponse[]>>(API_ENDPOINTS.ACCOUNTS_BALANCE.BASE);
+  },
+
+  getById: async (id: string): Promise<ApiResponse<accountBalanceResponse>> => {
+    return apiClient.get<ApiResponse<accountBalanceResponse>>(API_ENDPOINTS.ACCOUNTS_BALANCE.BY_ID(id));
+  },
+
+  getByAccountId: async (accountId: string): Promise<ApiResponse<accountBalanceResponse[]>> => {
+    return apiClient.get<ApiResponse<accountBalanceResponse[]>>(API_ENDPOINTS.ACCOUNTS_BALANCE.BY_ACCOUNT_ID(accountId));
+  },
+
+  create: async (data: Partial<accountBalanceResponse>): Promise<ApiResponse<accountBalanceResponse>> => {
+    return apiClient.post<ApiResponse<accountBalanceResponse>>(API_ENDPOINTS.ACCOUNTS_BALANCE.CREATE, data);
+  },
+
+  update: async (id: string, data: Partial<accountBalanceResponse>): Promise<ApiResponse<accountBalanceResponse>> => {
+    return apiClient.put<ApiResponse<accountBalanceResponse>>(API_ENDPOINTS.ACCOUNTS_BALANCE.UPDATE(id), data);
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.ACCOUNTS_BALANCE.DELETE(id));
+  },
+};
+
+// Account Source Services
+export const accountSourceService = {
+  getAll: async (): Promise<ApiResponse<accountSourceResponse[]>> => {
+    return apiClient.get<ApiResponse<accountSourceResponse[]>>(API_ENDPOINTS.ACCOUNTS_SOURCE.BASE);
+  },
+
+  getById: async (id: string): Promise<ApiResponse<accountSourceResponse>> => {
+    return apiClient.get<ApiResponse<accountSourceResponse>>(API_ENDPOINTS.ACCOUNTS_SOURCE.BY_ID(id));
+  },
+
+  getByAccountId: async (accountId: string): Promise<ApiResponse<accountSourceResponse[]>> => {
+    return apiClient.get<ApiResponse<accountSourceResponse[]>>(API_ENDPOINTS.ACCOUNTS_SOURCE.BY_ACCOUNT_ID(accountId));
+  },
+
+  create: async (data: Partial<accountSourceResponse>): Promise<ApiResponse<accountSourceResponse>> => {
+    return apiClient.post<ApiResponse<accountSourceResponse>>(API_ENDPOINTS.ACCOUNTS_SOURCE.CREATE, data);
+  },
+
+  update: async (id: string, data: Partial<accountSourceResponse>): Promise<ApiResponse<accountSourceResponse>> => {
+    return apiClient.put<ApiResponse<accountSourceResponse>>(API_ENDPOINTS.ACCOUNTS_SOURCE.UPDATE(id), data);
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.ACCOUNTS_SOURCE.DELETE(id));
+  },
+};
+
+// Credit Card Services
+export const creditCardService = {
+  getAll: async (): Promise<ApiResponse<creditCardResponse[]>> => {
+    return apiClient.get<ApiResponse<creditCardResponse[]>>(API_ENDPOINTS.CREDIT_CARDS.BASE);
+  },
+
+  getById: async (id: string): Promise<ApiResponse<creditCardResponse>> => {
+    return apiClient.get<ApiResponse<creditCardResponse>>(API_ENDPOINTS.CREDIT_CARDS.BY_ID(id));
+  },
+
+  create: async (data: Partial<creditCardResponse>): Promise<ApiResponse<creditCardResponse>> => {
+    return apiClient.post<ApiResponse<creditCardResponse>>(API_ENDPOINTS.CREDIT_CARDS.CREATE, data);
+  },
+
+  update: async (id: string, data: Partial<creditCardResponse>): Promise<ApiResponse<creditCardResponse>> => {
+    return apiClient.put<ApiResponse<creditCardResponse>>(API_ENDPOINTS.CREDIT_CARDS.UPDATE(id), data);
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.CREDIT_CARDS.DELETE(id));
+  },
+};
+
+// Debts Services
+export const debtsService = {
+  getAll: async (): Promise<ApiResponse<debtsResponse[]>> => {
+    return apiClient.get<ApiResponse<debtsResponse[]>>(API_ENDPOINTS.DEBTS.BASE);
+  },
+
+  getById: async (id: string): Promise<ApiResponse<debtsResponse>> => {
+    return apiClient.get<ApiResponse<debtsResponse>>(API_ENDPOINTS.DEBTS.BY_ID(id));
+  },
+
+  create: async (data: Partial<debtsResponse>): Promise<ApiResponse<debtsResponse>> => {
+    return apiClient.post<ApiResponse<debtsResponse>>(API_ENDPOINTS.DEBTS.CREATE, data);
+  },
+
+  update: async (id: string, data: Partial<debtsResponse>): Promise<ApiResponse<debtsResponse>> => {
+    return apiClient.put<ApiResponse<debtsResponse>>(API_ENDPOINTS.DEBTS.UPDATE(id), data);
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.DEBTS.DELETE(id));
+  },
+};
+
+// Debt Payments Services
+export const debtPaymentsService = {
+  getAll: async (): Promise<ApiResponse<debtPaymentsResponse[]>> => {
+    return apiClient.get<ApiResponse<debtPaymentsResponse[]>>(API_ENDPOINTS.DEBT_Payments.BASE);
+  },
+
+  getById: async (id: string): Promise<ApiResponse<debtPaymentsResponse>> => {
+    return apiClient.get<ApiResponse<debtPaymentsResponse>>(API_ENDPOINTS.DEBT_Payments.BY_ID(id));
+  },
+
+  create: async (data: Partial<debtPaymentsResponse>): Promise<ApiResponse<debtPaymentsResponse>> => {
+    return apiClient.post<ApiResponse<debtPaymentsResponse>>(API_ENDPOINTS.DEBT_Payments.CREATE, data);
+  },
+
+  update: async (id: string, data: Partial<debtPaymentsResponse>): Promise<ApiResponse<debtPaymentsResponse>> => {
+    return apiClient.put<ApiResponse<debtPaymentsResponse>>(API_ENDPOINTS.DEBT_Payments.UPDATE(id), data);
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.DEBT_Payments.DELETE(id));
+  },
+};
+
+// Budget Services
+export const budgetService = {
+  getAll: async (): Promise<ApiResponse<budgetResponse[]>> => {
+    return apiClient.get<ApiResponse<budgetResponse[]>>(API_ENDPOINTS.BUDGET.BASE);
+  },
+
+  getById: async (id: string): Promise<ApiResponse<budgetResponse>> => {
+    return apiClient.get<ApiResponse<budgetResponse>>(API_ENDPOINTS.BUDGET.BY_ID(id));
+  },
+
+  getByUserId: async (userId: string): Promise<ApiResponse<budgetResponse[]>> => {
+    return apiClient.get<ApiResponse<budgetResponse[]>>(API_ENDPOINTS.BUDGET.BY_USER_ID(userId));
+  },
+
+  create: async (data: Partial<budgetResponse>): Promise<ApiResponse<budgetResponse>> => {
+    return apiClient.post<ApiResponse<budgetResponse>>(API_ENDPOINTS.BUDGET.CREATE, data);
+  },
+
+  update: async (id: string, data: Partial<budgetResponse>): Promise<ApiResponse<budgetResponse>> => {
+    return apiClient.put<ApiResponse<budgetResponse>>(API_ENDPOINTS.BUDGET.UPDATE(id), data);
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.BUDGET.DELETE(id));
   },
 };
 

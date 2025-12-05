@@ -1,9 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Dashboard } from './pages/dashboard'
 import { LoginPage } from './pages/LoginPage'
 import { CategoryManagement } from './pages/Category/CategoryManagement'
@@ -15,16 +10,21 @@ import { ReportsDashboard } from './pages/Report/ReportsDashboard'
 import { DebtManagement } from './pages/Debt/DebtManagement'
 import { AccountsPage } from './pages/Accounts/AccountsPage'
 import { RegisterPage } from './pages/register'
+import { AuthProvider } from './components/AuthProvider'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+// Criando uma instância do QueryClient
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function AppRoutes() {
-
-  const token = localStorage.getItem('token')
-
-  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    if (!token) return <Navigate to="/login" />
-    return <>{children}</>
-  }
-
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
@@ -85,7 +85,14 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="/debts" element={<ProtectedRoute> <DebtManagement/> </ProtectedRoute>}/>
+      <Route 
+        path="/debts" 
+        element={
+          <ProtectedRoute>
+            <DebtManagement/>
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/reports"
         element={
@@ -96,7 +103,7 @@ function AppRoutes() {
       />
       <Route
         path="*"
-        element={<Navigate to={token ? '/dashboard' : '/login'} />}
+        element={<Navigate to="/login" />}
       />
     </Routes>
   )
@@ -104,8 +111,12 @@ function AppRoutes() {
 
 export function App() {
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   )
 }

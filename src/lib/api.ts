@@ -18,6 +18,11 @@ export class ApiError extends Error {
   }
 }
 
+function getCookie(name: string): string | undefined {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? decodeURIComponent(match[2]) : undefined;
+}
+
 class ApiClient {
   private config: ApiConfig;
 
@@ -43,15 +48,17 @@ class ApiClient {
         ...this.config.headers,
         ...options.headers,
       },
+      // Inclui cookies HTTP-only
+      credentials: 'include',
     };
 
-    // Add authorization header if token exists
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
+    // Para métodos mutáveis, envia header CSRF
+    const method = (config.method || 'GET').toString().toUpperCase();
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+      const csrf = getCookie('csrf_token');
+      if (csrf) {
+        (config.headers as Record<string, string>)['X-CSRF-Token'] = csrf;
+      }
     }
 
     try {
@@ -65,13 +72,46 @@ class ApiClient {
 
       clearTimeout(timeoutId);
 
+      // Em 401, tenta refresh baseado em cookies e re-executa
+      if (response.status === 401) {
+        try {
+          const refreshResponse = await fetch(`${this.config.baseURL}/auth/refresh-token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+          });
+
+          if (refreshResponse.ok) {
+            // Reexecuta requisição original após refresh
+            return this.request<T>(endpoint, options);
+          }
+        } catch (_) {
+          // ignore
+        }
+        // Se falhar, direciona para login
+        window.location.href = '/login';
+        throw new ApiError('Session expired. Please login again.', 401);
+      }
+
       if (!response.ok) {
-        const errorData = await response.text();
-        throw new ApiError(
-          errorData || `HTTP error! status: ${response.status}`,
-          response.status,
-          errorData
-        );
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        let errorData: any = null;
+        
+        try {
+          // Try to parse error as JSON
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+          } else {
+            errorData = await response.text();
+          }
+        } catch (e) {
+          // If parsing fails, use text
+          errorData = await response.text();
+        }
+        
+        throw new ApiError(errorMessage, response.status, errorData);
       }
 
       // Handle empty responses
