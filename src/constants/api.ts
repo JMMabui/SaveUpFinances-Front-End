@@ -11,6 +11,7 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // Authentication
   AUTH: {
+    CSRF: '/auth/csrf-token',
     LOGIN: '/auth/login',
     LOGOUT: '/auth/logout',
     REFRESH: '/auth/refresh',
@@ -23,7 +24,7 @@ export const API_ENDPOINTS = {
   USERS: {
     BASE: '/users',
     BY_ID: (id: string) => `/users/${id}`,
-    PROFILE: '/users/profile',
+    PROFILE: (id: string) => `/users/${id}/profile`,
     UPDATE_PROFILE: '/users/profile',
     CHANGE_PASSWORD: '/users/change-password',
   },

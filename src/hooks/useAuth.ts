@@ -28,9 +28,16 @@ export function useAuth(): UseAuthReturn {
         setUser(null);
         return false;
       }
+
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        setIsAuthenticated(false);
+        setUser(null);
+        return false;
+      }
       
       // Buscar dados do usuário atual
-      const response = await authService.getCurrentUser();
+      const response = await authService.getCurrentUser(userId!);
       
       if (response && response.data) {
         setUser(response.data);
@@ -85,9 +92,21 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
-  // Verificar autenticação ao montar o componente
+  // Inicializar CSRF token e verificar autenticação ao montar o componente
   useEffect(() => {
-    checkAuth();
+    const initializeAuth = async () => {
+      try {
+        // Inicializar CSRF token
+        await authService.initializeCSRFToken();
+      } catch (error) {
+        console.error('Erro ao inicializar CSRF token:', error);
+      } finally {
+        // Verificar autenticação
+        await checkAuth();
+      }
+    };
+
+    initializeAuth();
   }, [checkAuth]);
 
   return {
@@ -98,4 +117,4 @@ export function useAuth(): UseAuthReturn {
     logout,
     checkAuth
   };
-}
+};

@@ -10,11 +10,28 @@ export function useLogin(redirectTo: string = '/dashboard') {
   return useMutation({
     mutationKey: ['auth', 'login'],
     mutationFn: (payload: getAuthRequest) => authService.login(payload),
-    onSuccess: (data) => {
-      localStorage.setItem('token', data.data.token)
-      localStorage.setItem('userId', data.data.user.id)
-      queryClient.invalidateQueries({ queryKey: ['profile'] })
-      navigate(redirectTo)
+    onSuccess: async (data) => {
+      // Salva token/usuario apenas se existirem na resposta
+      if (data?.data?.token) {
+        localStorage.setItem('token', data.data.token);
+      }
+
+      if (data?.data?.user?.id) {
+        localStorage.setItem('userId', data.data.user.id);
+      }
+
+      // Tenta obter o perfil do usuário para validar sessão (cookie/session-based servers)
+      try {
+        const userId = localStorage.getItem('userId');
+        await queryClient.fetchQuery({ queryKey: ['profile'], queryFn: () => authService.getCurrentUser(userId!) });
+      } catch (err) {
+        console.error('Falha ao buscar perfil após login:', err);
+        // Se não conseguiu obter o perfil, não navega para evitar redirecionamento ao login
+        return;
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      navigate(redirectTo);
     },
     onError: ()=>{
       alert("Invalid email or password")

@@ -7,6 +7,8 @@ export type getAuthRequest = {
 
 export type AuthResponse = {
   token: string;
+  refreshToken: string;
+  refreshTokenExpiresIn: number;
   user: userResponse;
 };
  

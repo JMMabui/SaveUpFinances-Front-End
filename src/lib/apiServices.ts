@@ -6,24 +6,46 @@ import type { userResponse } from '../HTTP/Type/user.type';
 import type { accountResponse } from '../HTTP/Type/account.type';
 import type { accountBalanceResponse } from '../HTTP/Type/account-balance.type';
 import type { accountSourceResponse } from '../HTTP/Type/account-source.type';
-import type { bankResponde } from '../HTTP/Type/banks.type';
 import type { budgetResponse } from '../HTTP/Type/budget.type';
-import type { categoriesResponse } from '../HTTP/Type/categories.type';
 import type { creditCardResponse } from '../HTTP/Type/credit-card.type';
 import type { debtPaymentsResponse } from '../HTTP/Type/debts-payments.type';
 import type { debtsResponse } from '../HTTP/Type/debts.type';
-import type { expensesResponse } from '../HTTP/Type/expenses.type';
-import type { incomeSourcesResponse } from '../HTTP/Type/income-sources.type';
-import type { incomeResponse } from '../HTTP/Type/income.type';
-import type { investmentGoalResponse } from '../HTTP/Type/investment-goal.type';
-import type { investmentResponse } from '../HTTP/Type/investment.type';
-import type { TransactionResponse } from '../HTTP/Type/transactions.type';
-import type { TransactionAttachmentResponse } from '../HTTP/Type/transactions-attachment.type';
+
+// CSRF Token Management
+let csrfTokenCache: string | null = null;
+
+const fetchCSRFToken = async (): Promise<string> => {
+  try {
+    if (csrfTokenCache) {
+      return csrfTokenCache;
+    }
+    
+    const response = await apiClient.get<{ token: string }>(API_ENDPOINTS.AUTH.CSRF);
+    const token = response?.token || null;
+    
+    if (token) {
+      csrfTokenCache = token;
+    }
+    
+    return token || '';
+  } catch (error) {
+    console.warn('Falha ao obter CSRF token:', error);
+    return '';
+  }
+};
+
+const storageCSRFToken = (): string | null => {
+  return localStorage.getItem('csrf_token');
+};
 
 // Auth Services
 export const authService = {
   login: async (data: getAuthRequest): Promise<ApiResponse<AuthResponse>> => {
+    // Buscar CSRF token antes do login
+    await fetchCSRFToken();
+    
     const response = await apiClient.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, data);
+    console.log("Login response:", response);
     
     // Armazenar token e refreshToken
     if (response.data && response.data.token) {
@@ -55,6 +77,8 @@ export const authService = {
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('userId');
+      localStorage.removeItem('csrf_token');
+      csrfTokenCache = null;
     }
   },
 
@@ -78,27 +102,39 @@ export const authService = {
   },
 
   register: async (data: any): Promise<ApiResponse<AuthResponse>> => {
+    // Buscar CSRF token antes do registro
+    await fetchCSRFToken();
+    
     return apiClient.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.REGISTER, data);
   },
 
   forgotPassword: async (email: string): Promise<ApiResponse<void>> => {
+    await fetchCSRFToken();
+    
     return apiClient.post<ApiResponse<void>>(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
   },
 
   resetPassword: async (token: string, password: string): Promise<ApiResponse<void>> => {
+    await fetchCSRFToken();
+    
     return apiClient.post<ApiResponse<void>>(API_ENDPOINTS.AUTH.RESET_PASSWORD, { token, password });
   },
   
   changePassword: async (oldPassword: string, newPassword: string): Promise<ApiResponse<void>> => {
+    await fetchCSRFToken();
+    
     return apiClient.post<ApiResponse<void>>(API_ENDPOINTS.USERS.CHANGE_PASSWORD, { 
       oldPassword, 
       newPassword 
     });
   },
   
-  getCurrentUser: async (): Promise<ApiResponse<userResponse>> => {
-    return apiClient.get<ApiResponse<userResponse>>(API_ENDPOINTS.USERS.PROFILE);
+  getCurrentUser: async (userId: string): Promise<ApiResponse<userResponse>> => {
+    return apiClient.get<ApiResponse<userResponse>>(API_ENDPOINTS.USERS.PROFILE(userId));
   },
+
+  initializeCSRFToken: fetchCSRFToken,
+  getCSRFToken: storageCSRFToken,
 };
 
 // User Services
@@ -123,8 +159,8 @@ export const userService = {
     return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.USERS.BY_ID(id));
   },
 
-  getProfile: async (): Promise<ApiResponse<userResponse>> => {
-    return apiClient.get<ApiResponse<userResponse>>(API_ENDPOINTS.USERS.PROFILE);
+  getProfile: async (userId: string): Promise<ApiResponse<userResponse>> => {
+    return apiClient.get<ApiResponse<userResponse>>(API_ENDPOINTS.USERS.PROFILE(userId));
   },
 
   updateProfile: async (data: Partial<userResponse>): Promise<ApiResponse<userResponse>> => {
