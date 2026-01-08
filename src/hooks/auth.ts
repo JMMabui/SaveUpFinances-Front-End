@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '@/lib/apiServices';
-import type { getAuthRequest } from '@/HTTP/Type/authType';
+import type { getAuthRequest } from '@/lib/HTTP/Type/authType';
 
 export function useLogin(redirectTo: string = '/dashboard') {
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ export function useLogin(redirectTo: string = '/dashboard') {
       // Tenta obter o perfil do usuário para validar sessão (cookie/session-based servers)
       try {
         const userId = localStorage.getItem('userId');
+        // console.log('Obtendo perfil do usuário com ID:', userId);
         await queryClient.fetchQuery({ queryKey: ['profile'], queryFn: () => authService.getCurrentUser(userId!) });
       } catch (err) {
         console.error('Falha ao buscar perfil após login:', err);

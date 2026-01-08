@@ -1,10 +1,10 @@
 import type React from 'react'
 import { useState } from 'react'
-import { Button } from '../../components/Button'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { TopNavigation } from '../../components/TopNavigation'
+import { TopNavigation } from '../../components/layout/topNavigation'
 import { mockCategories, TransactionType } from '../../mocks/mockData'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 
 interface Category {
   id: number

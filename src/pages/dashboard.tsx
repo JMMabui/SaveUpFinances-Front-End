@@ -1,18 +1,15 @@
 
-import { Header } from '../components/Header'
-import { FinancesResume } from './finances_resume'
-import { QuickStats } from '../components/QuickStats'
-import { ExpenseChart } from '../components/ExpenseChart'
-import { FinancialGoals } from '../components/FinancialGoals'
-import { RecentTransactions } from '../components/RecentTransactions'
-import { FinancialAlerts } from '../components/FinancialAlerts'
-import { MonthlySummary } from '../components/MonthlySummary'
+import { MainLayout } from '../components/layout/mainLayout'
+import { QuickStats } from '../components/quickStats'
+import { ExpenseChart } from '../components/expenseChart'
+import { FinancialGoals } from '../components/financialGoals'
+import { RecentTransactions } from '../components/recentTransactions'
+import { FinancialAlerts } from '../components/financialAlerts'
+import { MonthlySummary } from '../components/monthlySummary'
 
 export function Dashboard() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
-      <Header />
-
+    <MainLayout>
       {/* Resumo financeiro usando Cards */}
       <main className="px-6 space-y-6">
         
@@ -48,7 +45,8 @@ export function Dashboard() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Análise Mensal</h2>
           <MonthlySummary />
         </section>
+        
       </main>
-    </div>
+    </MainLayout>
   )
 }

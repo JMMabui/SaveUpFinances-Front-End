@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../lib/apiServices';
-import type { getAuthRequest } from '../HTTP/Type/authType';
+import type { getAuthRequest } from '../lib/HTTP/Type/authType';
 
 interface UseAuthReturn {
   isAuthenticated: boolean;

@@ -2,9 +2,9 @@ import  { useState } from 'react';
 import { DebtList } from './DebtList';
 import { DebtForm } from './DebtForm';
 import { DebtPaymentForm } from './DebtPaymentForm';
-import { Header } from '@/components/Header';
-import { useGetDebtsByUser, useCreateDebt, useUpdateDebt } from '@/HTTP/debts';
-import { useCreateDebtPayment } from '@/HTTP/debts-payments';
+import { Header } from '@/components/layout/header';
+import { useGetDebtsByUser, useCreateDebt, useUpdateDebt } from '@/lib/HTTP/debts';
+import { useCreateDebtPayment } from '@/lib/HTTP/debts-payments';
 
 export function DebtManagement() {
   const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''

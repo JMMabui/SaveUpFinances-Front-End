@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { COLORS } from '../constants/colors';
-import { useGetExpensesByUser } from '@/HTTP/expenses';
-import { useGetCategories } from '@/HTTP/categories';
+import { useGetExpensesByUser } from '@/lib/HTTP/expenses';
+import { useGetCategories } from '@/lib/HTTP/categories';
 
 interface ExpenseCategoryAgg {
   name: string;

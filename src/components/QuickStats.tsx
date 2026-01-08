@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { TrendingUp, TrendingDown, DollarSign, PiggyBank, CreditCard, AlertTriangle } from 'lucide-react';
 import { COLORS } from '../constants/colors';
-import { getAccountsByUserId } from '@/HTTP/account';
-import { useGetIncomeByUser } from '@/HTTP/income';
-import { useGetExpensesByUser } from '@/HTTP/expenses';
-import { useGetDebtsByUser } from '@/HTTP/debts';
-import { useGetCreditCardsByUser } from '@/HTTP/credit-card';
+import { getAccountsByUserId } from '@/lib/HTTP/account';
+import { useGetIncomeByUser } from '@/lib/HTTP/income';
+import { useGetExpensesByUser } from '@/lib/HTTP/expenses';
+import { useGetDebtsByUser } from '@/lib/HTTP/debts';
+import { useGetCreditCardsByUser } from '@/lib/HTTP/credit-card';
 
 interface QuickStatProps {
   title: string;

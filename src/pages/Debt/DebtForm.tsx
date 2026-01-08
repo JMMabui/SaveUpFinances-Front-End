@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Debt } from '../../types/Debt';
-import { Button } from '../../components/Button';
+import { Debt } from '@/types/Debt';
+import { Button } from '@/components/ui/button';
 
 interface DebtFormProps {
   initialDebt?: Debt;

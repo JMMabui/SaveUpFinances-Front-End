@@ -1,15 +1,15 @@
 import { apiClient } from './api';
 import { API_ENDPOINTS } from '../constants/api';
-import type { ApiResponse } from '../HTTP/Type/response.type';
-import type { AuthResponse, getAuthRequest } from '../HTTP/Type/authType';
-import type { userResponse } from '../HTTP/Type/user.type';
-import type { accountResponse } from '../HTTP/Type/account.type';
-import type { accountBalanceResponse } from '../HTTP/Type/account-balance.type';
-import type { accountSourceResponse } from '../HTTP/Type/account-source.type';
-import type { budgetResponse } from '../HTTP/Type/budget.type';
-import type { creditCardResponse } from '../HTTP/Type/credit-card.type';
-import type { debtPaymentsResponse } from '../HTTP/Type/debts-payments.type';
-import type { debtsResponse } from '../HTTP/Type/debts.type';
+import type { ApiResponse } from './HTTP/Type/response.type';
+import type { AuthResponse, getAuthRequest } from './HTTP/Type/authType';
+import type { userResponse } from './HTTP/Type/user.type';
+import type { accountResponse } from './HTTP/Type/account.type';
+import type { accountBalanceResponse } from './HTTP/Type/account-balance.type';
+import type { accountSourceResponse } from './HTTP/Type/account-source.type';
+import type { budgetResponse } from './HTTP/Type/budget.type';
+import type { creditCardResponse } from './HTTP/Type/credit-card.type';
+import type { debtPaymentsResponse } from './HTTP/Type/debts-payments.type';
+import type { debtsResponse } from './HTTP/Type/debts.type';
 
 // CSRF Token Management
 let csrfTokenCache: string | null = null;
@@ -45,7 +45,7 @@ export const authService = {
     await fetchCSRFToken();
     
     const response = await apiClient.post<ApiResponse<AuthResponse>>(API_ENDPOINTS.AUTH.LOGIN, data);
-    console.log("Login response:", response);
+    // console.log("Login response:", response);
     
     // Armazenar token e refreshToken
     if (response.data && response.data.token) {

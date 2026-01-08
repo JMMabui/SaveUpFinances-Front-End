@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Debt } from '../../types/Debt';
-import { Button } from '../../components/Button';
+import { Debt } from '@/types/Debt';
+import { Button } from '@/components/ui/button';
 import { FiEdit2, FiCheckCircle, FiTrash2, FiAlertCircle, FiClock } from 'react-icons/fi';
 import { COLORS } from '@/constants/colors';
 

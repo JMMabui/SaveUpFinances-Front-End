@@ -1,7 +1,7 @@
 import { apiClient } from './api';
 import { API_ENDPOINTS } from '../constants/api';
-import type { ApiResponse } from '../HTTP/Type/response.type';
-import type { bankResponde } from '../HTTP/Type/banks.type';
+import type { ApiResponse } from './HTTP/Type/response.type';
+import type { bankResponde } from './HTTP/Type/banks.type';
 
 // Banks Services
 export const bankService = {

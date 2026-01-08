@@ -1,5 +1,5 @@
-import { Button } from '../../components/Button';
-import { DateRangeFilter } from '../../components/DateRangeFilter';
+import { Button } from '@/components/ui/button';
+import { DateRangeFilter } from '@/components/dateRangeFilter';
 
 interface TransactionFiltersProps {
   selectedType: 'all' | 'income' | 'expense';
@@ -22,21 +22,21 @@ export function TransactionFilters({
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
         <Button
-          variant={selectedType === 'all' ? 'primary' : 'secondary'}
+          variant={selectedType === 'all' ? 'default' : 'outline'}
           size="sm"
           onClick={() => onTypeChange('all')}
         >
           Todos
         </Button>
         <Button
-          variant={selectedType === 'income' ? 'primary' : 'secondary'}
+          variant={selectedType === 'income' ? 'default' : 'outline'}
           size="sm"
           onClick={() => onTypeChange('income')}
         >
           Receitas
         </Button>
         <Button
-          variant={selectedType === 'expense' ? 'primary' : 'secondary'}
+          variant={selectedType === 'expense' ? 'default' : 'outline'}
           size="sm"
           onClick={() => onTypeChange('expense')}
         >
@@ -46,7 +46,7 @@ export function TransactionFilters({
 
       <div className="flex flex-wrap gap-2">
         <Button
-          variant={selectedAccount === 'all' ? 'primary' : 'secondary'}
+          variant={selectedAccount === 'all' ? 'default' : 'outline'}
           size="sm"
           onClick={() => onAccountChange('all')}
         >
@@ -55,7 +55,7 @@ export function TransactionFilters({
         {accounts.map((account) => (
           <Button
             key={account}
-            variant={selectedAccount === account ? 'primary' : 'secondary'}
+            variant={selectedAccount === account ? 'default' : 'outline'}
             size="sm"
             onClick={() => onAccountChange(account)}
           >

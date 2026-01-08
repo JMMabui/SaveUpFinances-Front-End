@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/card"
 import { CheckCircle, XCircle } from "lucide-react"
 import { COLORS } from '../constants/colors'
-import { useGetIncomeByUser } from '@/HTTP/income'
-import { useGetExpensesByUser } from '@/HTTP/expenses'
+import { useGetIncomeByUser } from '@/lib/HTTP/income'
+import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
 
 export function FinancesResume() {
   const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''

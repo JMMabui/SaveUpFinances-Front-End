@@ -1,7 +1,7 @@
 import type React from 'react'
 import { useState } from 'react'
 import { FiX } from 'react-icons/fi'
-import { Button } from './Button'
+import { Button } from '@/components/ui/button'
 
 interface AccountModalProps {
   isOpen: boolean

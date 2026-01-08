@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Target } from 'lucide-react';
 import { COLORS } from '../constants/colors';
-import { useGetInvestmentGoalsByUser } from '@/HTTP/investment-goal';
+import { useGetInvestmentGoalsByUser } from '@/lib/HTTP/investment-goal';
 
 export function FinancialGoals() {
   const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''

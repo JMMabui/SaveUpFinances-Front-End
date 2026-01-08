@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import type { getAuthRequest } from '../HTTP/Type/authType';
+import type { getAuthRequest } from '../lib/HTTP/Type/authType';
 
 // Definindo o tipo do contexto
 interface AuthContextType {

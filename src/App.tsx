@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Dashboard } from './pages/dashboard'
-import { LoginPage } from './pages/LoginPage'
+import { LoginPage } from './pages/auth/LoginPage'
 import { CategoryManagement } from './pages/Category/CategoryManagement'
 import { BudgetManagement } from './pages/Budget/BudgetManagement'
 import { CreditCardManagement } from './pages/Creadit Card/CreditCardManagement'
@@ -8,10 +8,10 @@ import { IncomeSourceManagement } from './pages/Income Source/IncomeSourceManage
 import { InvestmentTracking } from './pages/Investiment/InvestmentTracking'
 import { ReportsDashboard } from './pages/Report/ReportsDashboard'
 import { DebtManagement } from './pages/Debt/DebtManagement'
-import { AccountsPage } from './pages/Accounts/AccountsPage'
-import { RegisterPage } from './pages/register'
-import { AuthProvider } from './components/AuthProvider'
-import { ProtectedRoute } from './components/ProtectedRoute'
+import { AccountsPage } from './pages/accounts/accountsPage'
+import { RegisterPage } from './pages/auth/register'
+import { AuthProvider } from './components/authProvider'
+import { ProtectedRoute } from './components/protectedRoute'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // Criando uma instância do QueryClient

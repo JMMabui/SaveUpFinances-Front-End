@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Calendar, TrendingUp, TrendingDown } from 'lucide-react';
 import { COLORS } from '../constants/colors';
-import { useGetIncomeByUser } from '@/HTTP/income';
-import { useGetExpensesByUser } from '@/HTTP/expenses';
+import { useGetIncomeByUser } from '@/lib/HTTP/income';
+import { useGetExpensesByUser } from '@/lib/HTTP/expenses';
 
 interface MonthlyData {
   month: string;

@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { ArrowUpRight, ArrowDownLeft, MoreHorizontal } from 'lucide-react';
 import { COLORS } from '../constants/colors';
-import { useGetTransactionsByUser } from '@/HTTP/transactions';
-import { useGetCategories } from '@/HTTP/categories';
+import { useGetTransactionsByUser } from '@/lib/HTTP/transactions';
+import { useGetCategories } from '@/lib/HTTP/categories';
 
 export function RecentTransactions() {
   const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
-import { Button } from '../../components/Button'
-import { useGetCategories, useGetCategoriesByType } from '@/HTTP/categories'
-import { getAccountsByUserId } from '@/HTTP/account'
+import { Button } from '@/components/ui/button'
+import { useGetCategories, useGetCategoriesByType } from '@/lib/HTTP/categories'
+import { getAccountsByUserId } from '@/lib/HTTP/account'
 
 interface TransactionFormProps {
   onSubmit: (data: TransactionFormData) => void

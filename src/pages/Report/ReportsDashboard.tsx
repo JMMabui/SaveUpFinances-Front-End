@@ -4,10 +4,10 @@ import { Line } from 'react-chartjs-2';
 import { Chart, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from 'chart.js';
 import { FiTrendingUp, FiArrowDownCircle, FiArrowUpCircle, FiPieChart, FiAlertCircle } from 'react-icons/fi';
 import { Pie } from 'react-chartjs-2';
-import { Header } from '@/components/Header';
-import { useGetIncomeByUser } from '@/HTTP/income'
-import { useGetExpensesByUser } from '@/HTTP/expenses'
-import { useGetDebtsByUser } from '@/HTTP/debts'
+import { MainLayout } from '@/components/layout/mainLayout'
+import { useGetIncomeByUser } from '@/lib/HTTP/income'
+import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
+import { useGetDebtsByUser } from '@/lib/HTTP/debts'
 import { COLORS } from '@/constants/colors'
 
 Chart.register(ArcElement);
@@ -127,10 +127,10 @@ export function ReportsDashboard() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
 
   return (
-    <div className="p-4" style={{ background: 'linear-gradient(to bottom right, ' + COLORS.blue[50] + ', white)' }}>
-      <Header />
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-extrabold" style={{ color: COLORS.black[800] }}>Relatórios Financeiros</h2>
+    <MainLayout>
+      <div className="p-4" style={{ background: 'linear-gradient(to bottom right, ' + COLORS.blue[50] + ', white)' }}>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-extrabold" style={{ color: COLORS.black[800] }}>Relatórios Financeiros</h2>
         <select
           value={selectedYear}
           onChange={e => setSelectedYear(Number(e.target.value))}
@@ -338,6 +338,7 @@ export function ReportsDashboard() {
           </table>
         </div>
       </Card>
-    </div>
+      </div>
+    </MainLayout>
   )
 }

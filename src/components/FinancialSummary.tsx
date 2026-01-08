@@ -1,5 +1,6 @@
+import { formatCurrency } from '@/lib/utils'
 import type { TransactionFormData } from '../pages/Transaction/TransactionForm'
-import { Card } from './Card'
+import { Card } from '@/components/ui/card'
 
 interface FinancialSummaryProps {
   transactions: TransactionFormData[]
@@ -19,15 +20,7 @@ export function FinancialSummary({
   monthlyTotals,
   totalBalance,
 }: FinancialSummaryProps) {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-MZ', {
-      style: 'currency',
-      currency: 'MZN',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)
-  }
-
+ 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card>
