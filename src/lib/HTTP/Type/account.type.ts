@@ -13,7 +13,7 @@ enum AccountType {
     JOINT = 'joint',
 }
 
-enum Currency {
+export enum Currency {
   MZN = 'MZN',
   USD = 'USD',
   EUR = 'EUR',
@@ -71,6 +71,7 @@ export interface accountResponse {
 }
 
 export interface accountRequest {
+    id?: string,
     accountName: string;
     accountType: AccountType;
     accountHolderName: string;

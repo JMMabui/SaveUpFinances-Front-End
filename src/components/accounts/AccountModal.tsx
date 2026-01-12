@@ -3,18 +3,8 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { COLORS } from '@/constants/colors'
 import { useCreateAccount, useUpdateAccount } from '@/lib/HTTP/account'
-
-interface AccountFormState {
-  id?: string
-  accountName: string
-  accountType: string
-  accountHolderName?: string
-  balance: number
-  bankId?: string | null
-  currency?: string
-  isActive?: boolean
-  isDefault?: boolean
-}
+import { accountRequest } from '@/lib/HTTP/Type/account.type'
+import { Input } from '../ui/input'
 
 const ACCOUNT_TYPES = [
   { value: 'current', label: 'Corrente' },
@@ -25,27 +15,37 @@ const ACCOUNT_TYPES = [
   { value: 'joint', label: 'Conjunta' },
 ]
 
+const CURRENCY = [
+  { value: 'MZN', label: 'Metical'},
+  { value: 'ZAR', label: 'Rand'},
+  { value: 'USD', label: 'Dolar Americano'},
+  { value: 'EUR', label: 'Euro'},
+  { value: 'GBP', label: 'Libra'},
+  { value: 'BRL', label: 'Real'},
+]
+
 interface AccountModalProps {
-  initial: AccountFormState
+  initial: accountRequest
   onClose: () => void
   banks: any[]
 }
 
 export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
-  const { register, handleSubmit, reset, watch } = useForm<AccountFormState>({
+  const { register, handleSubmit, reset, watch } = useForm<accountRequest>({
     defaultValues: initial,
   })
 
   const create = useCreateAccount()
   const update = useUpdateAccount(initial.id || "")
   const userId = typeof window !== "undefined" ? localStorage.getItem("userId") || "" : ""
-
+  console.log("id do usuario, ", userId)
   // sempre que abrir o modal com dados novos, resetar os campos
   useEffect(() => {
     reset(initial)
   }, [initial, reset])
 
-  const onSubmit = (form: AccountFormState) => {
+  const onSubmit = (form: accountRequest) => {
+    console.log("Account form data, ", form)
     if (form.id) {
       update.mutate({
         accountName: form.accountName,
@@ -57,11 +57,13 @@ export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
       } as any)
     } else {
       create.mutate({
-        userId,
+        userId: userId,
         accountName: form.accountName,
         accountType: form.accountType,
+        accountHolderName: form.accountHolderName,
         balance: Number(form.balance),
         bankId: form.bankId || null,
+        currency: form.currency,
         isActive: true,
         isDefault: false,
       } as any)
@@ -84,9 +86,18 @@ export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
               <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Nome da Conta
               </label>
-              <input
+              <Input
                 className="w-full p-2 border rounded"
                 {...register("accountName", { required: true })}
+              />
+            </div>
+            <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
+                Titular da Conta
+              </label>
+              <Input
+                className="w-full p-2 border rounded"
+                {...register("accountHolderName", { required: true })}
               />
             </div>
 
@@ -112,6 +123,19 @@ export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
                 {banks.map((b: any) => (
                   <option key={b.id} value={b.id}>
                     {b.bankName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
+                Tipo de Moeda
+              </label>
+              <select className="w-full p-2 border rounded" {...register("currency", { required: true })}>
+                {CURRENCY.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
                   </option>
                 ))}
               </select>

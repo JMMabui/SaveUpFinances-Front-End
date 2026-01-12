@@ -1,22 +1,26 @@
 import { defineConfig } from 'orval';
 
 export default defineConfig({
-  saveup: {
+  myApi: {
     input: {
-      // Ajuste a URL caso seu endpoint do swagger.json seja diferente
-      target: 'http://localhost:7410/docs/json',
+      target: 'https://localhost:7410/swagger.json',
+      validation: false,
+    
     },
     output: {
-      mode: 'tags',
-      target: 'src/lib/generated/saveup.api.ts',
+      mode: 'tags-split',
+      target: './src/app/api/my-api.ts',
+      schemas: './src/generated/models',
       client: 'react-query',
-      // Usa mutator para delegar requisições ao `apiClient` existente
       override: {
         mutator: {
           path: 'src/lib/orvalMutator.ts',
           name: 'orvalMutator',
         },
       },
+    },
+    hooks: {
+      afterAllFilesWrite: 'prettier --write',
     },
   },
 });
