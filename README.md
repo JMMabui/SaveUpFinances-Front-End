@@ -1,87 +1,99 @@
-# Finance Control
+# SaveUpFinances – Front-End
 
-Aplicação web para controle financeiro pessoal, desenvolvida com React, TypeScript, Vite e Prisma.
+Aplicação web para gestão financeira pessoal, construída com React + TypeScript e Vite. Este repositório contém exclusivamente o frontend e integra-se com uma API externa configurável via variáveis de ambiente.
 
 ## Funcionalidades
 
-- Cadastro e autenticação de usuários
-- Gerenciamento de contas bancárias, cartões de crédito e fontes de renda
+- Autenticação e cadastro de usuários
+- Gerenciamento de contas bancárias e cartões de crédito
 - Registro de transações (receitas, despesas, investimentos)
-- Categorias personalizáveis para transações
-- Resumo financeiro mensal e anual
-- Relatórios e dashboards interativos
-- Orçamentos por categoria
-- Interface responsiva e tema escuro/claro
+- Categorias personalizáveis e orçamentos por categoria
+- Resumos mensais/anuais, relatórios e dashboards interativos
+- Interface responsiva com tema claro/escuro
 
-## Tecnologias Utilizadas
+## Tecnologias
 
-- [React](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Vite](https://vitejs.dev/)
-- [Prisma ORM](https://www.prisma.io/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Chart.js](https://www.chartjs.org/)
+- React 19, React Router
+- TypeScript, Vite 7
+- Tailwind CSS 4
+- Radix UI + componentes (shadcn)
+- TanStack React Query
+- React Hook Form + Zod
+- Chart.js + react-chartjs-2
+- Axios, Day.js, Lucide Icons
+- Biome (lint/format)
+- Orval (geração de cliente da API)
 
-## Estrutura do Projeto
+Veja as dependências em [package.json](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/package.json).
+
+## Estrutura
 
 ```
-├── prisma/              # Schema e seed do banco de dados
-├── public/              # Arquivos estáticos
-├── src/                 # Código-fonte da aplicação
-│   ├── app/             # Organização por domínio
-│   ├── components/      # Componentes reutilizáveis
-│   ├── pages/           # Páginas principais
-│   ├── services/        # Serviços de API
-│   └── utils/           # Utilitários
-├── package.json         # Dependências e scripts
-├── tsconfig.json        # Configuração TypeScript
-├── vite.config.ts       # Configuração Vite
-└── README.md
+src/
+├── components/         # UI reutilizável e layouts
+├── pages/              # Páginas por domínio (Accounts, Budget, etc.)
+├── lib/                # Cliente HTTP, serviços, interceptadores
+├── hooks/              # Hooks (auth, API)
+├── constants/          # Constantes (endpoints, cores, categorias)
+├── config/             # Configuração por ambiente
+├── schema/             # Schemas de validação (Zod)
+├── types/              # Definições de tipos
+├── App.tsx, main.tsx   # Bootstrap da aplicação
+└── index.css           # Estilos base (Tailwind)
 ```
 
-## Instalação
+Arquivos úteis:
+- [vite.config.ts](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/vite.config.ts)
+- [tsconfig.json](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/tsconfig.json)
+- [env.example](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/env.example)
+- [src/env.ts](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/src/env.ts)
+- [src/config/environment.ts](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/src/config/environment.ts)
 
-1. **Clone o repositório:**
-   ```sh
-   git clone <url-do-repo>
-   cd <nome-do-projeto>
+## Ambiente
+
+1. Copie o arquivo de exemplo:
+   ```bash
+   cp env.example .env.local
    ```
+2. Defina a URL da API:
+   ```
+   VITE_API_URL=http://localhost:7410
+   ```
+   Flags opcionais:
+   - `VITE_ENABLE_ANALYTICS=true|false`
+   - `VITE_DEBUG_MODE=true|false`
+   - `VITE_ENABLE_PERFORMANCE_MONITORING=true|false`
 
-2. **Instale as dependências:**
-   ```sh
+3. Instale dependências:
+   ```bash
    npm install
    ```
 
-3. **Configure o banco de dados:**
-   - Crie um banco PostgreSQL e defina a variável `DATABASE_URL` no arquivo `.env`.
-
-4. **Rode as migrations e o seed:**
-   ```sh
-   npx prisma migrate dev
-   npx prisma db seed
-   ```
-
-5. **Inicie o servidor de desenvolvimento:**
-   ```sh
+4. Execute em desenvolvimento:
+   ```bash
    npm run dev
    ```
 
-## Scripts Disponíveis
+Detalhes de integração com a API: veja [README_API.md](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/README_API.md).
 
-- `npm run dev` — Inicia o servidor de desenvolvimento Vite
-- `npm run build` — Gera a build de produção
-- `npm run lint` — Executa o linter
-- `npm run preview` — Visualiza a build de produção localmente
+## Scripts
 
-## Configuração do ESLint
+- `npm run dev` — inicia o Vite em desenvolvimento
+- `npm run build` — build de produção (TypeScript + Vite)
+- `npm run preview` — serve a build localmente
+- `npm run lint` — verificação com Biome
+- `npm run lint:fix` — correções automáticas com Biome
+- `npm run generate:api` — gera o cliente da API via Orval
 
-O projeto já vem com ESLint configurado para React e TypeScript. Veja exemplos de expansão da configuração no próprio [README.md](README.md).
+## Padrões de Código
+
+- Lint/format com Biome (configuração em [biome.json](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/biome.json))
+- Alias de importação `@/*` configurado em [tsconfig.json](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/tsconfig.json) e [vite.config.ts](file:///c:/Users/INFORMATICA/Desktop/Doc/SaveUpFinances/SaveUpFinances-Front-End/vite.config.ts)
 
 ## Licença
 
-Este projeto é open-source e está sob a licença MIT.
+Projeto open-source sob licença MIT.
 
 ---
 
-> Feito com 💸 por Justino Mabui
+Feito com 💸 por Justino Mabui

@@ -1,18 +1,18 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { Dashboard } from './pages/dashboard'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from './components/AuthProvider'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { AccountsPage } from './pages/Accounts/AccountsPage'
 import { LoginPage } from './pages/auth/LoginPage'
-import { CategoryManagement } from './pages/Category/CategoryManagement'
+import { RegisterPage } from './pages/auth/register'
 import { BudgetManagement } from './pages/Budget/BudgetManagement'
+import { CategoryManagement } from './pages/Category/CategoryManagement'
 import { CreditCardManagement } from './pages/Creadit Card/CreditCardManagement'
+import { DebtManagement } from './pages/Debt/DebtManagement'
+import { Dashboard } from './pages/dashboard'
 import { IncomeSourceManagement } from './pages/Income Source/IncomeSourceManagement'
 import { InvestmentTracking } from './pages/Investiment/InvestmentTracking'
 import { ReportsDashboard } from './pages/Report/ReportsDashboard'
-import { DebtManagement } from './pages/Debt/DebtManagement'
-import { AccountsPage } from './pages/accounts/accountsPage'
-import { RegisterPage } from './pages/auth/register'
-import { AuthProvider } from './components/authProvider'
-import { ProtectedRoute } from './components/protectedRoute'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // Criando uma instância do QueryClient
 const queryClient = new QueryClient({
@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-});
+})
 
 function AppRoutes() {
   return (
@@ -85,11 +85,11 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route 
-        path="/debts" 
+      <Route
+        path="/debts"
         element={
           <ProtectedRoute>
-            <DebtManagement/>
+            <DebtManagement />
           </ProtectedRoute>
         }
       />
@@ -101,10 +101,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="*"
-        element={<Navigate to="/login" />}
-      />
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   )
 }

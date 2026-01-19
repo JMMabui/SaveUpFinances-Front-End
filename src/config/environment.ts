@@ -1,4 +1,4 @@
-import { env } from "@/env";
+import { env } from '@/env'
 
 // Environment configuration
 export const environment = {
@@ -20,13 +20,15 @@ export const environment = {
     enableLogging: false,
     enableMockData: true,
   },
-};
+}
 
 // Get current environment
 export const getCurrentEnvironment = () => {
-  const nodeEnv = env.MODE || 'development';
-  return environment[nodeEnv as keyof typeof environment] || environment.development;
-};
+  const nodeEnv = env.MODE || 'development'
+  return (
+    environment[nodeEnv as keyof typeof environment] || environment.development
+  )
+}
 
 // API Configuration
 export const apiConfig = {
@@ -34,14 +36,15 @@ export const apiConfig = {
   timeout: getCurrentEnvironment().timeout,
   enableLogging: getCurrentEnvironment().enableLogging,
   enableMockData: getCurrentEnvironment().enableMockData,
-};
+}
 
 // Feature flags
 export const features = {
   enableAnalytics: env.VITE_ENABLE_ANALYTICS === 'true',
   enableDebugMode: env.VITE_DEBUG_MODE === 'true',
-  enablePerformanceMonitoring: env.VITE_ENABLE_PERFORMANCE_MONITORING === 'true',
-};
+  enablePerformanceMonitoring:
+    env.VITE_ENABLE_PERFORMANCE_MONITORING === 'true',
+}
 
 // App configuration
 export const appConfig = {
@@ -50,4 +53,4 @@ export const appConfig = {
   description: 'Sistema de gestão financeira pessoal',
   author: 'SaveUpFinances Team',
   supportEmail: 'support@saveupfinances.com',
-};
+}

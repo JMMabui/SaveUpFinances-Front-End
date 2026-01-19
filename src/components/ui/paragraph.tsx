@@ -1,10 +1,10 @@
-import { twMerge } from 'tailwind-merge';
+import { twMerge } from 'tailwind-merge'
 
 interface ParagraphProps {
-  children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
-  weight?: 'normal' | 'medium' | 'semibold';
-  className?: string;
+  children: React.ReactNode
+  size?: 'sm' | 'md' | 'lg'
+  weight?: 'normal' | 'medium' | 'semibold'
+  className?: string
 }
 
 export const Paragraph = ({
@@ -17,13 +17,13 @@ export const Paragraph = ({
     sm: 'text-sm',
     md: 'text-base',
     lg: 'text-lg',
-  };
+  }
 
   const weightClasses = {
     normal: 'font-normal',
     medium: 'font-medium',
     semibold: 'font-semibold',
-  };
+  }
 
   return (
     <p
@@ -36,5 +36,5 @@ export const Paragraph = ({
     >
       {children}
     </p>
-  );
-}; 
+  )
+}

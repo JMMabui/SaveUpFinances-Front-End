@@ -1,6 +1,12 @@
-import { useNavigate } from 'react-router-dom';
-import { FiLogOut, FiUser } from 'react-icons/fi';
-
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@radix-ui/react-navigation-menu'
+import { BiMoneyWithdraw } from 'react-icons/bi'
 import {
   FiAlertCircle,
   FiBarChart2,
@@ -8,36 +14,38 @@ import {
   FiCreditCard,
   FiDollarSign,
   FiList,
+  FiLogOut,
   FiPieChart,
   FiTrendingUp,
+  FiUser,
 } from 'react-icons/fi'
-import { BiMoneyWithdraw } from 'react-icons/bi';
-import { HiOutlineAdjustments } from 'react-icons/hi';
-import { useLogout } from '@/hooks/auth';
-import { getUserById } from '@/lib/HTTP/user';
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink, NavigationMenuTrigger, NavigationMenuContent } from '@radix-ui/react-navigation-menu';
-import { Button } from '../ui/button';
+import { HiOutlineAdjustments } from 'react-icons/hi'
+import { useNavigate } from 'react-router-dom'
+import { useLogout } from '@/hooks/auth'
+import { getUserById } from '@/lib/HTTP/user'
+import { Button } from '../ui/button'
 
 export function checkUserLoggedIn() {
-  const userId = localStorage.getItem('userId');
-  return !!userId;
-};
+  const userId = localStorage.getItem('userId')
+  return !!userId
+}
 export function Header() {
-  const navigate = useNavigate();
-  const userId = checkUserLoggedIn() ? localStorage.getItem('userId') : null;
+  const navigate = useNavigate()
+  const onLogout = useLogout()
+  const userId = checkUserLoggedIn() ? localStorage.getItem('userId') : null
   if (!userId) {
-    navigate('/login');
-    return null;
+    navigate('/login')
+    return null
   }
-  const user = getUserById(userId);
-  const onLogout = useLogout();
+  const user = getUserById(userId)
 
   return (
-    <header className="flex flex-wrap items-center justify-between px-6 py-4 
+    <header
+      className="flex flex-wrap items-center justify-between px-6 py-4 
       bg-gradient-to-r from-green-500 via-green-400 to-yellow-400 
       dark:from-green-700 dark:via-green-600 dark:to-yellow-600
-      border-b border-green-300 dark:border-gray-700 shadow-md">
-      
+      border-b border-green-300 dark:border-gray-700 shadow-md"
+    >
       {/* Perfil do usuário */}
       <div className="flex items-center gap-4">
         {user.data?.data.avatar ? (
@@ -63,11 +71,11 @@ export function Header() {
 
       {/* Menu de navegação */}
       <div className="mt-4 md:mt-0">
-        <NavigationMenu >
+        <NavigationMenu>
           <NavigationMenuList className="flex gap-4">
             <NavigationMenuItem>
-              <NavigationMenuLink 
-                href="/dashboard" 
+              <NavigationMenuLink
+                href="/dashboard"
                 className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors"
               >
                 <FiPieChart /> Dashboard
@@ -80,10 +88,16 @@ export function Header() {
                 Planejamento Financeiro
               </NavigationMenuTrigger>
               <NavigationMenuContent className="flex flex-col gap-2 p-2 bg-white/90 dark:bg-gray-800 rounded-md shadow-md">
-                <NavigationMenuLink href="/budgets" className="flex items-center gap-2 hover:text-green-600 transition-colors">
+                <NavigationMenuLink
+                  href="/budgets"
+                  className="flex items-center gap-2 hover:text-green-600 transition-colors"
+                >
                   <FiCalendar /> Orçamentos
                 </NavigationMenuLink>
-                <NavigationMenuLink href="/categories" className="flex items-center gap-2 hover:text-green-600 transition-colors">
+                <NavigationMenuLink
+                  href="/categories"
+                  className="flex items-center gap-2 hover:text-green-600 transition-colors"
+                >
                   <FiList /> Categorias
                 </NavigationMenuLink>
               </NavigationMenuContent>
@@ -94,24 +108,36 @@ export function Header() {
                 <BiMoneyWithdraw /> Finanças Pessoais
               </NavigationMenuTrigger>
               <NavigationMenuContent className="flex flex-col gap-2 p-2 bg-white/90 dark:bg-gray-800 rounded-md shadow-md">
-                <NavigationMenuLink href="/income-sources" className="flex items-center gap-2 hover:text-green-600 transition-colors">
+                <NavigationMenuLink
+                  href="/income-sources"
+                  className="flex items-center gap-2 hover:text-green-600 transition-colors"
+                >
                   <FiDollarSign /> Fontes de Renda
                 </NavigationMenuLink>
-                <NavigationMenuLink href="/credit-cards" className="flex items-center gap-2 hover:text-green-600 transition-colors">
+                <NavigationMenuLink
+                  href="/credit-cards"
+                  className="flex items-center gap-2 hover:text-green-600 transition-colors"
+                >
                   <FiCreditCard /> Cartões de Crédito
                 </NavigationMenuLink>
-                <NavigationMenuLink href="/accounts" className="flex items-center gap-2 hover:text-green-600 transition-colors">
+                <NavigationMenuLink
+                  href="/accounts"
+                  className="flex items-center gap-2 hover:text-green-600 transition-colors"
+                >
                   <FiList /> Contas
                 </NavigationMenuLink>
-                <NavigationMenuLink href="/debts" className="flex items-center gap-2 hover:text-red-500 transition-colors">
+                <NavigationMenuLink
+                  href="/debts"
+                  className="flex items-center gap-2 hover:text-red-500 transition-colors"
+                >
                   <FiAlertCircle /> Dívidas
                 </NavigationMenuLink>
               </NavigationMenuContent>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuLink 
-                href="/investments" 
+              <NavigationMenuLink
+                href="/investments"
                 className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors"
               >
                 <FiTrendingUp /> Investimentos
@@ -119,8 +145,8 @@ export function Header() {
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuLink 
-                href="/reports" 
+              <NavigationMenuLink
+                href="/reports"
                 className="flex items-center gap-2 text-white hover:text-yellow-200 transition-colors"
               >
                 <FiBarChart2 /> Relatórios
@@ -146,5 +172,5 @@ export function Header() {
         </Button>
       </div>
     </header>
-  );
+  )
 }

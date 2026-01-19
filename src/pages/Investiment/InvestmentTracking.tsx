@@ -1,26 +1,32 @@
 import { useMemo, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { MainLayout } from '@/components/layout/mainLayout'
-import { InvestmentModal } from '@/components/investment/InvestmentModal'
 import { InvestmentList } from '@/components/investment/InvestmentList'
+import { InvestmentModal } from '@/components/investment/InvestmentModal'
 import { InvestmentSummary } from '@/components/investment/InvestmentSummary'
-import { useGetInvestmentsByUser } from '@/lib/HTTP/investment'
+import { MainLayout } from '@/components/layout/mainLayout'
+import { Button } from '@/components/ui/button'
 import { COLORS } from '@/constants/colors'
-import { investmentResponse } from '@/lib/HTTP/Type/investment.type'
+import { useGetInvestmentsByUser } from '@/lib/HTTP/investment'
+import type { investmentResponse } from '@/lib/HTTP/Type/investment.type'
 
 export function InvestmentTracking() {
-  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const userId =
+    typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const { data } = useGetInvestmentsByUser(userId)
-  console.log("dados de useGetInvestmentsByUser: ", data)
+  console.log('dados de useGetInvestmentsByUser: ', data)
   const investments: investmentResponse[] = data?.data || []
 
-  const totalInvested = useMemo(() => investments.reduce((sum, i) => sum + (i.amount || 0), 0), [investments])
-  const estimatedReturn = useMemo(() => investments.reduce((sum, i) => sum + ((i.amount || 0) * 0.1), 0), [investments])
+  const totalInvested = useMemo(
+    () => investments.reduce((sum, i) => sum + (i.amount || 0), 0),
+    [investments]
+  )
+  const estimatedReturn = useMemo(
+    () => investments.reduce((sum, i) => sum + (i.amount || 0) * 0.1, 0),
+    [investments]
+  )
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedInvestment, setSelectedInvestment] = useState<investmentResponse | null>(null)
-
- 
+  const [selectedInvestment, setSelectedInvestment] =
+    useState<investmentResponse | null>(null)
 
   const handleEdit = (investment: investmentResponse) => {
     setSelectedInvestment(investment)
@@ -31,10 +37,16 @@ export function InvestmentTracking() {
     <MainLayout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold" style={{ color: COLORS.black[800] }}>
+          <h2
+            className="text-2xl font-bold"
+            style={{ color: COLORS.black[800] }}
+          >
             Investimentos
           </h2>
-          <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2"
+          >
             Novo Investimento
           </Button>
         </div>
@@ -44,10 +56,7 @@ export function InvestmentTracking() {
           estimatedReturn={estimatedReturn}
         />
 
-        <InvestmentList
-          investments={investments}
-          onEdit={handleEdit}
-        />
+        <InvestmentList investments={investments} onEdit={handleEdit} />
 
         {isModalOpen && (
           <InvestmentModal

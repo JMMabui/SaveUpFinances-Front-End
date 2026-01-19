@@ -1,15 +1,14 @@
-
 export interface accountBalanceRequest {
-    accountId: string
-    date: Date
-    balance: number
+  accountId: string
+  date: string
+  balance: number
 }
 
 export interface accountBalanceResponse {
-    id: string;
-    accountId: string;
-    date: Date;
-    balance: number;
-    createdAt: Date;
-    updatedAt: Date;
+  id: string
+  accountId: string
+  date: string
+  balance: number
+  createdAt: string
+  updatedAt: string
 }

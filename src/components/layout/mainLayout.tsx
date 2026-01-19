@@ -1,9 +1,9 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { Header } from "./header";
+import type React from 'react'
+import { Outlet } from 'react-router-dom'
+import { Header } from './header'
 
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
@@ -15,5 +15,5 @@ export function MainLayout({ children }: MainLayoutProps) {
         <Outlet />
       </main>
     </div>
-  );
+  )
 }

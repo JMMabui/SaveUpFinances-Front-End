@@ -25,9 +25,15 @@ interface IncomeSourceListProps {
   onEdit: (source: IncomeSource) => void
 }
 
-export function IncomeSourceList({ sources, incomes, onEdit }: IncomeSourceListProps) {
+export function IncomeSourceList({
+  sources,
+  incomes,
+  onEdit,
+}: IncomeSourceListProps) {
   const calculateTotalIncome = (sourceId: string) => {
-    return incomes.filter(t => t.sourceId === sourceId).reduce((total, t) => total + (t.amount || 0), 0)
+    return incomes
+      .filter(t => t.sourceId === sourceId)
+      .reduce((total, t) => total + (t.amount || 0), 0)
   }
 
   const calculateMonthlyIncome = (sourceId: string) => {
@@ -37,7 +43,11 @@ export function IncomeSourceList({ sources, incomes, onEdit }: IncomeSourceListP
     return incomes
       .filter(t => {
         const d = new Date(t.date)
-        return t.sourceId === sourceId && d.getMonth() === month && d.getFullYear() === year
+        return (
+          t.sourceId === sourceId &&
+          d.getMonth() === month &&
+          d.getFullYear() === year
+        )
       })
       .reduce((total, t) => total + (t.amount || 0), 0)
   }
@@ -45,28 +55,40 @@ export function IncomeSourceList({ sources, incomes, onEdit }: IncomeSourceListP
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {sources.map(source => (
-        <Card key={source.id} className="p-4 border" style={{ borderColor: COLORS.blue[100] }}>
+        <Card
+          key={source.id}
+          className="p-4 border"
+          style={{ borderColor: COLORS.blue[100] }}
+        >
           <div className="space-y-4">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="font-semibold" style={{ color: COLORS.black[800] }}>{source.name}</h3>
+                <h3
+                  className="font-semibold"
+                  style={{ color: COLORS.black[800] }}
+                >
+                  {source.name}
+                </h3>
                 <p className="text-sm" style={{ color: COLORS.black[600] }}>
                   Total: {calculateTotalIncome(source.id).toLocaleString()} Mt
                 </p>
                 <p className="text-sm" style={{ color: COLORS.black[600] }}>
-                  Este mês: {calculateMonthlyIncome(source.id).toLocaleString()} Mt
+                  Este mês: {calculateMonthlyIncome(source.id).toLocaleString()}{' '}
+                  Mt
                 </p>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => onEdit(source)}
-              >
+              <Button variant="outline" onClick={() => onEdit(source)}>
                 Editar
               </Button>
             </div>
 
             <div>
-              <h4 className="font-medium mb-2" style={{ color: COLORS.black[700] }}>Últimas Transações</h4>
+              <h4
+                className="font-medium mb-2"
+                style={{ color: COLORS.black[700] }}
+              >
+                Últimas Transações
+              </h4>
               <div className="space-y-2">
                 {incomes
                   .filter(t => t.sourceId === source.id)
@@ -78,12 +100,25 @@ export function IncomeSourceList({ sources, incomes, onEdit }: IncomeSourceListP
                       style={{ backgroundColor: COLORS.black[50] }}
                     >
                       <div>
-                        <p className="font-medium" style={{ color: COLORS.black[800] }}>{transaction.description}</p>
-                        <p className="text-sm" style={{ color: COLORS.black[600] }}>
-                          {new Date(transaction.date).toLocaleDateString('pt-BR')}
+                        <p
+                          className="font-medium"
+                          style={{ color: COLORS.black[800] }}
+                        >
+                          {transaction.description}
+                        </p>
+                        <p
+                          className="text-sm"
+                          style={{ color: COLORS.black[600] }}
+                        >
+                          {new Date(transaction.date).toLocaleDateString(
+                            'pt-BR'
+                          )}
                         </p>
                       </div>
-                      <span className="font-medium" style={{ color: COLORS.green[700] }}>
+                      <span
+                        className="font-medium"
+                        style={{ color: COLORS.green[700] }}
+                      >
                         {transaction.amount.toLocaleString()} Mt
                       </span>
                     </div>

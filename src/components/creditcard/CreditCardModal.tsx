@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { COLORS } from '@/constants/colors'
-import { useCreateCreditCard, useUpdateCreditCard } from '@/lib/HTTP/credit-card'
+import {
+  useCreateCreditCard,
+  useUpdateCreditCard,
+} from '@/lib/HTTP/credit-card'
 
 interface CreditCard {
   id: string
@@ -24,14 +28,18 @@ export function CreditCardModal({ card, onClose }: CreditCardModalProps) {
     }
   )
 
-  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const userId =
+    typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const create = useCreateCreditCard()
   const update = useUpdateCreditCard(card?.id || '')
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4" style={{ color: COLORS.black[800] }}>
+        <h3
+          className="text-xl font-bold mb-4"
+          style={{ color: COLORS.black[800] }}
+        >
           {card ? 'Editar Cartão' : 'Novo Cartão'}
         </h3>
 
@@ -39,32 +47,35 @@ export function CreditCardModal({ card, onClose }: CreditCardModalProps) {
           onSubmit={e => {
             e.preventDefault()
             if (card) {
-              update.mutate({ name: formData.name!, limit: formData.limit!, dueDay: formData.dueDay! })
+              update.mutate({
+                name: formData.name!,
+                limit: formData.limit!,
+                dueDay: formData.dueDay!,
+              })
             } else {
-              create.mutate({ name: formData.name!, limit: formData.limit!, dueDay: formData.dueDay!, userId } as any)
+              create.mutate({
+                name: formData.name!,
+                limit: formData.limit!,
+                dueDay: formData.dueDay!,
+                userId,
+              } as any)
             }
             onClose()
           }}
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
-                Nome do Cartão
-              </label>
-              <input
-                type="text"
+              <Input
+                label="Nome do Cartão"
                 value={formData.name || ''}
-                onChange={e =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                className="w-full p-2 border rounded"
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>Limite</label>
-              <input
+              <Input
+                label="Limite"
                 type="number"
                 value={formData.limit ?? 0}
                 onChange={e =>
@@ -73,18 +84,15 @@ export function CreditCardModal({ card, onClose }: CreditCardModalProps) {
                     limit: Number(e.target.value),
                   })
                 }
-                className="w-full p-2 border rounded"
-                min="0"
-                step="0.01"
+                min={0}
+                step={0.01}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
-                Dia de Vencimento
-              </label>
-              <input
+              <Input
+                label="Dia de Vencimento"
                 type="number"
                 value={formData.dueDay ?? 1}
                 onChange={e =>
@@ -93,9 +101,8 @@ export function CreditCardModal({ card, onClose }: CreditCardModalProps) {
                     dueDay: Number(e.target.value),
                   })
                 }
-                className="w-full p-2 border rounded"
-                min="1"
-                max="31"
+                min={1}
+                max={31}
                 required
               />
             </div>

@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { COLORS } from '@/constants/colors'
-import { useCreateBudget, useUpdateBudget } from '@/lib/HTTP/budget'
 
 interface BudgetFormState {
   id?: string
@@ -19,14 +18,19 @@ interface BudgetModalProps {
   onSubmit: (data: BudgetFormState) => void
 }
 
-export function BudgetModal({ selectedBudget, categories, onClose, onSubmit }: BudgetModalProps) {
+export function BudgetModal({
+  selectedBudget,
+  categories,
+  onClose,
+  onSubmit,
+}: BudgetModalProps) {
   const { register, handleSubmit, reset } = useForm<BudgetFormState>({
     defaultValues: {
       categoryId: '',
       month: new Date().getMonth() + 1,
       year: new Date().getFullYear(),
       limit: 0,
-    }
+    },
   })
 
   // Quando abrir o modal, atualiza os valores
@@ -46,11 +50,17 @@ export function BudgetModal({ selectedBudget, categories, onClose, onSubmit }: B
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h3 className="text-xl font-semibold mb-4" style={{ color: COLORS.black[800] }}>
+        <h3
+          className="text-xl font-semibold mb-4"
+          style={{ color: COLORS.black[800] }}
+        >
           {selectedBudget?.id ? 'Editar Orçamento' : 'Novo Orçamento'}
         </h3>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
+          <label
+            className="block text-sm font-medium mb-1"
+            style={{ color: COLORS.black[700] }}
+          >
             Categoria
           </label>
           <select
@@ -65,7 +75,10 @@ export function BudgetModal({ selectedBudget, categories, onClose, onSubmit }: B
             ))}
           </select>
 
-          <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
+          <label
+            className="block text-sm font-medium mt-4 mb-1"
+            style={{ color: COLORS.black[700] }}
+          >
             Mês
           </label>
           <select
@@ -80,7 +93,10 @@ export function BudgetModal({ selectedBudget, categories, onClose, onSubmit }: B
             ))}
           </select>
 
-          <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
+          <label
+            className="block text-sm font-medium mt-4 mb-1"
+            style={{ color: COLORS.black[700] }}
+          >
             Ano
           </label>
           <select
@@ -95,7 +111,10 @@ export function BudgetModal({ selectedBudget, categories, onClose, onSubmit }: B
             ))}
           </select>
 
-          <label className="block text-sm font-medium mt-4 mb-1" style={{ color: COLORS.black[700] }}>
+          <label
+            className="block text-sm font-medium mt-4 mb-1"
+            style={{ color: COLORS.black[700] }}
+          >
             Limite
           </label>
           <input
@@ -106,11 +125,7 @@ export function BudgetModal({ selectedBudget, categories, onClose, onSubmit }: B
           />
 
           <div className="mt-6 flex justify-end">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={onClose}
-            >
+            <Button type="button" variant="secondary" onClick={onClose}>
               Cancelar
             </Button>
             <Button type="submit" className="ml-2">

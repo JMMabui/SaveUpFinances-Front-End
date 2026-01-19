@@ -1,12 +1,11 @@
-import type React from 'react'
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { MainLayout } from '@/components/layout/mainLayout'
-import { useGetIncomeSourcesByUser } from '@/lib/HTTP/income-sources'
-import { useGetIncomeByUser } from '@/lib/HTTP/income'
-import { COLORS } from '@/constants/colors'
 import { IncomeSourceList } from '@/components/incomesource/IncomeSourceList'
 import { IncomeSourceModal } from '@/components/incomesource/IncomeSourceModal'
+import { MainLayout } from '@/components/layout/mainLayout'
+import { Button } from '@/components/ui/button'
+import { COLORS } from '@/constants/colors'
+import { useGetIncomeByUser } from '@/lib/HTTP/income'
+import { useGetIncomeSourcesByUser } from '@/lib/HTTP/income-sources'
 
 interface IncomeSource {
   id: string
@@ -26,7 +25,8 @@ interface Transaction {
 }
 
 export function IncomeSourceManagement() {
-  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const userId =
+    typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
 
   const { data: sourcesQuery } = useGetIncomeSourcesByUser(userId)
   const { data: incomesQuery } = useGetIncomeByUser(userId)
@@ -35,7 +35,9 @@ export function IncomeSourceManagement() {
   const incomes: Transaction[] = incomesQuery?.data || []
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedSource, setSelectedSource] = useState<IncomeSource | null>(null)
+  const [selectedSource, setSelectedSource] = useState<IncomeSource | null>(
+    null
+  )
 
   const handleAddSource = () => {
     setSelectedSource(null)
@@ -50,11 +52,17 @@ export function IncomeSourceManagement() {
   return (
     <MainLayout>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold" style={{ color: COLORS.black[800] }}>Fontes de Renda</h2>
+        <h2 className="text-2xl font-bold" style={{ color: COLORS.black[800] }}>
+          Fontes de Renda
+        </h2>
         <Button onClick={handleAddSource}>Nova Fonte</Button>
       </div>
 
-      <IncomeSourceList sources={sources} incomes={incomes} onEdit={handleEditSource} />
+      <IncomeSourceList
+        sources={sources}
+        incomes={incomes}
+        onEdit={handleEditSource}
+      />
 
       {isModalOpen && (
         <IncomeSourceModal

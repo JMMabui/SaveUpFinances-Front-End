@@ -1,9 +1,7 @@
-import { formatCurrency } from '@/lib/utils'
-import type { TransactionFormData } from '../pages/Transaction/TransactionForm'
 import { Card } from '@/components/ui/card'
+import { formatCurrency } from '@/lib/utils'
 
 interface FinancialSummaryProps {
-  transactions: TransactionFormData[]
   period?: {
     start: string
     end: string
@@ -16,11 +14,9 @@ interface FinancialSummaryProps {
 }
 
 export function FinancialSummary({
-  transactions,
   monthlyTotals,
   totalBalance,
 }: FinancialSummaryProps) {
- 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card>

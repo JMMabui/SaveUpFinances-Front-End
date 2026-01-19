@@ -1,20 +1,12 @@
-import  { useState } from 'react'
-import {
-  FiPlus,
-  FiPieChart,
-  FiDollarSign,
-  FiCreditCard,
-} from 'react-icons/fi'
+import { useState } from 'react'
+import { FiCreditCard, FiDollarSign, FiPieChart, FiPlus } from 'react-icons/fi'
+import type { accountResponse } from '@/lib/HTTP/Type/account.type'
+import { AccountModal } from '../AccountModal'
 import { Button } from '../ui/button'
-import { AccountModal } from '../accountModal'
-import { accountResponse } from '@/lib/HTTP/Type/account.type'
-
 
 interface AsideProps {
   accounts: accountResponse[]
   totalBalance: number
-  selectedAccount: string
-  setSelectedAccount: (account: string) => void
 }
 
 const accountTypes = [
@@ -24,7 +16,7 @@ const accountTypes = [
   { value: 'CARTEIRA_MOVEL', icon: FiDollarSign, label: 'Carteira Móvel' },
 ]
 
-export function Aside({ accounts, totalBalance, selectedAccount, setSelectedAccount }: AsideProps) {
+export function Aside({ accounts, totalBalance }: AsideProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const formatCurrency = (value: number) => {
@@ -54,7 +46,9 @@ export function Aside({ accounts, totalBalance, selectedAccount, setSelectedAcco
 
       <div className="space-y-2">
         {accounts.map(acc => {
-          const Icon = accountTypes.find(t => t.value === acc.accountType)?.icon || FiCreditCard
+          const Icon =
+            accountTypes.find(t => t.value === acc.accountType)?.icon ||
+            FiCreditCard
           return (
             <div
               key={acc.id}

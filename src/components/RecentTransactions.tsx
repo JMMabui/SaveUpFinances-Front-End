@@ -1,11 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { ArrowUpRight, ArrowDownLeft, MoreHorizontal } from 'lucide-react';
-import { COLORS } from '../constants/colors';
-import { useGetTransactionsByUser } from '@/lib/HTTP/transactions';
-import { useGetCategories } from '@/lib/HTTP/categories';
+import { ArrowDownLeft, ArrowUpRight, MoreHorizontal } from 'lucide-react'
+import { useGetCategories } from '@/lib/HTTP/categories'
+import { useGetTransactionsByUser } from '@/lib/HTTP/transactions'
+import { COLORS } from '../constants/colors'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 export function RecentTransactions() {
-  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const userId =
+    typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const { data: transactionsData } = useGetTransactionsByUser(userId)
   const { data: categoriesData } = useGetCategories()
 
@@ -13,18 +14,31 @@ export function RecentTransactions() {
   const categories = categoriesData?.data || []
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+    })
+  }
 
   const getCategoryColor = (categoryId: string) => {
     const idx = categories.findIndex((c: any) => c?.id === categoryId)
-    const palette = [COLORS.green[500], COLORS.blue[500], COLORS.yellow[500], COLORS.black[600], COLORS.green[400], COLORS.yellow[600]]
+    const palette = [
+      COLORS.green[500],
+      COLORS.blue[500],
+      COLORS.yellow[500],
+      COLORS.black[600],
+      COLORS.green[400],
+      COLORS.yellow[600],
+    ]
     return palette[idx >= 0 ? idx % palette.length : 0]
-  };
+  }
 
   const getCategoryName = (categoryId: string) => {
-    return categories.find((c: any) => c?.id === categoryId)?.categoryName || 'Categoria'
+    return (
+      categories.find((c: any) => c?.id === categoryId)?.categoryName ||
+      'Categoria'
+    )
   }
 
   return (
@@ -53,7 +67,7 @@ export function RecentTransactions() {
                     <ArrowUpRight className="w-4 h-4 text-red-600" />
                   )}
                 </div>
-                
+
                 <div className="flex flex-col">
                   <span className="font-medium text-gray-900 text-sm">
                     {transaction.description}
@@ -61,7 +75,11 @@ export function RecentTransactions() {
                   <div className="flex items-center gap-2">
                     <span
                       className="text-xs px-2 py-1 rounded-full text-white"
-                      style={{ backgroundColor: getCategoryColor(transaction.categoryId) }}
+                      style={{
+                        backgroundColor: getCategoryColor(
+                          transaction.categoryId
+                        ),
+                      }}
                     >
                       {getCategoryName(transaction.categoryId)}
                     </span>
@@ -71,7 +89,7 @@ export function RecentTransactions() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <span
                   className={`font-semibold text-sm ${
@@ -81,20 +99,20 @@ export function RecentTransactions() {
                   {transaction.amount >= 0 ? '+' : '-'}
                   {Math.abs(transaction.amount).toLocaleString()} Mt
                 </span>
-                <button className="p-1 hover:bg-gray-200 rounded-full transition-colors">
+                <button type="button" className="p-1 hover:bg-gray-200 rounded-full transition-colors">
                   <MoreHorizontal className="w-4 h-4 text-gray-400" />
                 </button>
               </div>
             </div>
           ))}
         </div>
-        
+
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <button className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded-lg transition-colors">
+          <button type="button" className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded-lg transition-colors">
             Ver Todas as Transações
           </button>
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

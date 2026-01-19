@@ -1,30 +1,24 @@
-
-import { useForm } from 'react-hook-form';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Title } from '@/components/ui/title';
-import { Paragraph } from '@/components/ui/paragraph';
-import logo from '../../assets/logo principal de save up finances.png';
-import z from 'zod/v4';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useLogin } from '@/hooks/auth';
-
-
-
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import z from 'zod/v4'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Paragraph } from '@/components/ui/paragraph'
+import { Title } from '@/components/ui/title'
+import { useLogin } from '@/hooks/auth'
+import logo from '../../assets/logo principal de save up finances.png'
 
 const createAuthSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).max(100),
-});
+})
 
-type Form = z.infer<typeof createAuthSchema>;
+type Form = z.infer<typeof createAuthSchema>
 
-export function LoginPage() {  
-
-  const {mutateAsync: createAuth, isPending} = useLogin()
-
+export function LoginPage() {
+  const { mutateAsync: createAuth, isPending } = useLogin()
 
   const Form = useForm({
     resolver: zodResolver(createAuthSchema),
@@ -32,24 +26,26 @@ export function LoginPage() {
       email: '',
       password: '',
     },
-  });
-  
+  })
 
-
- async function handleSubmit({ email, password }: Form) {
-  try {
-    await createAuth({ email, password });
-    Form.reset();
-  } catch (error) {
-    console.error("Erro no login:", error);
+  async function handleSubmit({ email, password }: Form) {
+    try {
+      await createAuth({ email, password })
+      Form.reset()
+    } catch (error) {
+      console.error('Erro no login:', error)
+    }
   }
-}
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center">
-          <img src={logo} alt="Logo SaveUpFinances" className="mx-auto h-12 w-auto" />
+          <img
+            src={logo}
+            alt="Logo SaveUpFinances"
+            className="mx-auto h-12 w-auto"
+          />
           <Title level={1} className="text-green-600">
             SaveUpFinances
           </Title>
@@ -61,7 +57,10 @@ export function LoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <Card className="py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form onSubmit={Form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form
+            onSubmit={Form.handleSubmit(handleSubmit)}
+            className="space-y-6"
+          >
             <div>
               <Input
                 label="Email"
@@ -76,7 +75,7 @@ export function LoginPage() {
               <Input
                 label="Senha"
                 type="password"
-                {...Form.register('password')}  
+                {...Form.register('password')}
                 placeholder="••••••••"
                 required
               />
@@ -90,13 +89,19 @@ export function LoginPage() {
                   type="checkbox"
                   className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label
+                  htmlFor="remember-me"
+                  className="ml-2 block text-sm text-gray-900"
+                >
                   Lembrar-me
                 </label>
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-green-600 hover:text-green-500">
+                <a
+                  href="#"
+                  className="font-medium text-green-600 hover:text-green-500"
+                >
                   Esqueceu sua senha?
                 </a>
               </div>
@@ -104,11 +109,11 @@ export function LoginPage() {
 
             <div>
               <Button
-                  type="submit"
-                  variant="default"
-                  size="lg"
-                  className="w-full"
-                  disabled={isPending}
+                type="submit"
+                variant="default"
+                size="lg"
+                className="w-full"
+                disabled={isPending}
               >
                 {isPending ? 'Entrando...' : 'Entrar'}
               </Button>
@@ -121,7 +126,9 @@ export function LoginPage() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Ou continue com</span>
+                <span className="px-2 bg-white text-gray-500">
+                  Ou continue com
+                </span>
               </div>
             </div>
 
@@ -130,7 +137,9 @@ export function LoginPage() {
                 variant="outline"
                 size="lg"
                 className="w-full"
-                onClick={() => {/* TODO: Implementar login com Google */}}
+                onClick={() => {
+                  /* TODO: Implementar login com Google */
+                }}
               >
                 <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                   <path
@@ -157,9 +166,15 @@ export function LoginPage() {
                 variant="outline"
                 size="lg"
                 className="w-full"
-                onClick={() => {/* TODO: Implementar login com Facebook */}}
+                onClick={() => {
+                  /* TODO: Implementar login com Facebook */
+                }}
               >
-                <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="h-5 w-5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
                 </svg>
                 Facebook
@@ -170,7 +185,10 @@ export function LoginPage() {
           <div className="mt-6 text-center">
             <Paragraph size="sm" className="text-gray-600">
               Não tem uma conta?{' '}
-              <a href="/register" className="font-medium text-green-600 hover:text-green-500">
+              <a
+                href="/register"
+                className="font-medium text-green-600 hover:text-green-500"
+              >
                 Registre-se
               </a>
             </Paragraph>
@@ -184,5 +202,5 @@ export function LoginPage() {
         </div>
       </div>
     </div>
-  );
-}; 
+  )
+}

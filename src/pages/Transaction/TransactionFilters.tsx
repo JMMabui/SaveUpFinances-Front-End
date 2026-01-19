@@ -1,13 +1,20 @@
-import { Button } from '@/components/ui/button';
-import { DateRangeFilter } from '@/components/dateRangeFilter';
+import { DateRangeFilter } from '@/components/DateRangeFilter'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select'
 
 interface TransactionFiltersProps {
-  selectedType: 'all' | 'income' | 'expense';
-  selectedAccount: string;
-  onTypeChange: (type: 'all' | 'income' | 'expense') => void;
-  onAccountChange: (account: string) => void;
-  onDateRangeChange: (range: { start: string; end: string }) => void;
-  accounts: string[];
+  selectedType: 'all' | 'income' | 'expense'
+  selectedAccount: string
+  onTypeChange: (type: 'all' | 'income' | 'expense') => void
+  onAccountChange: (account: string) => void
+  onDateRangeChange: (range: { start: string; end: string }) => void
+  accounts: string[]
 }
 
 export function TransactionFilters({
@@ -45,26 +52,25 @@ export function TransactionFilters({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button
-          variant={selectedAccount === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => onAccountChange('all')}
+        <Select
+          value={selectedAccount}
+          onValueChange={value => onAccountChange(value)}
         >
-          Todas as Contas
-        </Button>
-        {accounts.map((account) => (
-          <Button
-            key={account}
-            variant={selectedAccount === account ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onAccountChange(account)}
-          >
-            {account}
-          </Button>
-        ))}
+          <SelectTrigger className="w-fit min-w-48">
+            <SelectValue placeholder="Selecionar conta" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas as Contas</SelectItem>
+            {accounts.map(account => (
+              <SelectItem key={account} value={account}>
+                {account}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <DateRangeFilter onFilterChange={onDateRangeChange} />
     </div>
-  );
+  )
 }

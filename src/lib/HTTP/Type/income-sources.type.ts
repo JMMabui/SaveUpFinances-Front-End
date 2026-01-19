@@ -1,18 +1,18 @@
 export interface incomeSourceResponse {
-    name: string;
-    frequency: string;
-    startDate: Date;
-    endDate: Date | null;
-    id: string;
-    isActive: boolean;
-    userId: string;
-    createdAt: Date;
+  name: string
+  frequency: string
+  startDate: string
+  endDate: string | null
+  id: string
+  isActive: boolean
+  userId: string
+  createdAt: string
 }
 
 export interface incomeSourceRequest {
-    name: string;
-    frequency: string;
-    startDate: Date;
-    endDate: Date | null;
-    userId: string;
+  name: string
+  frequency: string
+  startDate: string
+  endDate: string | null
+  userId: string
 }

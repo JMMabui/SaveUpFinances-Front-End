@@ -1,16 +1,16 @@
-import { accountBalanceResponse } from "./account-balance.type";
-import { accountSourceResponse } from "./account-source.type";
-import { bankResponde } from "./banks.type";
-import { debtPaymentsResponse } from "./debts-payments.type";
-import { TransactionResponse } from "./transactions.type";
+import type { accountBalanceResponse } from './account-balance.type'
+import type { accountSourceResponse } from './account-source.type'
+import type { bankResponde } from './banks.type'
+import type { debtPaymentsResponse } from './debts-payments.type'
+import type { TransactionResponse } from './transactions.type'
 
-enum AccountType {
-    CURRENT = 'current',
-    SAVINGS = 'savings',
-    SALARY = 'salary',
-    INVESTMENT = 'investment',
-    DIGITAL = 'digital',
-    JOINT = 'joint',
+export enum AccountType {
+  CURRENT = 'current',
+  SAVINGS = 'savings',
+  SALARY = 'salary',
+  INVESTMENT = 'investment',
+  DIGITAL = 'digital',
+  JOINT = 'joint',
 }
 
 export enum Currency {
@@ -28,59 +28,58 @@ export enum Currency {
 }
 
 export interface account {
-    accountType: AccountType;
-    accountName: string;
-    accountHolderName: string;
-    id: string;
-    balance: number;
-    userId: string;
-    bankId: string | null;
-    currency: Currency;
-    isActive: boolean;
-    isDefault: boolean;
-    isJoint: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+  accountType: AccountType
+  accountName: string
+  accountHolderName: string
+  id: string
+  balance: number
+  userId: string
+  bankId: string | null
+  currency: Currency
+  isActive: boolean
+  isDefault: boolean
+  isJoint: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface accountsResponse {
-   accounts: ({
-    bank: bankResponde[] ,
-    AccountBalance: accountBalanceResponse [],
-    AccountSource: accountSourceResponse[],
-    transactions: TransactionResponse[],
-    DebtPayment: debtPaymentsResponse[],  
-   }& account[]);
-   totalAmount: number;
+  accounts: {
+    bank: bankResponde[]
+    AccountBalance: accountBalanceResponse[]
+    AccountSource: accountSourceResponse[]
+    transactions: TransactionResponse[]
+    DebtPayment: debtPaymentsResponse[]
+  } & account[]
+  totalAmount: number
 }
 
 export interface accountResponse {
-    accountType: AccountType;
-    accountName: string;
-    accountHolderName: string;
-    id: string;
-    balance: number;
-    userId: string;
-    bankId: string | null;
-    currency: Currency;
-    isActive: boolean;
-    isDefault: boolean;
-    isJoint: boolean;
-    createdAt: Date;
-    updatedAt: Date;
+  accountType: AccountType
+  accountName: string
+  accountHolderName: string
+  id: string
+  balance: number
+  userId: string
+  bankId: string | null
+  currency: Currency
+  isActive: boolean
+  isDefault: boolean
+  isJoint: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface accountRequest {
-    id?: string,
-    accountName: string;
-    accountType: AccountType;
-    accountHolderName: string;
-    balance: number;
-    userId: string;
-    bankId: string | null;
-    currency?: Currency;
-    isActive?: boolean;
-    isDefault?: boolean;
-    isJoint?: boolean;
+  id?: string
+  accountName: string
+  accountType: AccountType
+  accountHolderName: string
+  balance: number
+  userId: string
+  bankId: string | null
+  currency?: Currency
+  isActive?: boolean
+  isDefault?: boolean
+  isJoint?: boolean
 }
-

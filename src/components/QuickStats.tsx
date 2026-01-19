@@ -1,67 +1,89 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { TrendingUp, TrendingDown, DollarSign, PiggyBank, CreditCard, AlertTriangle } from 'lucide-react';
-import { COLORS } from '../constants/colors';
-import { getAccountsByUserId } from '@/lib/HTTP/account';
-import { useGetIncomeByUser } from '@/lib/HTTP/income';
-import { useGetExpensesByUser } from '@/lib/HTTP/expenses';
-import { useGetDebtsByUser } from '@/lib/HTTP/debts';
-import { useGetCreditCardsByUser } from '@/lib/HTTP/credit-card';
+import {
+  AlertTriangle,
+  CreditCard,
+  DollarSign,
+  PiggyBank,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react'
+import { getAccountsByUserId } from '@/lib/HTTP/account'
+import { useGetCreditCardsByUser } from '@/lib/HTTP/credit-card'
+import { useGetDebtsByUser } from '@/lib/HTTP/debts'
+import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
+import { useGetIncomeByUser } from '@/lib/HTTP/income'
+import { COLORS } from '../constants/colors'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 interface QuickStatProps {
-  title: string;
-  value: string;
-  change?: string;
-  changeType?: 'positive' | 'negative' | 'neutral';
-  icon: React.ReactNode;
-  color: string;
+  title: string
+  value: string
+  change?: string
+  changeType?: 'positive' | 'negative' | 'neutral'
+  icon: React.ReactNode
+  color: string
 }
 
-const QuickStat = ({ title, value, change, changeType = 'neutral', icon, color }: QuickStatProps) => {
+const QuickStat = ({
+  title,
+  value,
+  change,
+  changeType = 'neutral',
+  icon,
+  color,
+}: QuickStatProps) => {
   const getChangeColor = () => {
     switch (changeType) {
       case 'positive':
-        return 'text-green-600';
+        return 'text-green-600'
       case 'negative':
-        return 'text-red-600';
+        return 'text-red-600'
       default:
-        return 'text-gray-600';
+        return 'text-gray-600'
     }
-  };
+  }
 
   const getChangeIcon = () => {
     switch (changeType) {
       case 'positive':
-        return <TrendingUp className="w-4 h-4 text-green-600" />;
+        return <TrendingUp className="w-4 h-4 text-green-600" />
       case 'negative':
-        return <TrendingDown className="w-4 h-4 text-red-600" />;
+        return <TrendingDown className="w-4 h-4 text-red-600" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-200">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600">{title}</CardTitle>
-        <div className={`p-2 rounded-lg`} style={{ backgroundColor: color + '20' }}>
+        <CardTitle className="text-sm font-medium text-gray-600">
+          {title}
+        </CardTitle>
+        <div
+          className={`p-2 rounded-lg`}
+          style={{ backgroundColor: color + '20' }}
+        >
           <div style={{ color: color }}>{icon}</div>
         </div>
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold text-gray-900">{value}</div>
         {change && (
-          <div className={`flex items-center gap-1 text-sm ${getChangeColor()}`}>
+          <div
+            className={`flex items-center gap-1 text-sm ${getChangeColor()}`}
+          >
             {getChangeIcon()}
             <span>{change}</span>
           </div>
         )}
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 export function QuickStats() {
-  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const userId =
+    typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
 
   const { data: accountsData } = getAccountsByUserId(userId)
   const { data: incomeData } = useGetIncomeByUser(userId)
@@ -76,13 +98,22 @@ export function QuickStats() {
 
   const incomes = incomeData?.data || []
   const expenses = expensesData?.data || []
-  const totalIncome = incomes.reduce((sum: number, i: any) => sum + (i?.amount || 0), 0)
-  const totalExpenses = expenses.reduce((sum: number, e: any) => sum + (e?.amount || 0), 0)
+  const totalIncome = incomes.reduce(
+    (sum: number, i: any) => sum + (i?.amount || 0),
+    0
+  )
+  const totalExpenses = expenses.reduce(
+    (sum: number, e: any) => sum + (e?.amount || 0),
+    0
+  )
   const savings = Math.max(totalIncome - totalExpenses, 0)
 
   const debts = debtsData?.data || []
   const pendingDebts = debts.filter((d: any) => d?.status === 'pending')
-  const pendingDebtsAmount = pendingDebts.reduce((sum: number, d: any) => sum + (d?.amount || 0), 0)
+  const pendingDebtsAmount = pendingDebts.reduce(
+    (sum: number, d: any) => sum + (d?.amount || 0),
+    0
+  )
 
   const creditCards = creditCardsData?.data || []
 
@@ -111,7 +142,7 @@ export function QuickStats() {
       icon: <AlertTriangle className="w-5 h-5" />,
       color: COLORS.black[600],
     },
-  ];
+  ]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -119,5 +150,5 @@ export function QuickStats() {
         <QuickStat key={index} {...stat} />
       ))}
     </div>
-  );
+  )
 }

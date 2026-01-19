@@ -1,26 +1,25 @@
-import { defineConfig } from 'orval';
+import { defineConfig } from 'orval'
 
 export default defineConfig({
-  myApi: {
+  api: {
     input: {
-      target: 'https://localhost:7410/swagger.json',
+      target: './swagger.json',
+      // target: "http://localhost:7410/docs/json",
       validation: false,
-    
     },
     output: {
-      mode: 'tags-split',
-      target: './src/app/api/my-api.ts',
-      schemas: './src/generated/models',
+      target: './src/lib/api/backend.ts',
       client: 'react-query',
+      mode: 'split',
+      schemas: './src/lib/api/model',
+      clean: true,
+      prettier: true,
       override: {
         mutator: {
-          path: 'src/lib/orvalMutator.ts',
-          name: 'orvalMutator',
+          path: 'src/lib/api/orvalMutator.ts',
+          name: 'customAxios',
         },
       },
     },
-    hooks: {
-      afterAllFilesWrite: 'prettier --write',
-    },
   },
-});
+})

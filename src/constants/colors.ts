@@ -12,7 +12,7 @@ export const COLORS = {
     800: '#166534',
     900: '#14532d',
   },
-  
+
   // Amarelo - tons harmoniosos
   yellow: {
     50: '#fefce8',
@@ -26,7 +26,7 @@ export const COLORS = {
     800: '#92400e',
     900: '#78350f',
   },
-  
+
   // Azul - tons harmoniosos
   blue: {
     50: '#eff6ff',
@@ -40,7 +40,7 @@ export const COLORS = {
     800: '#1e40af',
     900: '#1e3a8a',
   },
-  
+
   // Preto e branco
   black: {
     50: '#f8fafc',
@@ -54,16 +54,16 @@ export const COLORS = {
     800: '#1e293b',
     900: '#0f172a',
   },
-  
+
   white: '#ffffff',
-  
+
   // Cores semânticas baseadas na paleta
   success: '#16a34a', // green-600
   warning: '#f59e0b', // yellow-500
-  info: '#3b82f6',   // blue-500
-  error: '#dc2626',  // vermelho para erros
+  info: '#3b82f6', // blue-500
+  error: '#dc2626', // vermelho para erros
   neutral: '#64748b', // black-500
-} as const;
+} as const
 
-export type ColorKey = keyof typeof COLORS;
-export type ColorShade = keyof typeof COLORS.green;
+export type ColorKey = keyof typeof COLORS
+export type ColorShade = keyof typeof COLORS.green

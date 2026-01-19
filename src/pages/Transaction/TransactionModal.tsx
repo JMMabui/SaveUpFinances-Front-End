@@ -1,8 +1,8 @@
 import { FiX } from 'react-icons/fi'
 import { Button } from '@/components/ui/button'
-import { TransactionForm } from './TransactionForm'
-import type { TransactionFormData } from './TransactionForm'
 import { COLORS } from '@/constants/colors'
+import type { TransactionFormData } from './TransactionForm'
+import { TransactionForm } from './TransactionForm'
 
 interface TransactionModalProps {
   isOpen: boolean
@@ -36,7 +36,6 @@ export function TransactionModal({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
       <div
         className="fixed inset-0 transition-opacity"
         onClick={onClose}
@@ -44,9 +43,18 @@ export function TransactionModal({
         style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
       />
 
-      <div className="fixed right-0 top-0 h-full w-full max-w-md shadow-lg backdrop-blur-sm" style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}>
-        <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: COLORS.black[200] }}>
-          <h3 className="text-lg font-bold" style={{ color: COLORS.black[800] }}>
+      <div
+        className="fixed right-0 top-0 h-full w-full max-w-md shadow-lg backdrop-blur-sm"
+        style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
+      >
+        <div
+          className="flex items-center justify-between p-4 border-b"
+          style={{ borderColor: COLORS.black[200] }}
+        >
+          <h3
+            className="text-lg font-bold"
+            style={{ color: COLORS.black[800] }}
+          >
             {mode === 'add' ? 'Adicionar Transação' : 'Editar Transação'}
           </h3>
           <Button

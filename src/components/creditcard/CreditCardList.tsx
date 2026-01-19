@@ -18,11 +18,7 @@ interface CreditCardListProps {
 function DeleteCardButton({ id }: { id: string }) {
   const del = useDeleteCreditCard()
   return (
-    <Button
-      variant="destructive"
-      size="sm"
-      onClick={() => del.mutate(id)}
-    >
+    <Button variant="destructive" size="sm" onClick={() => del.mutate(id)}>
       Excluir
     </Button>
   )
@@ -42,11 +38,18 @@ export function CreditCardList({ cards, onEdit }: CreditCardListProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {cards.map(card => {
         return (
-          <Card key={card.id} className="border" style={{ borderColor: COLORS.blue[100] }}>
+          <Card
+            key={card.id}
+            className="border"
+            style={{ borderColor: COLORS.blue[100] }}
+          >
             <div className="p-4">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold" style={{ color: COLORS.black[800] }}>
+                  <h3
+                    className="text-lg font-semibold"
+                    style={{ color: COLORS.black[800] }}
+                  >
                     {card.name}
                   </h3>
                   <p className="text-sm" style={{ color: COLORS.black[600] }}>
@@ -67,8 +70,13 @@ export function CreditCardList({ cards, onEdit }: CreditCardListProps) {
 
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span style={{ color: COLORS.black[600] }}>Limite Total:</span>
-                  <span className="font-medium" style={{ color: COLORS.black[800] }}>
+                  <span style={{ color: COLORS.black[600] }}>
+                    Limite Total:
+                  </span>
+                  <span
+                    className="font-medium"
+                    style={{ color: COLORS.black[800] }}
+                  >
                     {formatCurrency(card.limit)}
                   </span>
                 </div>

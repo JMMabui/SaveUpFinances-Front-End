@@ -1,14 +1,12 @@
-
-
 export interface accountSourceResponse {
-    id: string;
-    accountId: string;
-    source: string;
-    createdAt: Date;
-    updatedAt: Date;
+  id: string
+  accountId: string
+  source: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface accountSourceRequest {
-    accountId: string;
-    source: string;
+  accountId: string
+  source: string
 }

@@ -1,10 +1,10 @@
 export interface bankResponde {
-    id: string;
-    bankName: string;
-    logoUrl: string | null;
+  id: string
+  bankName: string
+  logoUrl: string | null
 }
 
 export interface bankRequest {
-    bankName: string;
-    logoUrl: string | null;
+  bankName: string
+  logoUrl: string | null
 }

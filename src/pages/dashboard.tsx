@@ -1,21 +1,21 @@
-
+import { ExpenseChart } from '../components/ExpenseChart'
+import { FinancialAlerts } from '../components/FinancialAlerts'
+import { FinancialGoals } from '../components/FinancialGoals'
 import { MainLayout } from '../components/layout/mainLayout'
-import { QuickStats } from '../components/quickStats'
-import { ExpenseChart } from '../components/expenseChart'
-import { FinancialGoals } from '../components/financialGoals'
-import { RecentTransactions } from '../components/recentTransactions'
-import { FinancialAlerts } from '../components/financialAlerts'
-import { MonthlySummary } from '../components/monthlySummary'
+import { MonthlySummary } from '../components/MonthlySummary'
+import { QuickStats } from '../components/QuickStats'
+import { RecentTransactions } from '../components/RecentTransactions'
 
 export function Dashboard() {
   return (
     <MainLayout>
       {/* Resumo financeiro usando Cards */}
       <main className="px-6 space-y-6">
-        
         {/* Estatísticas rápidas */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Visão Geral</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Visão Geral
+          </h2>
           <QuickStats />
         </section>
 
@@ -25,7 +25,7 @@ export function Dashboard() {
           <div className="lg:col-span-2 space-y-6">
             {/* Gráfico de despesas */}
             <ExpenseChart />
-            
+
             {/* Metas financeiras */}
             <FinancialGoals />
           </div>
@@ -34,7 +34,7 @@ export function Dashboard() {
           <div className="space-y-6">
             {/* Transações recentes */}
             <RecentTransactions />
-            
+
             {/* Alertas financeiros */}
             <FinancialAlerts />
           </div>
@@ -42,10 +42,11 @@ export function Dashboard() {
 
         {/* Resumo mensal em largura total */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Análise Mensal</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Análise Mensal
+          </h2>
           <MonthlySummary />
         </section>
-        
       </main>
     </MainLayout>
   )

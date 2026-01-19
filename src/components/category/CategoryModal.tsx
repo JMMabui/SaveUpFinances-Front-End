@@ -1,7 +1,15 @@
 import type React from 'react'
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select'
 import { COLORS } from '@/constants/colors'
 import { useCreateCategory, useUpdateCategory } from '@/lib/HTTP/categories'
 
@@ -26,7 +34,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
   categories,
   onClose,
 }) => {
-  const { register, handleSubmit, reset } = useForm<Category>({
+  const { register, handleSubmit, reset, control } = useForm<Category>({
     defaultValues: {
       categoryName: '',
       categoryType: 'expense',
@@ -77,7 +85,10 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4" style={{ color: COLORS.black[800] }}>
+        <h3
+          className="text-xl font-bold mb-4"
+          style={{ color: COLORS.black[800] }}
+        >
           {category ? 'Editar Categoria' : 'Nova Categoria'}
         </h3>
 
@@ -85,28 +96,35 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
           <div className="space-y-4">
             {/* Nome */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
-                Nome da Categoria
-              </label>
-              <input
-                type="text"
+              <Input
+                label="Nome da Categoria"
                 {...register('categoryName', { required: true })}
-                className="w-full p-2 border rounded"
                 placeholder="Ex: Alimentação"
               />
             </div>
 
             {/* Tipo */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>Tipo</label>
-              <select
-                {...register('categoryType', { required: true })}
-                className="w-full p-2 border rounded"
-              >
-                <option value="income">Receita</option>
-                <option value="expense">Despesa</option>
-                <option value="investment">Investimento</option>
-              </select>
+              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
+                Tipo
+              </label>
+              <Controller
+                name="categoryType"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="income">Receita</SelectItem>
+                      <SelectItem value="expense">Despesa</SelectItem>
+                      <SelectItem value="investment">Investimento</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
 
             {/* Categoria Pai */}
@@ -114,40 +132,43 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
                 Categoria Pai
               </label>
-              <select
-                {...register('parentId')}
-                className="w-full p-2 border rounded"
-              >
-                <option value="">Nenhuma (Categoria Principal)</option>
-                {mainCategories.map(cat => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.categoryName}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                name="parentId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value ?? ''}
+                    onValueChange={value => field.onChange(value || undefined)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Nenhuma (Categoria Principal)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Nenhuma (Categoria Principal)</SelectItem>
+                      {mainCategories.map(cat => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.categoryName}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
 
             {/* Ícone */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
-                Ícone
-              </label>
-              <input
+              <Input
+                label="Ícone"
                 type="text"
                 {...register('icon')}
-                className="w-full p-2 border rounded"
                 placeholder="Ex: 🍔"
               />
             </div>
 
             {/* Cor */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>Cor</label>
-              <input
-                type="color"
-                {...register('color')}
-                className="w-full p-2 border rounded"
-              />
+              <Input label="Cor" type="color" {...register('color')} />
             </div>
           </div>
 
