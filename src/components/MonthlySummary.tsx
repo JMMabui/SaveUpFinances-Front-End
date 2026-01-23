@@ -217,8 +217,8 @@ export function MonthlySummary() {
             <div className="text-xs text-gray-500 mt-1">
               {currentMonth.income
                 ? ((currentMonth.savings / currentMonth.income) * 100).toFixed(
-                    1
-                  )
+                  1
+                )
                 : '0.0'}
               % do rendimento
             </div>
