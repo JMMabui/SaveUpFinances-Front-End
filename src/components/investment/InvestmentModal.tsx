@@ -2,12 +2,19 @@ import type React from 'react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { COLORS } from '@/constants/colors'
 import { useCreateInvestment, useUpdateInvestment } from '@/lib/HTTP/investment'
 import type { investmentRequest } from '@/lib/HTTP/Type/investment.type'
 
 interface InvestmentModalProps {
-  investment: investmentRequest | null
+  investment: (investmentRequest & { id?: string }) | null
   onClose: () => void
 }
 
@@ -31,14 +38,18 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
   const update = useUpdateInvestment(investment?.id || '')
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3
-          className="text-xl font-bold mb-4"
-          style={{ color: COLORS.black[800] }}
-        >
-          {investment ? 'Editar Investimento' : 'Novo Investimento'}
-        </h3>
+    <Sheet
+      open
+      onOpenChange={open => {
+        if (!open) onClose()
+      }}
+    >
+      <SheetContent side="right" className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle style={{ color: COLORS.black[800] }}>
+            {investment ? 'Editar Investimento' : 'Novo Investimento'}
+          </SheetTitle>
+        </SheetHeader>
 
         <form
           onSubmit={e => {
@@ -64,7 +75,7 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
             onClose()
           }}
         >
-          <div className="space-y-4">
+          <div className="space-y-4 px-4">
             <div>
               <Input
                 label="Nome do Investimento"
@@ -105,14 +116,14 @@ export const InvestmentModal: React.FC<InvestmentModalProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 mt-6">
+          <SheetFooter className="px-4">
             <Button variant="outline" onClick={onClose} type="button">
               Cancelar
             </Button>
             <Button type="submit">Salvar</Button>
-          </div>
+          </SheetFooter>
         </form>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }

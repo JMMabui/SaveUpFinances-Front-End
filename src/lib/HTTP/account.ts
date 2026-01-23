@@ -1,4 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useToast } from '@/components/ui/toast'
+import {
+  AccountsPostAccountsBodySchema,
+  AccountsPutAccountsByIdBodySchema,
+} from '@/lib/openapi/zod/Accounts'
 import { accountService, apiService } from '../apiServices'
 import type { accountRequest, accountResponse } from './Type/account.type'
 
@@ -30,33 +35,48 @@ export function getAccountById(id: string) {
 }
 
 export function useCreateAccount() {
+  const { success, error } = useToast()
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: ['create-account'],
-    mutationFn: async (data: accountRequest | Partial<accountRequest>) =>
-      accountService.create(data as Partial<accountResponse>),
+    mutationFn: async (data: accountRequest | Partial<accountRequest>) => {
+      const parsed = AccountsPostAccountsBodySchema.parse(data)
+      return accountService.create(parsed as Partial<accountResponse>)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-accounts'] })
       queryClient.invalidateQueries({ queryKey: ['get-accounts-all'] })
+      success('Conta criada', 'A conta foi criada com sucesso.')
+    },
+    onError: () => {
+      error('Falha ao criar conta', 'Tente novamente mais tarde.')
     },
   })
 }
 
 export function useUpdateAccount(id: string) {
+  const { success, error } = useToast()
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: ['update-account', id],
-    mutationFn: async (data: Partial<accountRequest>) =>
-      accountService.update(id, data as Partial<accountResponse>),
+    mutationFn: async (data: Partial<accountRequest>) => {
+      const parsed = AccountsPutAccountsByIdBodySchema.parse(data)
+      return accountService.update(id, parsed as Partial<accountResponse>)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-accounts'] })
       queryClient.invalidateQueries({ queryKey: ['get-accounts-all'] })
       queryClient.invalidateQueries({ queryKey: ['get-account-by-id', id] })
+      success('Conta atualizada', 'Alterações guardadas com sucesso.')
+    },
+    onError: () => {
+      error('Falha ao atualizar conta', 'Verifique os dados e tente novamente.')
     },
   })
 }
 
 export function useDeleteAccount() {
+  const { success, error } = useToast()
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: ['delete-account'],
@@ -64,6 +84,10 @@ export function useDeleteAccount() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-accounts'] })
       queryClient.invalidateQueries({ queryKey: ['get-accounts-all'] })
+      success('Conta apagada', 'A conta foi removida com sucesso.')
+    },
+    onError: () => {
+      error('Falha ao apagar conta', 'Tente novamente mais tarde.')
     },
   })
 }

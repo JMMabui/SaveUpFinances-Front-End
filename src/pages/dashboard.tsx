@@ -1,3 +1,4 @@
+import { CashFlowChart } from '../components/CashFlowChart'
 import { ExpenseChart } from '../components/ExpenseChart'
 import { FinancialAlerts } from '../components/FinancialAlerts'
 import { FinancialGoals } from '../components/FinancialGoals'
@@ -23,6 +24,8 @@ export function Dashboard() {
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Coluna esquerda - Gráficos e Metas */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Fluxo de caixa */}
+            <CashFlowChart />
             {/* Gráfico de despesas */}
             <ExpenseChart />
 

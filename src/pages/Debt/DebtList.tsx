@@ -10,24 +10,25 @@ import {
 import { Button } from '@/components/ui/button'
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { COLORS } from '@/constants/colors'
-import type { Debt } from '@/types/Debt'
+import type { debtsResponse } from '@/lib/HTTP/Type/debts.type'
 
 interface DebtListProps {
-  debts: Debt[]
+  debts: debtsResponse[]
   onAdd: () => void
-  onEdit: (debt: Debt) => void
+  onEdit: (debt: debtsResponse) => void
   onPay: (debtId: string) => void
 }
 
-function isVencida(debt: Debt) {
+function isVencida(debt: debtsResponse) {
   return (
-    debt.status === 'pendente' && new Date(debt.dataVencimento) < new Date()
+    debt.status === 'PENDING' &&
+    new Date(debt.dueDate as any as string) < new Date()
   )
 }
 
@@ -41,19 +42,25 @@ export const DebtList: React.FC<DebtListProps> = ({
     'todas' | 'pendente' | 'paga'
   >('todas')
   const filteredDebts = debts
-    .filter(d => statusFilter === 'todas' || d.status === statusFilter)
+    .filter(
+      d =>
+        statusFilter === 'todas' ||
+        (statusFilter === 'pendente'
+          ? d.status === 'PENDING'
+          : d.status === 'PAID')
+    )
     .sort(
       (a, b) =>
-        new Date(a.dataVencimento).getTime() -
-        new Date(b.dataVencimento).getTime()
+        new Date(a.dueDate as any as string).getTime() -
+        new Date(b.dueDate as any as string).getTime()
     )
 
   const totalPendentes = debts
-    .filter(d => d.status === 'pendente')
-    .reduce((acc, d) => acc + d.valor, 0)
+    .filter(d => d.status === 'PENDING')
+    .reduce((acc, d) => acc + (d.amount || 0), 0)
   const totalPagas = debts
-    .filter(d => d.status === 'paga')
-    .reduce((acc, d) => acc + d.valor, 0)
+    .filter(d => d.status === 'PAID')
+    .reduce((acc, d) => acc + (d.amount || 0), 0)
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -135,19 +142,19 @@ export const DebtList: React.FC<DebtListProps> = ({
                   className="p-4 font-medium"
                   style={{ color: COLORS.black[800] }}
                 >
-                  {debt.descricao}
+                  {debt.description}
                 </td>
                 <td className="p-4" style={{ color: COLORS.black[700] }}>
-                  MT {debt.valor.toFixed(2)}
+                  MT {Number(debt.amount || 0).toFixed(2)}
                 </td>
                 <td className="p-4" style={{ color: COLORS.black[700] }}>
-                  {debt.credor}
+                  {debt.creditor}
                 </td>
                 <td
                   className="p-4 flex items-center gap-2"
                   style={{ color: COLORS.black[700] }}
                 >
-                  {new Date(debt.dataVencimento).toLocaleDateString()}
+                  {new Date(debt.dueDate as any as string).toLocaleDateString()}
                   {isVencida(debt) && (
                     <span
                       className="inline-flex items-center gap-1 text-xs font-semibold ml-1"
@@ -159,7 +166,7 @@ export const DebtList: React.FC<DebtListProps> = ({
                   )}
                 </td>
                 <td className="p-4">
-                  {debt.status === 'paga' ? (
+                  {debt.status === 'PAID' ? (
                     <span
                       className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold shadow-sm"
                       style={{
@@ -201,7 +208,7 @@ export const DebtList: React.FC<DebtListProps> = ({
                   >
                     <FiEdit2 size={18} />
                   </button>
-                  {debt.status === 'pendente' && (
+                  {debt.status === 'PENDING' && (
                     <button
                       type="button"
                       title="Registrar pagamento"

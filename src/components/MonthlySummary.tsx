@@ -46,13 +46,13 @@ export function MonthlySummary() {
       .filter(
         (i: any) => i.date.getMonth() === month && i.date.getFullYear() === year
       )
-      .reduce((sum: number, i: any) => sum + (i.amount || 0), 0)
+      .reduce((sum: number, i: any) => sum + (Number(i.amount) || 0), 0)
 
     const monthExpenses = expenses
       .filter(
         (e: any) => e.date.getMonth() === month && e.date.getFullYear() === year
       )
-      .reduce((sum: number, e: any) => sum + (e.amount || 0), 0)
+      .reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0)
 
     const savings = Math.max(monthIncome - monthExpenses, 0)
 

@@ -1,3 +1,6 @@
+import type { z } from 'zod'
+import type { IncomeSourcePostIncomeSourceBodySchema } from '@/lib/openapi/zod/IncomeSource'
+
 export interface incomeSourceResponse {
   name: string
   frequency: string
@@ -9,10 +12,6 @@ export interface incomeSourceResponse {
   createdAt: string
 }
 
-export interface incomeSourceRequest {
-  name: string
-  frequency: string
-  startDate: string
-  endDate: string | null
-  userId: string
-}
+export type incomeSourceRequest = z.infer<
+  typeof IncomeSourcePostIncomeSourceBodySchema
+>

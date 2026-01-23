@@ -1,19 +1,22 @@
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table'
+import { getAccountsByUserId } from '@/lib/HTTP/account'
+import { useGetCategories } from '@/lib/HTTP/categories'
+import type { TransactionResponse } from '@/lib/HTTP/Type/transactions.type'
 import type { TransactionFormData } from './TransactionForm'
 
 interface TransactionListProps {
-  transactions: TransactionFormData[]
-  onEdit?: (transaction: TransactionFormData) => void
-  onDelete?: (transaction: TransactionFormData) => void
+  transactions: Array<TransactionFormData | TransactionResponse>
+  onEdit?: (transaction: TransactionFormData | TransactionResponse) => void
+  onDelete?: (transaction: TransactionFormData | TransactionResponse) => void
 }
 
 export function TransactionList({
@@ -21,6 +24,15 @@ export function TransactionList({
   onEdit,
   onDelete,
 }: TransactionListProps) {
+  const userId =
+    typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
+  const { data: categoriesData } = useGetCategories()
+  const categories = categoriesData?.data || []
+  const { data: accountsData } = getAccountsByUserId(userId)
+  const accounts = Array.isArray(accountsData?.data)
+    ? (accountsData?.data as any[])
+    : []
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-MZ', {
       style: 'currency',
@@ -30,12 +42,40 @@ export function TransactionList({
     }).format(value)
   }
 
-  const formatDate = (date: string) => {
+  const formatDate = (date: string | Date) => {
     return new Intl.DateTimeFormat('pt-MZ', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
-    }).format(new Date(date))
+    }).format(typeof date === 'string' ? new Date(date) : date)
+  }
+
+  const getCategoryName = (t: TransactionFormData | TransactionResponse) => {
+    const categoryId = (t as any).categoryId ?? (t as any).category ?? ''
+    return (
+      categories.find((c: any) => c?.id === String(categoryId))?.categoryName ||
+      'Categoria'
+    )
+  }
+
+  const getAccountName = (t: TransactionFormData | TransactionResponse) => {
+    const accountId = (t as any).accountId ?? ''
+    const debitAccount = (t as any).debitAccount ?? ''
+    let acc =
+      accounts.find((a: any) => String(a?.id) === String(accountId)) || null
+    if (!acc && debitAccount) {
+      acc =
+        accounts.find(
+          (a: any) => String(a?.accountType) === String(debitAccount)
+        ) || null
+    }
+    return acc?.accountName || debitAccount || 'Conta'
+  }
+
+  const getType = (t: TransactionFormData | TransactionResponse) => {
+    const type: any = (t as any).type
+    if (type === 'income' || type === 'expense') return type
+    return (t as any).amount >= 0 ? 'income' : 'expense'
   }
 
   return (
@@ -53,35 +93,37 @@ export function TransactionList({
       </TableHeader>
       <TableBody>
         {transactions.map(transaction => (
-          <TableRow key={transaction.id}>
+          <TableRow key={String((transaction as any).id)}>
             <TableCell className="text-gray-500">
-              {formatDate(transaction.date)}
+              {formatDate((transaction as any).date)}
             </TableCell>
             <TableCell className="text-gray-900">
-              {transaction.description}
+              {(transaction as any).description}
             </TableCell>
             <TableCell className="text-gray-500">
-              {transaction.category}
+              {getCategoryName(transaction)}
             </TableCell>
             <TableCell>
               <Badge
                 variant={
-                  transaction.type === 'income' ? 'success' : 'destructive'
+                  getType(transaction) === 'income' ? 'success' : 'destructive'
                 }
                 size="sm"
               >
-                {transaction.type === 'income' ? 'Receita' : 'Despesa'}
+                {getType(transaction) === 'income' ? 'Receita' : 'Despesa'}
               </Badge>
             </TableCell>
             <TableCell
               className={
-                transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                getType(transaction) === 'income'
+                  ? 'text-green-600'
+                  : 'text-red-600'
               }
             >
-              {formatCurrency(transaction.amount)}
+              {formatCurrency((transaction as any).amount)}
             </TableCell>
             <TableCell className="text-gray-500">
-              {transaction.accountType}
+              {getAccountName(transaction)}
             </TableCell>
             <TableCell>
               <div className="flex justify-end space-x-2">

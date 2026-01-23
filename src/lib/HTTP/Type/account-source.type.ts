@@ -1,3 +1,6 @@
+import type { z } from 'zod'
+import type { AccountsSourcePostAccountSourceBodySchema } from '@/lib/openapi/zod/AccountsSource'
+
 export interface accountSourceResponse {
   id: string
   accountId: string
@@ -6,7 +9,6 @@ export interface accountSourceResponse {
   updatedAt: string
 }
 
-export interface accountSourceRequest {
-  accountId: string
-  source: string
-}
+export type accountSourceRequest = z.infer<
+  typeof AccountsSourcePostAccountSourceBodySchema
+>

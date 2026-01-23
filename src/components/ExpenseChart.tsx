@@ -13,8 +13,10 @@ interface ExpenseCategoryAgg {
 export function ExpenseChart() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
-  const { data: expensesData } = useGetExpensesByUser(userId)
-  const { data: categoriesData } = useGetCategories()
+  const { data: expensesData, isLoading: loadingExpenses } =
+    useGetExpensesByUser(userId)
+  const { data: categoriesData, isLoading: loadingCategories } =
+    useGetCategories()
 
   const expenses = expensesData?.data || []
   const categories = categoriesData?.data || []
@@ -64,6 +66,12 @@ export function ExpenseChart() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          {(loadingExpenses || loadingCategories) && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="h-4 w-4 rounded-full border-2 border-gray-300 border-t-green-500 animate-spin" />
+              Carregando despesas...
+            </div>
+          )}
           <div className="space-y-3">
             {categoriesAgg.map((category, index) => (
               <div key={index} className="space-y-2">

@@ -1,22 +1,16 @@
-enum TransactionType {
-  INCOME = 'income',
-  EXPENSE = 'expense',
-  INVESTMENT = 'investment',
-}
+import type { z } from 'zod'
+import type { CategoriesPostCategoriesBodySchema } from '@/lib/openapi/zod/Categories'
 
 export interface categoryResponse {
   id: string
   createdAt: Date
   updatedAt: Date
   categoryName: string
-  categoryType: TransactionType
+  categoryType: z.infer<
+    typeof CategoriesPostCategoriesBodySchema
+  >['categoryType']
   icon: string | null
   color: string | null
 }
 
-export interface categoryRequest {
-  categoryName: string
-  categoryType: TransactionType
-  icon: string | null
-  color: string | null
-}
+export type categoryRequest = z.infer<typeof CategoriesPostCategoriesBodySchema>

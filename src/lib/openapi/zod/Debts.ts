@@ -1,0 +1,31 @@
+import { z } from 'zod'
+export const DebtsPostDebtsBodySchema = z.object({
+  description: z.string(),
+  amount: z.number(),
+  creditor: z.string(),
+  dueDate: z.string(),
+  status: z.enum(['PENDING', 'PAID']),
+  notes: z.union([z.string(), z.null()]).optional(),
+  paymentDate: z.union([z.string(), z.null()]).optional(),
+  userId: z.string(),
+})
+export const DebtsPostDebtsResponseSchema = z.unknown()
+export const DebtsGetDebtsBodySchema = z.unknown()
+export const DebtsGetDebtsResponseSchema = z.unknown()
+export const DebtsGetDebtsByIdBodySchema = z.unknown()
+export const DebtsGetDebtsByIdResponseSchema = z.unknown()
+export const DebtsPutDebtsByIdBodySchema = z.object({
+  description: z.string().optional(),
+  amount: z.number().optional(),
+  creditor: z.string().optional(),
+  dueDate: z.string().optional(),
+  status: z.enum(['PENDING', 'PAID']).optional(),
+  notes: z.union([z.string(), z.null()]).optional(),
+  paymentDate: z.union([z.string(), z.null()]).optional(),
+  userId: z.string().optional(),
+})
+export const DebtsPutDebtsByIdResponseSchema = z.unknown()
+export const DebtsDeleteDebtsByIdBodySchema = z.unknown()
+export const DebtsDeleteDebtsByIdResponseSchema = z.unknown()
+export const DebtsGetDebtsUserByUserIdBodySchema = z.unknown()
+export const DebtsGetDebtsUserByUserIdResponseSchema = z.unknown()

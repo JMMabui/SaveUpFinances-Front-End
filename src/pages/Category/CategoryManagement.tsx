@@ -1,15 +1,19 @@
 import { useState } from 'react'
+import type { z } from 'zod'
 import { CategoryModal } from '@/components/category/CategoryModal'
 import { MainLayout } from '@/components/layout/mainLayout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { COLORS } from '@/constants/colors'
 import { useDeleteCategory, useGetCategories } from '@/lib/HTTP/categories'
+import type { CategoriesPostCategoriesBodySchema } from '@/lib/openapi/zod/Categories'
 
 interface Category {
   id: string
   categoryName: string
-  categoryType: 'income' | 'expense' | 'investment'
+  categoryType: z.infer<
+    typeof CategoriesPostCategoriesBodySchema
+  >['categoryType']
   icon: string | null
   color: string | null
   parentId?: string | null

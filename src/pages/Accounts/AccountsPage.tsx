@@ -12,7 +12,7 @@ import {
   type accountsResponse,
 } from '@/lib/HTTP/Type/account.type'
 
-type AccountFormState = accountRequest
+type AccountFormState = accountRequest & { id?: string }
 
 export function AccountsPage() {
   const userId =

@@ -2,6 +2,13 @@ import type React from 'react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 
 interface DebtPaymentFormProps {
   valorOriginal: number
@@ -33,51 +40,61 @@ export const DebtPaymentForm: React.FC<DebtPaymentFormProps> = ({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-6 bg-white rounded shadow max-w-md mx-auto space-y-4"
+    <Sheet
+      open
+      onOpenChange={open => {
+        if (!open) onCancel()
+      }}
     >
-      <h2 className="text-xl font-bold mb-4">Registrar Pagamento</h2>
-      <div>
-        <Input
-          label="Valor pago *"
-          type="number"
-          value={valorPago}
-          onChange={e => setValorPago(Number(e.target.value))}
-          min={1}
-          max={valorOriginal}
-          required
-          error={
-            touched && (!valorPago || valorPago <= 0)
-              ? 'Informe um valor válido'
-              : undefined
-          }
-        />
-      </div>
-      <div>
-        <Input
-          label="Data do pagamento *"
-          type="date"
-          value={dataPagamento}
-          onChange={e => setDataPagamento(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label className="block font-medium mb-1">Observações</label>
-        <textarea
-          className="border rounded px-3 py-2 w-full"
-          value={observacoes}
-          onChange={e => setObservacoes(e.target.value)}
-          placeholder="Opcional"
-        />
-      </div>
-      <div className="flex gap-2 mt-4">
-        <Button type="submit">Salvar</Button>
-        <Button type="button" variant="secondary" onClick={onCancel}>
-          Cancelar
-        </Button>
-      </div>
-    </form>
+      <SheetContent side="right" className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Registrar Pagamento</SheetTitle>
+        </SheetHeader>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4 px-4">
+            <div>
+              <Input
+                label="Valor pago *"
+                type="number"
+                value={valorPago}
+                onChange={e => setValorPago(Number(e.target.value))}
+                min={1}
+                max={valorOriginal}
+                required
+                error={
+                  touched && (!valorPago || valorPago <= 0)
+                    ? 'Informe um valor válido'
+                    : undefined
+                }
+              />
+            </div>
+            <div>
+              <Input
+                label="Data do pagamento *"
+                type="date"
+                value={dataPagamento}
+                onChange={e => setDataPagamento(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="block font-medium mb-1">Observações</label>
+              <textarea
+                className="border rounded px-3 py-2 w-full"
+                value={observacoes}
+                onChange={e => setObservacoes(e.target.value)}
+                placeholder="Opcional"
+              />
+            </div>
+          </div>
+          <SheetFooter className="px-4 mt-4">
+            <Button type="submit">Salvar</Button>
+            <Button type="button" variant="secondary" onClick={onCancel}>
+              Cancelar
+            </Button>
+          </SheetFooter>
+        </form>
+      </SheetContent>
+    </Sheet>
   )
 }

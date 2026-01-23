@@ -68,6 +68,7 @@ export function TransactionForm({
   const { data: accountsApi } = getAccountsByUserId(userId)
   const accountsFromApi = Array.isArray(accountsApi?.data)
     ? (accountsApi?.data as any[]).map(acc => ({
+        id: acc.id,
         label: acc.accountName,
         type: acc.accountType,
         balance: acc.balance,
@@ -157,7 +158,10 @@ export function TransactionForm({
             </SelectTrigger>
             <SelectContent>
               {availableAccounts.map(account => (
-                <SelectItem key={account.type} value={account.type}>
+                <SelectItem
+                  key={(account as any).id ?? account.type}
+                  value={String((account as any).id ?? account.type)}
+                >
                   {account.label} - MT {account.balance.toLocaleString()}
                 </SelectItem>
               ))}

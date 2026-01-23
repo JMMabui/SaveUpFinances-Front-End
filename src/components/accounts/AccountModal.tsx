@@ -1,6 +1,13 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { COLORS } from '@/constants/colors'
 import { useCreateAccount, useUpdateAccount } from '@/lib/HTTP/account'
 import type { accountRequest } from '@/lib/HTTP/Type/account.type'
@@ -25,13 +32,15 @@ const CURRENCY = [
 ]
 
 interface AccountModalProps {
-  initial: accountRequest
+  initial: accountRequest & { id?: string }
   onClose: () => void
   banks: any[]
 }
 
 export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
-  const { register, handleSubmit, reset, watch } = useForm<accountRequest>({
+  const { register, handleSubmit, reset, watch } = useForm<
+    accountRequest & { id?: string }
+  >({
     defaultValues: initial,
   })
 
@@ -45,7 +54,7 @@ export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
     reset(initial)
   }, [initial, reset])
 
-  const onSubmit = (form: accountRequest) => {
+  const onSubmit = (form: accountRequest & { id?: string }) => {
     console.log('Account form data, ', form)
     if (form.id) {
       update.mutate({
@@ -75,17 +84,21 @@ export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
   const isEditing = !!watch('id')
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3
-          className="text-xl font-bold mb-4"
-          style={{ color: COLORS.black[800] }}
-        >
-          {isEditing ? 'Editar Conta' : 'Nova Conta'}
-        </h3>
+    <Sheet
+      open
+      onOpenChange={open => {
+        if (!open) onClose()
+      }}
+    >
+      <SheetContent side="right" className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle style={{ color: COLORS.black[800] }}>
+            {isEditing ? 'Editar Conta' : 'Nova Conta'}
+          </SheetTitle>
+        </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
+          <div className="space-y-4 px-4">
             <div>
               <label
                 className="block text-sm font-medium mb-1"
@@ -204,14 +217,14 @@ export function AccountModal({ initial, onClose, banks }: AccountModalProps) {
             )}
           </div>
 
-          <div className="flex justify-end gap-2 mt-6">
+          <SheetFooter className="px-4">
             <Button variant="secondary" type="button" onClick={onClose}>
               Cancelar
             </Button>
             <Button type="submit">Salvar</Button>
-          </div>
+          </SheetFooter>
         </form>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }

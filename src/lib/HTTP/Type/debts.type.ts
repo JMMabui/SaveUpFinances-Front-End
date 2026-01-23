@@ -1,6 +1,9 @@
+import type { z } from 'zod'
+import type { DebtsPostDebtsBodySchema } from '@/lib/openapi/zod/Debts'
+
 enum DebtStatus {
-  PENDING = 'pending',
-  PAID = 'paid',
+  PENDING = 'PENDING',
+  PAID = 'PAID',
 }
 
 export interface debtsResponse {
@@ -16,13 +19,4 @@ export interface debtsResponse {
   paymentDate: Date | null
 }
 
-export interface debtsRequest {
-  description: string
-  amount: number
-  creditor: string
-  dueDate: string
-  status: DebtStatus
-  userId: string
-  notes?: string | null | undefined
-  paymentDate?: string | null | undefined
-}
+export type debtsRequest = z.infer<typeof DebtsPostDebtsBodySchema>

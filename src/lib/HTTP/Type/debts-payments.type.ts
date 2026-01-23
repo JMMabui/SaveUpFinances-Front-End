@@ -1,3 +1,6 @@
+import type { z } from 'zod'
+import type { DebtPaymentsPostDebtPaymentsBodySchema } from '@/lib/openapi/zod/DebtPayments'
+
 export interface debtPaymentsResponse {
   id: string
   createdAt: Date
@@ -8,10 +11,6 @@ export interface debtPaymentsResponse {
   debtId: string
 }
 
-export interface debtPaymentsRequest {
-  amount: number
-  date: string
-  debtId: string
-  accountId?: string | null | undefined
-  notes?: string | null | undefined
-}
+export type debtPaymentsRequest = z.infer<
+  typeof DebtPaymentsPostDebtPaymentsBodySchema
+>

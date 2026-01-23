@@ -2,12 +2,13 @@ import { useMemo, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { COLORS } from '@/constants/colors'
+import { formatCurrency } from '@/lib/utils'
 import type { accountResponse } from '@/lib/HTTP/Type/account.type'
 import { AccountCard } from './AccountCard'
 
@@ -45,7 +46,7 @@ export function AccountsList({
   }, [accounts, bankFilter, typeFilter])
 
   const totalBalance = useMemo(
-    () => filteredAccounts.reduce((s, a) => s + (a.balance || 0), 0),
+    () => filteredAccounts.reduce((s, a) => s + (Number(a.balance) || 0), 0),
     [filteredAccounts]
   )
 
@@ -54,7 +55,7 @@ export function AccountsList({
     for (const acc of filteredAccounts) {
       map.set(
         acc.accountType,
-        (map.get(acc.accountType) || 0) + (acc.balance || 0)
+        (map.get(acc.accountType) || 0) + (Number(acc.balance) || 0)
       )
     }
     return ACCOUNT_TYPES.map(t => ({
@@ -76,12 +77,15 @@ export function AccountsList({
             >
               Banco
             </label>
-            <Select value={bankFilter} onValueChange={setBankFilter}>
+            <Select
+              value={bankFilter || 'all'}
+              onValueChange={v => setBankFilter(v === 'all' ? '' : v)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 {banks.map((b: any) => (
                   <SelectItem key={b.id} value={b.id}>
                     {b.bankName}
@@ -97,12 +101,15 @@ export function AccountsList({
             >
               Tipo
             </label>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <Select
+              value={typeFilter || 'all'}
+              onValueChange={v => setTypeFilter(v === 'all' ? '' : v)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 {ACCOUNT_TYPES.map(t => (
                   <SelectItem key={t.value} value={t.value}>
                     {t.label}
@@ -128,7 +135,7 @@ export function AccountsList({
               className="mt-2 text-2xl font-semibold"
               style={{ color: COLORS.green[600] }}
             >
-              {totalBalance.toLocaleString()} Mt
+              {formatCurrency(totalBalance).replace('MZN ', '')} Mt
             </p>
           </div>
         </Card>
@@ -152,7 +159,7 @@ export function AccountsList({
                   className="mt-2 text-xl font-semibold"
                   style={{ color: COLORS.black[800] }}
                 >
-                  {x.total.toLocaleString()} Mt
+                  {formatCurrency(x.total).replace('MZN ', '')} Mt
                 </p>
               </div>
             </Card>

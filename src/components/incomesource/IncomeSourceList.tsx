@@ -33,7 +33,7 @@ export function IncomeSourceList({
   const calculateTotalIncome = (sourceId: string) => {
     return incomes
       .filter(t => t.sourceId === sourceId)
-      .reduce((total, t) => total + (t.amount || 0), 0)
+      .reduce((total, t) => total + (Number(t.amount) || 0), 0)
   }
 
   const calculateMonthlyIncome = (sourceId: string) => {

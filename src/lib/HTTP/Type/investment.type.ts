@@ -1,3 +1,6 @@
+import type { z } from 'zod'
+import type { InvestmentsPostInvestmentBodySchema } from '@/lib/openapi/zod/Investments'
+
 export interface investmentResponse {
   id: string
   userId: string
@@ -10,12 +13,6 @@ export interface investmentResponse {
   updatedAt: Date
 }
 
-export interface investmentRequest {
-  id: string | null
-  userId: string
-  investimentName: string
-  amount: number
-  investmentTypeId: string
-  investmentGoalId: string | null
-  notes: string | null
-}
+export type investmentRequest = z.infer<
+  typeof InvestmentsPostInvestmentBodySchema
+>

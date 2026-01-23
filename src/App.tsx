@@ -1,4 +1,3 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './components/AuthProvider'
 import { ProtectedRoute } from './components/ProtectedRoute'
@@ -10,19 +9,11 @@ import { CategoryManagement } from './pages/Category/CategoryManagement'
 import { CreditCardManagement } from './pages/Creadit Card/CreditCardManagement'
 import { DebtManagement } from './pages/Debt/DebtManagement'
 import { Dashboard } from './pages/dashboard'
+import { ExpensesManagement } from './pages/Expenses/ExpensesManagement'
 import { IncomeSourceManagement } from './pages/Income Source/IncomeSourceManagement'
 import { InvestmentTracking } from './pages/Investiment/InvestmentTracking'
 import { ReportsDashboard } from './pages/Report/ReportsDashboard'
-
-// Criando uma instância do QueryClient
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-})
+import { ToastProvider } from '@/components/ui/toast'
 
 function AppRoutes() {
   return (
@@ -94,6 +85,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/expenses"
+        element={
+          <ProtectedRoute>
+            <ExpensesManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/reports"
         element={
           <ProtectedRoute>
@@ -108,12 +107,12 @@ function AppRoutes() {
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <ToastProvider>
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+      </ToastProvider>
+    </BrowserRouter>
   )
 }

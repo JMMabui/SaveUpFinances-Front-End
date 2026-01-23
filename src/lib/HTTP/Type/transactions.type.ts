@@ -1,4 +1,6 @@
-// Tipos mínimos inferidos (ajuste quando o arquivo Type/transactions.type.ts for definido)
+import type { z } from 'zod'
+import type { TransactionPostTransactionBodySchema } from '@/lib/openapi/zod/Transaction'
+
 export interface TransactionResponse {
   id: string
   userId: string
@@ -11,11 +13,6 @@ export interface TransactionResponse {
   updatedAt?: string | Date
 }
 
-export interface TransactionRequest {
-  userId: string
-  accountId: string
-  date: string | Date
-  description: string
-  amount: number
-  categoryId: string
-}
+export type TransactionRequest = z.infer<
+  typeof TransactionPostTransactionBodySchema
+>

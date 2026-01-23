@@ -12,7 +12,9 @@ import { useGetDebtsByUser } from '@/lib/HTTP/debts'
 import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
 import { useGetIncomeByUser } from '@/lib/HTTP/income'
 import { COLORS } from '../constants/colors'
+import { formatCurrency } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Spinner } from './ui/spinner'
 
 interface QuickStatProps {
   title: string
@@ -85,48 +87,71 @@ export function QuickStats() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
 
-  const { data: accountsData } = getAccountsByUserId(userId)
-  const { data: incomeData } = useGetIncomeByUser(userId)
-  const { data: expensesData } = useGetExpensesByUser(userId)
-  const { data: debtsData } = useGetDebtsByUser(userId)
-  const { data: creditCardsData } = useGetCreditCardsByUser(userId)
+  const { data: accountsData, isLoading: loadingAccounts } =
+    getAccountsByUserId(userId)
+  const { data: incomeData, isLoading: loadingIncome } =
+    useGetIncomeByUser(userId)
+  const { data: expensesData, isLoading: loadingExpenses } =
+    useGetExpensesByUser(userId)
+  const { data: debtsData, isLoading: loadingDebts } = useGetDebtsByUser(userId)
+  const { data: creditCardsData, isLoading: loadingCards } =
+    useGetCreditCardsByUser(userId)
 
   const accounts = accountsData?.data || []
   const totalBalance = Array.isArray(accounts)
-    ? accounts.reduce((sum: number, acc: any) => sum + (acc?.balance || 0), 0)
+    ? accounts.reduce((sum: number, acc: any) => sum + (Number(acc?.balance) || 0), 0)
     : 0
 
   const incomes = incomeData?.data || []
   const expenses = expensesData?.data || []
   const totalIncome = incomes.reduce(
-    (sum: number, i: any) => sum + (i?.amount || 0),
+    (sum: number, i: any) => sum + (Number(i?.amount) || 0),
     0
   )
   const totalExpenses = expenses.reduce(
-    (sum: number, e: any) => sum + (e?.amount || 0),
+    (sum: number, e: any) => sum + (Number(e?.amount) || 0),
     0
   )
   const savings = Math.max(totalIncome - totalExpenses, 0)
 
   const debts = debtsData?.data || []
-  const pendingDebts = debts.filter((d: any) => d?.status === 'pending')
+  const pendingDebts = debts.filter((d: any) => d?.status === 'PENDING')
   const pendingDebtsAmount = pendingDebts.reduce(
-    (sum: number, d: any) => sum + (d?.amount || 0),
+    (sum: number, d: any) => sum + (Number(d?.amount) || 0),
     0
   )
 
   const creditCards = creditCardsData?.data || []
 
+  const isLoading =
+    loadingAccounts ||
+    loadingIncome ||
+    loadingExpenses ||
+    loadingDebts ||
+    loadingCards
+
   const stats = [
     {
       title: 'Saldo Total',
-      value: `${totalBalance.toLocaleString()} Mt`,
+      value: formatCurrency(totalBalance).replace('MZN ', '') + ' Mt',
       icon: <DollarSign className="w-5 h-5" />,
       color: COLORS.green[600],
     },
     {
+      title: 'Receitas Totais',
+      value: formatCurrency(totalIncome).replace('MZN ', '') + ' Mt',
+      icon: <TrendingUp className="w-5 h-5" />,
+      color: COLORS.green[500],
+    },
+    {
+      title: 'Despesas Totais',
+      value: formatCurrency(totalExpenses).replace('MZN ', '') + ' Mt',
+      icon: <TrendingDown className="w-5 h-5" />,
+      color: '#ef4444',
+    },
+    {
       title: 'Poupança (estimada)',
-      value: `${savings.toLocaleString()} Mt`,
+      value: formatCurrency(savings).replace('MZN ', '') + ' Mt',
       icon: <PiggyBank className="w-5 h-5" />,
       color: COLORS.blue[600],
     },
@@ -138,7 +163,7 @@ export function QuickStats() {
     },
     {
       title: 'Dívidas Pendentes',
-      value: `${pendingDebtsAmount.toLocaleString()} Mt`,
+      value: formatCurrency(pendingDebtsAmount).replace('MZN ', '') + ' Mt',
       icon: <AlertTriangle className="w-5 h-5" />,
       color: COLORS.black[600],
     },
@@ -146,9 +171,16 @@ export function QuickStats() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat, index) => (
-        <QuickStat key={index} {...stat} />
-      ))}
+      {isLoading ? (
+        <div className="col-span-1 md:col-span-2 lg:col-span-4 flex items-center gap-2">
+          <Spinner />
+          <span className="text-sm text-muted-foreground">
+            Carregando estatísticas...
+          </span>
+        </div>
+      ) : (
+        stats.map((stat, index) => <QuickStat key={index} {...stat} />)
+      )}
     </div>
   )
 }

@@ -6,6 +6,7 @@ import {
   useUpdateDebt,
 } from '@/lib/HTTP/debts'
 import { useCreateDebtPayment } from '@/lib/HTTP/debts-payments'
+import type { debtsRequest, debtsResponse } from '@/lib/HTTP/Type/debts.type'
 import { DebtForm } from './DebtForm'
 import { DebtList } from './DebtList'
 import { DebtPaymentForm } from './DebtPaymentForm'
@@ -16,11 +17,11 @@ export function DebtManagement() {
 
   const { data } = useGetDebtsByUser(userId)
   const createDebt = useCreateDebt()
-  const updateDebt = useUpdateDebt('')
+  const [editingDebt, setEditingDebt] = useState<debtsResponse | null>(null)
+  const updateDebt = useUpdateDebt(editingDebt?.id || '')
   const createPayment = useCreateDebtPayment()
 
-  const debtsApi = data?.data || []
-  const [editingDebt, setEditingDebt] = useState<any | null>(null)
+  const debtsApi: debtsResponse[] = data?.data || []
   const [showForm, setShowForm] = useState(false)
   const [payingDebt, setPayingDebt] = useState<any | null>(null)
 
@@ -29,13 +30,13 @@ export function DebtManagement() {
     setShowForm(true)
   }
 
-  function handleEdit(debt: any) {
+  function handleEdit(debt: debtsResponse) {
     setEditingDebt(debt)
     setShowForm(true)
   }
 
-  function handleSave(debt: any) {
-    if (debt?.id) {
+  function handleSave(debt: debtsRequest) {
+    if (editingDebt?.id) {
       updateDebt.mutate({ ...debt })
     } else {
       createDebt.mutate({ ...debt, userId })

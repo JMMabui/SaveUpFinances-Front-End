@@ -17,13 +17,14 @@ import {
   FiTrendingUp,
 } from 'react-icons/fi'
 import { MainLayout } from '@/components/layout/mainLayout'
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { COLORS } from '@/constants/colors'
 import { useGetDebtsByUser } from '@/lib/HTTP/debts'
@@ -67,11 +68,11 @@ export function ReportsDashboard() {
   const debts = debtsData?.data || []
 
   const totalIncome = useMemo(
-    () => incomes.reduce((acc: number, t: any) => acc + (t.amount || 0), 0),
+    () => incomes.reduce((acc: number, t: any) => acc + (Number(t.amount) || 0), 0),
     [incomes]
   )
   const totalExpenses = useMemo(
-    () => expenses.reduce((acc: number, t: any) => acc + (t.amount || 0), 0),
+    () => expenses.reduce((acc: number, t: any) => acc + (Number(t.amount) || 0), 0),
     [expenses]
   )
   const totalInvestments = 0
@@ -155,8 +156,8 @@ export function ReportsDashboard() {
     ],
   }
 
-  const qtdPagas = debts.filter((d: any) => d.status === 'paid').length
-  const qtdPendentes = debts.filter((d: any) => d.status === 'pending').length
+  const qtdPagas = debts.filter((d: any) => d.status === 'PAID').length
+  const qtdPendentes = debts.filter((d: any) => d.status === 'PENDING').length
 
   const pieData = {
     labels: ['Pagas', 'Pendentes'],
@@ -170,7 +171,7 @@ export function ReportsDashboard() {
   }
 
   const proximasDividas = debts
-    .filter((d: any) => d.status === 'pending')
+    .filter((d: any) => d.status === 'PENDING')
     .sort(
       (a: any, b: any) =>
         new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
@@ -178,6 +179,32 @@ export function ReportsDashboard() {
     .slice(0, 5)
 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+
+  function exportCSV() {
+    const rows = [
+      ['Mês', 'Receitas', 'Despesas', 'Investimentos'],
+      ...monthlyData.map(d => [
+        getMonthName(d.month),
+        String(d.income),
+        String(d.expenses),
+        String(d.investments),
+      ]),
+    ]
+    const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `relatorio_${selectedYear}.csv`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  function exportPDF() {
+    window.print()
+  }
 
   return (
     <MainLayout>
@@ -213,6 +240,12 @@ export function ReportsDashboard() {
               ))}
             </SelectContent>
           </Select>
+        </div>
+        <div className="flex gap-2 mb-4">
+          <Button onClick={exportCSV} variant="secondary">
+            Exportar CSV
+          </Button>
+          <Button onClick={exportPDF}>Exportar PDF</Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Card

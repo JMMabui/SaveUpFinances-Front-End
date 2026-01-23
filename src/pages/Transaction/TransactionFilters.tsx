@@ -2,10 +2,10 @@ import { DateRangeFilter } from '@/components/DateRangeFilter'
 import { Button } from '@/components/ui/button'
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 
 interface TransactionFiltersProps {

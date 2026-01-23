@@ -1,5 +1,9 @@
-import { FiX } from 'react-icons/fi'
-import { Button } from '@/components/ui/button'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { COLORS } from '@/constants/colors'
 import type { TransactionFormData } from './TransactionForm'
 import { TransactionForm } from './TransactionForm'
@@ -32,41 +36,19 @@ export function TransactionModal({
   onSave,
   accounts,
 }: TransactionModalProps) {
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div
-        className="fixed inset-0 transition-opacity"
-        onClick={onClose}
-        aria-hidden="true"
-        style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
-      />
-
-      <div
-        className="fixed right-0 top-0 h-full w-full max-w-md shadow-lg backdrop-blur-sm"
-        style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
-      >
-        <div
-          className="flex items-center justify-between p-4 border-b"
-          style={{ borderColor: COLORS.black[200] }}
-        >
-          <h3
-            className="text-lg font-bold"
-            style={{ color: COLORS.black[800] }}
-          >
+    <Sheet
+      open={isOpen}
+      onOpenChange={open => {
+        if (!open) onClose()
+      }}
+    >
+      <SheetContent side="right" className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle style={{ color: COLORS.black[800] }}>
             {mode === 'add' ? 'Adicionar Transação' : 'Editar Transação'}
-          </h3>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onClose}
-            className="p-2"
-          >
-            <FiX size={24} />
-          </Button>
-        </div>
-
+          </SheetTitle>
+        </SheetHeader>
         <div className="p-4">
           <TransactionForm
             initialData={transaction}
@@ -75,7 +57,7 @@ export function TransactionModal({
             accounts={accounts}
           />
         </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }

@@ -1,16 +1,22 @@
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
-import { Card } from '@/components/ui/card'
-import { TopNavigation } from '../../components/layout/topNavigation'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 
 enum TransactionType {
   RECEITA = 'RECEITA',
@@ -95,8 +101,6 @@ export function CategoryManagement() {
 
   return (
     <div className="p-4">
-      <TopNavigation />
-
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -283,19 +287,25 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   // removed unused variable
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3 className="text-xl font-bold mb-4">
-          {category ? 'Editar Categoria' : 'Nova Categoria'}
-        </h3>
-
+    <Sheet
+      open
+      onOpenChange={open => {
+        if (!open) onClose()
+      }}
+    >
+      <SheetContent side="right" className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>
+            {category ? 'Editar Categoria' : 'Nova Categoria'}
+          </SheetTitle>
+        </SheetHeader>
         <form
           onSubmit={e => {
             e.preventDefault()
             onSave(formData)
           }}
         >
-          <div className="space-y-4">
+          <div className="space-y-4 px-4">
             <div>
               <Input
                 label="Nome da Categoria"
@@ -322,8 +332,12 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={TransactionType.RECEITA}>Receita</SelectItem>
-                  <SelectItem value={TransactionType.DESPESA}>Despesa</SelectItem>
+                  <SelectItem value={TransactionType.RECEITA}>
+                    Receita
+                  </SelectItem>
+                  <SelectItem value={TransactionType.DESPESA}>
+                    Despesa
+                  </SelectItem>
                   <SelectItem value={TransactionType.INVESTIMENTO}>
                     Investimento
                   </SelectItem>
@@ -377,14 +391,14 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 mt-6">
+          <SheetFooter className="px-4 mt-6">
             <Button variant="secondary" onClick={onClose}>
               Cancelar
             </Button>
             <Button type="submit">Salvar</Button>
-          </div>
+          </SheetFooter>
         </form>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }

@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 export function RecentTransactions() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
-  const { data: transactionsData } = useGetTransactionsByUser(userId)
-  const { data: categoriesData } = useGetCategories()
+  const { data: transactionsData, isLoading: loadingTx } =
+    useGetTransactionsByUser(userId)
+  const { data: categoriesData, isLoading: loadingCat } = useGetCategories()
 
   const transactions = (transactionsData?.data || []).slice(0, 8)
   const categories = categoriesData?.data || []
@@ -50,6 +51,12 @@ export function RecentTransactions() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
+          {(loadingTx || loadingCat) && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="h-4 w-4 rounded-full border-2 border-gray-300 border-t-green-500 animate-spin" />
+              Carregando transações...
+            </div>
+          )}
           {transactions.map((transaction: any) => (
             <div
               key={transaction.id}
@@ -99,7 +106,10 @@ export function RecentTransactions() {
                   {transaction.amount >= 0 ? '+' : '-'}
                   {Math.abs(transaction.amount).toLocaleString()} Mt
                 </span>
-                <button type="button" className="p-1 hover:bg-gray-200 rounded-full transition-colors">
+                <button
+                  type="button"
+                  className="p-1 hover:bg-gray-200 rounded-full transition-colors"
+                >
                   <MoreHorizontal className="w-4 h-4 text-gray-400" />
                 </button>
               </div>
@@ -108,7 +118,10 @@ export function RecentTransactions() {
         </div>
 
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <button type="button" className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded-lg transition-colors">
+          <button
+            type="button"
+            className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded-lg transition-colors"
+          >
             Ver Todas as Transações
           </button>
         </div>

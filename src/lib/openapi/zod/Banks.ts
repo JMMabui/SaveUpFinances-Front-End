@@ -1,0 +1,17 @@
+import { z } from 'zod'
+export const BanksPostBanksBodySchema = z.object({
+  bankName: z.string(),
+  logoUrl: z.union([z.string(), z.null()]).optional(),
+})
+export const BanksPostBanksResponseSchema = z.unknown()
+export const BanksGetBanksBodySchema = z.unknown()
+export const BanksGetBanksResponseSchema = z.unknown()
+export const BanksGetBanksByIdBodySchema = z.unknown()
+export const BanksGetBanksByIdResponseSchema = z.unknown()
+export const BanksPutBanksByIdBodySchema = z.object({
+  bankName: z.string().optional(),
+  logoUrl: z.union([z.string(), z.null()]).optional(),
+})
+export const BanksPutBanksByIdResponseSchema = z.unknown()
+export const BanksDeleteBanksByIdBodySchema = z.unknown()
+export const BanksDeleteBanksByIdResponseSchema = z.unknown()

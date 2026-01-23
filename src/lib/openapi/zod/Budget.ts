@@ -1,0 +1,25 @@
+import { z } from 'zod'
+export const BudgetPostBudgetBodySchema = z.object({
+  userId: z.string(),
+  categoryId: z.string(),
+  month: z.number(),
+  year: z.number(),
+  limit: z.number(),
+})
+export const BudgetPostBudgetResponseSchema = z.unknown()
+export const BudgetGetBudgetBodySchema = z.unknown()
+export const BudgetGetBudgetResponseSchema = z.unknown()
+export const BudgetGetBudgetByIdBodySchema = z.unknown()
+export const BudgetGetBudgetByIdResponseSchema = z.unknown()
+export const BudgetPutBudgetByIdBodySchema = z.object({
+  userId: z.string().optional(),
+  categoryId: z.string().optional(),
+  month: z.number().optional(),
+  year: z.number().optional(),
+  limit: z.number().optional(),
+})
+export const BudgetPutBudgetByIdResponseSchema = z.unknown()
+export const BudgetDeleteBudgetByIdBodySchema = z.unknown()
+export const BudgetDeleteBudgetByIdResponseSchema = z.unknown()
+export const BudgetGetBudgetUserByUserIdBodySchema = z.unknown()
+export const BudgetGetBudgetUserByUserIdResponseSchema = z.unknown()

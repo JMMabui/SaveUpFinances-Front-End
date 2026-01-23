@@ -1,22 +1,33 @@
 import type React from 'react'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import type { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { COLORS } from '@/constants/colors'
 import { useCreateCategory, useUpdateCategory } from '@/lib/HTTP/categories'
+import type { CategoriesPostCategoriesBodySchema } from '@/lib/openapi/zod/Categories'
 
 interface Category {
   id: string
   categoryName: string
-  categoryType: 'income' | 'expense' | 'investment'
+  categoryType: z.infer<
+    typeof CategoriesPostCategoriesBodySchema
+  >['categoryType']
   icon: string | null
   color: string | null
   parentId?: string | null
@@ -83,18 +94,21 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
-        <h3
-          className="text-xl font-bold mb-4"
-          style={{ color: COLORS.black[800] }}
-        >
-          {category ? 'Editar Categoria' : 'Nova Categoria'}
-        </h3>
+    <Sheet
+      open
+      onOpenChange={open => {
+        if (!open) onClose()
+      }}
+    >
+      <SheetContent side="right" className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle style={{ color: COLORS.black[800] }}>
+            {category ? 'Editar Categoria' : 'Nova Categoria'}
+          </SheetTitle>
+        </SheetHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-4">
-            {/* Nome */}
+          <div className="space-y-4 px-4">
             <div>
               <Input
                 label="Nome da Categoria"
@@ -103,9 +117,11 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               />
             </div>
 
-            {/* Tipo */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: COLORS.black[700] }}
+              >
                 Tipo
               </label>
               <Controller
@@ -127,9 +143,11 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               />
             </div>
 
-            {/* Categoria Pai */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: COLORS.black[700] }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: COLORS.black[700] }}
+              >
                 Categoria Pai
               </label>
               <Controller
@@ -137,14 +155,18 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                 control={control}
                 render={({ field }) => (
                   <Select
-                    value={field.value ?? ''}
-                    onValueChange={value => field.onChange(value || undefined)}
+                    value={field.value ?? 'none'}
+                    onValueChange={value =>
+                      field.onChange(value === 'none' ? undefined : value)
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Nenhuma (Categoria Principal)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Nenhuma (Categoria Principal)</SelectItem>
+                      <SelectItem value="none">
+                        Nenhuma (Categoria Principal)
+                      </SelectItem>
                       {mainCategories.map(cat => (
                         <SelectItem key={cat.id} value={cat.id}>
                           {cat.categoryName}
@@ -156,7 +178,6 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               />
             </div>
 
-            {/* Ícone */}
             <div>
               <Input
                 label="Ícone"
@@ -166,20 +187,19 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
               />
             </div>
 
-            {/* Cor */}
             <div>
               <Input label="Cor" type="color" {...register('color')} />
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 mt-6">
+          <SheetFooter className="px-4">
             <Button variant="secondary" type="button" onClick={onClose}>
               Cancelar
             </Button>
             <Button type="submit">Salvar</Button>
-          </div>
+          </SheetFooter>
         </form>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }

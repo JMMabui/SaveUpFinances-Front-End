@@ -1,0 +1,32 @@
+import { z } from 'zod'
+export const TransactionsAttachmentPostTransactionAttachmentBodySchema =
+  z.object({
+    fileUrl: z.string(),
+    fileType: z.string(),
+    transactionId: z.string(),
+    expensesId: z.union([z.string(), z.null()]).optional(),
+  })
+export const TransactionsAttachmentPostTransactionAttachmentResponseSchema =
+  z.unknown()
+export const TransactionsAttachmentGetTransactionAttachmentBodySchema =
+  z.unknown()
+export const TransactionsAttachmentGetTransactionAttachmentResponseSchema =
+  z.unknown()
+export const TransactionsAttachmentGetTransactionAttachmentByIdBodySchema =
+  z.unknown()
+export const TransactionsAttachmentGetTransactionAttachmentByIdResponseSchema =
+  z.unknown()
+export const TransactionsAttachmentPutTransactionAttachmentByIdBodySchema =
+  z.object({
+    fileUrl: z.string(),
+    fileType: z.string(),
+    transactionId: z.string(),
+    expensesId: z.union([z.string(), z.null()]).optional(),
+    id: z.string(),
+  })
+export const TransactionsAttachmentPutTransactionAttachmentByIdResponseSchema =
+  z.unknown()
+export const TransactionsAttachmentDeleteTransactionAttachmentByIdBodySchema =
+  z.unknown()
+export const TransactionsAttachmentDeleteTransactionAttachmentByIdResponseSchema =
+  z.unknown()

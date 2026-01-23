@@ -1,3 +1,6 @@
+import type { z } from 'zod'
+import type { IncomesPostIncomeBodySchema } from '@/lib/openapi/zod/Incomes'
+
 export interface incomeResponse {
   id: string
   userId: string
@@ -8,10 +11,4 @@ export interface incomeResponse {
   sourceId: string
 }
 
-export interface incomeRequest {
-  userId: string
-  date: string
-  description: string
-  amount: number
-  sourceId: string
-}
+export type incomeRequest = z.infer<typeof IncomesPostIncomeBodySchema>

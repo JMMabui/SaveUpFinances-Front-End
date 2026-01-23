@@ -1,8 +1,9 @@
-export interface accountBalanceRequest {
-  accountId: string
-  date: string
-  balance: number
-}
+import type { z } from 'zod'
+import type { AccountsBalancePostAccountBalanceBodySchema } from '@/lib/openapi/zod/AccountsBalance'
+
+export type accountBalanceRequest = z.infer<
+  typeof AccountsBalancePostAccountBalanceBodySchema
+>
 
 export interface accountBalanceResponse {
   id: string

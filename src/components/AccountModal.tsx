@@ -1,7 +1,13 @@
 import type React from 'react'
 import { useState } from 'react'
-import { FiX } from 'react-icons/fi'
 import { Button } from '@/components/ui/button'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 
 interface AccountModalProps {
   isOpen: boolean
@@ -39,29 +45,16 @@ export function AccountModal({ isOpen, onClose, onSave }: AccountModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-      <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-white/95 dark:bg-slate-800/95 shadow-lg backdrop-blur-sm">
-        <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-            Adicionar Nova Conta
-          </h3>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onClose}
-            className="p-2"
-          >
-            <FiX size={24} />
-          </Button>
-        </div>
-
+    <Sheet
+      open={isOpen}
+      onOpenChange={open => {
+        if (!open) onClose()
+      }}
+    >
+      <SheetContent side="right" className="sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Adicionar Nova Conta</SheetTitle>
+        </SheetHeader>
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div>
             <label
@@ -124,14 +117,14 @@ export function AccountModal({ isOpen, onClose, onSave }: AccountModalProps) {
             />
           </div>
 
-          <div className="flex justify-end space-x-2 pt-4">
+          <SheetFooter className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="secondary" onClick={onClose}>
               Cancelar
             </Button>
             <Button type="submit">Adicionar</Button>
-          </div>
+          </SheetFooter>
         </form>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   )
 }

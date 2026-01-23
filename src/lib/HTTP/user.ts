@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useToast } from '@/components/ui/toast'
 import { userService } from '../apiServices'
 import type {
   userRequest,
@@ -26,6 +27,7 @@ export function getUserById(id: string) {
 }
 
 export function useCreateUser() {
+  const { success, error } = useToast()
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: ['create-user'],
@@ -33,11 +35,16 @@ export function useCreateUser() {
       userService.create(data as Partial<userResponse>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-users'] })
+      success('Usuário criado com sucesso')
+    },
+    onError: () => {
+      error('Erro ao criar usuário')
     },
   })
 }
 
 export function useUpdateUser(id: string) {
+  const { success, error } = useToast()
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: ['update-user', id],
@@ -46,17 +53,26 @@ export function useUpdateUser(id: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-users'] })
       queryClient.invalidateQueries({ queryKey: ['get-user-by-id', id] })
+      success('Usuário atualizado com sucesso')
+    },
+    onError: () => {
+      error('Erro ao atualizar usuário')
     },
   })
 }
 
 export function useDeleteUser() {
+  const { success, error } = useToast()
   const queryClient = useQueryClient()
   return useMutation({
     mutationKey: ['delete-user'],
     mutationFn: async (id: string) => userService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-users'] })
+      success('Usuário excluído com sucesso')
+    },
+    onError: () => {
+      error('Erro ao excluir usuário')
     },
   })
 }

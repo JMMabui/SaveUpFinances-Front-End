@@ -17,11 +17,11 @@ export function FinancesResume() {
   const expenses = expensesData?.data || []
 
   const totalIncome = incomes.reduce(
-    (sum: number, i: any) => sum + (i?.amount || 0),
+    (sum: number, i: any) => sum + (Number(i?.amount) || 0),
     0
   )
   const totalExpenses = expenses.reduce(
-    (sum: number, e: any) => sum + (e?.amount || 0),
+    (sum: number, e: any) => sum + (Number(e?.amount) || 0),
     0
   )
   const saldo = totalIncome - totalExpenses

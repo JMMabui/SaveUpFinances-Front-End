@@ -9,20 +9,12 @@ export interface budgetResponse {
   limit: number
 }
 
-export interface budgetRequest {
-  userId: string
-  month: number
-  year: number
-  categoryId: string
-  limit: number
-}
+import type { z } from 'zod'
+import type {
+  BudgetPostBudgetBodySchema,
+  BudgetPutBudgetByIdBodySchema,
+} from '@/lib/openapi/zod/Budget'
 
-export interface budgetUpdateRequest {
-  id?: string
-  userId?: string
-  month?: number
-  year?: number
-  categoryId?: string
-  limit?: number
-  updatedAt?: Date
-}
+export type budgetRequest = z.infer<typeof BudgetPostBudgetBodySchema>
+
+export type budgetUpdateRequest = z.infer<typeof BudgetPutBudgetByIdBodySchema>
