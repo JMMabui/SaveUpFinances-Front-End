@@ -7,31 +7,26 @@ export interface ApiState<T> {
   error: string | null
 }
 
-export function useApi<T>() {
-  const [state, setState] = useState<ApiState<T>>({
+export function useApi() {
+  const [state, setState] = useState<ApiState<unknown>>({
     data: null,
     loading: false,
     error: null,
   })
 
-  const execute = useCallback(async (apiCall: () => Promise<T>) => {
+  const execute = useCallback(async <R>(apiCall: () => Promise<R>) => {
     setState(prev => ({ ...prev, loading: true, error: null }))
-
     try {
       const result = await apiCall()
-      setState({ data: result, loading: false, error: null })
+      setState({ data: result as unknown, loading: false, error: null })
       return result
     } catch (error) {
       let errorMessage = 'An unexpected error occurred'
-
       if (error instanceof ApiError) {
         errorMessage = error.message
-
-        // Handle specific HTTP status codes
         switch (error.status) {
           case 401:
             errorMessage = 'Unauthorized access. Please login again.'
-            // Redirect to login or refresh token
             localStorage.removeItem('token')
             localStorage.removeItem('userId')
             break
@@ -55,7 +50,6 @@ export function useApi<T>() {
       } else if (error instanceof Error) {
         errorMessage = error.message
       }
-
       setState(prev => ({ ...prev, loading: false, error: errorMessage }))
       throw error
     }

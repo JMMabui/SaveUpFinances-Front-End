@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 type ToastVariant = 'success' | 'error' | 'info' | 'warning'
 
@@ -25,7 +32,13 @@ function useToastContext() {
   return ctx
 }
 
-function ToastContainer({ items, onClose }: { items: ToastItem[]; onClose: (id: string) => void }) {
+function ToastContainer({
+  items,
+  onClose,
+}: {
+  items: ToastItem[]
+  onClose: (id: string) => void
+}) {
   function bg(variant?: ToastVariant) {
     if (variant === 'success') return 'bg-green-600'
     if (variant === 'error') return 'bg-red-600'
@@ -41,7 +54,9 @@ function ToastContainer({ items, onClose }: { items: ToastItem[]; onClose: (id: 
         >
           <div className={`px-3 py-2 text-white ${bg(t.variant)}`}>
             <div className="font-semibold">{t.title}</div>
-            {t.description && <div className="text-sm opacity-90">{t.description}</div>}
+            {t.description && (
+              <div className="text-sm opacity-90">{t.description}</div>
+            )}
           </div>
           <button
             type="button"
@@ -82,10 +97,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<ToastContextValue>(() => {
     return {
       show: add,
-      success: (title, description) => add({ title, description, variant: 'success' }),
-      error: (title, description) => add({ title, description, variant: 'error' }),
-      info: (title, description) => add({ title, description, variant: 'info' }),
-      warning: (title, description) => add({ title, description, variant: 'warning' }),
+      success: (title, description) =>
+        add({ title, description, variant: 'success' }),
+      error: (title, description) =>
+        add({ title, description, variant: 'error' }),
+      info: (title, description) =>
+        add({ title, description, variant: 'info' }),
+      warning: (title, description) =>
+        add({ title, description, variant: 'warning' }),
     }
   }, [])
 

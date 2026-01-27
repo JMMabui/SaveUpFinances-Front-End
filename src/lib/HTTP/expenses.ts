@@ -1,83 +1,149 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
+import { apiService } from '../apiServices'
 import {
   ExpensesPostExpensesBodySchema,
   ExpensesPutExpensesByIdBodySchema,
-} from '@/lib/openapi/zod/Expenses'
-import { apiService } from '../apiServices'
-import type { expensesRequest, expensesResponse } from './Type/expenses.type'
+} from './Type/expenses.type'
 
-const BASE = '/expenses' as const
+const _BASE = '/expenses' as const
 
-export function useGetExpensesByUser(userId: string) {
-  return useQuery({
-    queryKey: ['expenses', 'by-user', userId],
-    queryFn: async () =>
-      apiService.get<expensesResponse[]>(`${BASE}/user/${userId}`),
-    enabled: !!userId,
+export function useExpensesPostExpenses() {
+  const queryClient = useQueryClient()
+  const { success, error } = useToast()
+
+  return useMutation({
+    mutationFn: async (data: any) => apiService.post('/expenses', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses'] })
+      success('Expenses criado com sucesso')
+    },
+    onError: () => {
+      error('Erro ao criar expenses')
+    },
   })
 }
 
-export function useGetExpenseById(id: string) {
+export function useGetExpensesByUser(userId: string) {
   return useQuery({
-    queryKey: ['expenses', 'by-id', id],
-    queryFn: async () => apiService.get<expensesResponse>(`${BASE}/${id}`),
-    enabled: !!id,
+    queryKey: ['expenses-get-user', userId],
+    queryFn: async () => apiService.get(`/expenses/user/${userId}`),
+  })
+}
+
+export function useExpensesGetExpenses(params?: any) {
+  return useQuery({
+    queryKey: ['expenses-get', params],
+    queryFn: async () => apiService.get('/expenses'),
+    enabled: true,
+  })
+}
+
+export function useExpensesGetExpensesById(params?: any) {
+  return useQuery({
+    queryKey: ['expenses-get', params],
+    queryFn: async () => apiService.get(`/expenses/${params?.id}`),
+    enabled: Object.values(params || {}).every(Boolean),
+  })
+}
+
+export function useExpensesPutExpensesById() {
+  const queryClient = useQueryClient()
+  const { success, error } = useToast()
+
+  return useMutation({
+    mutationFn: async (data: any) =>
+      apiService.put(`/expenses/${data?.id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses'] })
+      success('Expenses atualizado com sucesso')
+    },
+    onError: () => {
+      error('Erro ao atualizar expenses')
+    },
+  })
+}
+
+export function useExpensesDeleteExpensesById() {
+  const queryClient = useQueryClient()
+  const { success, error } = useToast()
+
+  return useMutation({
+    mutationFn: async (id: string) => apiService.delete(`/expenses/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['expenses'] })
+      success('Expenses deletado com sucesso')
+    },
+    onError: () => {
+      error('Erro ao deletar expenses')
+    },
+  })
+}
+
+export function useExpensesGetExpensesUserByUserId(params?: any) {
+  return useQuery({
+    queryKey: ['expenses-get', params],
+    queryFn: async () => apiService.get(`/expenses/user/${params?.userId}`),
+    enabled: Object.values(params || {}).every(Boolean),
+  })
+}
+
+export function useExpensesGetExpensesCategoryByCategoryId(params?: any) {
+  return useQuery({
+    queryKey: ['expenses-get', params],
+    queryFn: async () =>
+      apiService.get(`/expenses/category/${params?.categoryId}`),
+    enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
 export function useCreateExpense() {
-  const { success, error } = useToast()
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['expenses', 'create'],
-    mutationFn: async (data: expensesRequest) => {
-      console.log('Creating expense with data:', data)
+    mutationFn: async (data: any) => {
       const parsed = ExpensesPostExpensesBodySchema.parse(data)
-      return apiService.post<expensesResponse>(BASE, parsed)
+      return apiService.post('/expenses', parsed)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] })
-      success('Despesa criada', 'A despesa foi registada com sucesso.')
+      success('Despesa criada com sucesso')
     },
     onError: () => {
-      error('Falha ao criar despesa', 'Verifique os dados e tente novamente.')
+      error('Erro ao criar despesa')
     },
   })
 }
 
 export function useUpdateExpense(id: string) {
-  const { success, error } = useToast()
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['expenses', 'update', id],
-    mutationFn: async (data: Partial<expensesRequest>) => {
+    mutationFn: async (data: any) => {
       const parsed = ExpensesPutExpensesByIdBodySchema.parse(data)
-      return apiService.put<expensesResponse>(`${BASE}/${id}`, parsed)
+      return apiService.put(`/expenses/${id}`, parsed)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] })
-      queryClient.invalidateQueries({ queryKey: ['expenses', 'by-id', id] })
-      success('Despesa atualizada', 'Alterações guardadas com sucesso.')
+      success('Despesa atualizada com sucesso')
     },
     onError: () => {
-      error('Falha ao atualizar despesa', 'Tente novamente mais tarde.')
+      error('Erro ao atualizar despesa')
     },
   })
 }
 
 export function useDeleteExpense() {
-  const { success, error } = useToast()
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['expenses', 'delete'],
-    mutationFn: async (id: string) => apiService.delete<void>(`${BASE}/${id}`),
+    mutationFn: async (id: string) => apiService.delete(`/expenses/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] })
-      success('Despesa removida', 'A despesa foi apagada com sucesso.')
+      success('Despesa deletada com sucesso')
     },
     onError: () => {
-      error('Falha ao remover despesa', 'Tente novamente mais tarde.')
+      error('Erro ao deletar despesa')
     },
   })
 }

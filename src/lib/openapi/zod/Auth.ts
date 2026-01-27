@@ -20,3 +20,9 @@ export const AuthPostAuthResetPasswordBodySchema = z.object({
   confirmPassword: z.string(),
 })
 export const AuthPostAuthResetPasswordResponseSchema = z.unknown()
+export const AuthPostAuthVerifyResetTokenBodySchema = z.object({
+  token: z.string(),
+})
+export const AuthPostAuthVerifyResetTokenResponseSchema = z.unknown()
+export const AuthGetAuthResetPasswordByTokenBodySchema = z.unknown()
+export const AuthGetAuthResetPasswordByTokenResponseSchema = z.unknown()

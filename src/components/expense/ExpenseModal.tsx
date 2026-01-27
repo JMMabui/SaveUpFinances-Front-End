@@ -52,7 +52,6 @@ export function ExpenseModal({ expense, onClose }: ExpenseModalProps) {
     if (expense) setFormData(expense)
   }, [expense])
 
-
   return (
     <Sheet
       open

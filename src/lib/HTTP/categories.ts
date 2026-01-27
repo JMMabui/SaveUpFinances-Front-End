@@ -1,49 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
-import {
-  CategoriesPostCategoriesBodySchema,
-  CategoriesPutCategoriesByIdBodySchema,
-} from '@/lib/openapi/zod/Categories'
 import { apiService } from '../apiServices'
-import type { categoryRequest, categoryResponse } from './Type/categories.type'
+import type { ApiResponse } from './Type/response.type'
 
-const BASE = '/categories' as const
-
-export function useGetCategories() {
-  return useQuery({
-    queryKey: ['categories', 'list'],
-    queryFn: async () => apiService.get<categoryResponse[]>(BASE),
-  })
-}
-
-export function useGetCategoryById(id: string) {
-  return useQuery({
-    queryKey: ['categories', 'by-id', id],
-    queryFn: async () => apiService.get<categoryResponse>(`${BASE}/${id}`),
-    enabled: !!id,
-  })
-}
-
-export function useGetCategoriesByType(type: string) {
-  return useQuery({
-    queryKey: ['categories', 'by-type', type],
-    queryFn: async () =>
-      apiService.get<categoryResponse[]>(`${BASE}/type/${type}`),
-    enabled: !!type,
-  })
-}
+const QUERY_KEY_ALL = ['categories'] as const
 
 export function useCreateCategory() {
-  const { success, error } = useToast()
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['categories', 'create'],
-    mutationFn: async (data: categoryRequest) => {
-      const parsed = CategoriesPostCategoriesBodySchema.parse(data)
-      return apiService.post<categoryResponse>(BASE, parsed)
-    },
+    mutationFn: async (data: any) => apiService.post('/categories', data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY_ALL })
       success('Categoria criada com sucesso')
     },
     onError: () => {
@@ -52,18 +20,28 @@ export function useCreateCategory() {
   })
 }
 
+export function useGetCategories() {
+  return useQuery<ApiResponse<any[]>>({
+    queryKey: QUERY_KEY_ALL,
+    queryFn: async () => apiService.get<any[]>('/categories'),
+  })
+}
+
+export function useGetCategoryById(id: string) {
+  return useQuery<ApiResponse<any>>({
+    queryKey: ['category-by-id', id],
+    queryFn: async () => apiService.get<any>(`/categories/${id}`),
+    enabled: !!id,
+  })
+}
+
 export function useUpdateCategory(id: string) {
-  const { success, error } = useToast()
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['categories', 'update', id],
-    mutationFn: async (data: Partial<categoryRequest>) => {
-      const parsed = CategoriesPutCategoriesByIdBodySchema.parse(data)
-      return apiService.put<categoryResponse>(`${BASE}/${id}`, parsed)
-    },
+    mutationFn: async (data: any) => apiService.put(`/categories/${id}`, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
-      queryClient.invalidateQueries({ queryKey: ['categories', 'by-id', id] })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY_ALL })
       success('Categoria atualizada com sucesso')
     },
     onError: () => {
@@ -73,17 +51,16 @@ export function useUpdateCategory(id: string) {
 }
 
 export function useDeleteCategory() {
-  const { success, error } = useToast()
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['categories', 'delete'],
-    mutationFn: async (id: string) => apiService.delete<void>(`${BASE}/${id}`),
+    mutationFn: async (id: string) => apiService.delete(`/categories/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
-      success('Categoria excluída com sucesso')
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY_ALL })
+      success('Categoria deletada com sucesso')
     },
     onError: () => {
-      error('Erro ao excluir categoria')
+      error('Erro ao deletar categoria')
     },
   })
 }

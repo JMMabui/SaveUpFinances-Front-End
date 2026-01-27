@@ -1,40 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
-import {
-  BanksPostBanksBodySchema,
-  BanksPutBanksByIdBodySchema,
-} from '@/lib/openapi/zod/Banks'
-import { apiService } from '../apiServices'
-import type { bankRequest, bankResponde } from './Type/banks.type'
+import { banksService } from '../apiServices'
 
-const BASE = '/banks' as const
+const QUERY_KEY_ALL = ['banks'] as const
 
-export function useGetBanks() {
-  return useQuery({
-    queryKey: ['banks', 'list'],
-    queryFn: async () => apiService.get<bankResponde[]>(BASE),
-  })
-}
-
-export function useGetBankById(id: string) {
-  return useQuery({
-    queryKey: ['banks', 'by-id', id],
-    queryFn: async () => apiService.get<bankResponde>(`${BASE}/${id}`),
-    enabled: !!id,
-  })
-}
-
-export function useCreateBank() {
-  const { success, error } = useToast()
+export function useBanksPostBanks() {
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['banks', 'create'],
-    mutationFn: async (data: bankRequest) => {
-      const parsed = BanksPostBanksBodySchema.parse(data)
-      return apiService.post<bankResponde>(BASE, parsed)
-    },
+    mutationFn: async (data: any) => banksService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['banks'] })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY_ALL })
       success('Banco criado com sucesso')
     },
     onError: () => {
@@ -43,18 +19,28 @@ export function useCreateBank() {
   })
 }
 
-export function useUpdateBank(id: string) {
-  const { success, error } = useToast()
+export function useGetBanks() {
+  return useQuery({
+    queryKey: QUERY_KEY_ALL,
+    queryFn: async () => banksService.getAll(),
+  })
+}
+
+export function useBanksGetBanksById(id?: string) {
+  return useQuery({
+    queryKey: ['bank-by-id', id],
+    queryFn: async () => banksService.getById(id as string),
+    enabled: !!id,
+  })
+}
+
+export function useBanksPutBanksById(id: string) {
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['banks', 'update', id],
-    mutationFn: async (data: Partial<bankRequest>) => {
-      const parsed = BanksPutBanksByIdBodySchema.parse(data)
-      return apiService.put<bankResponde>(`${BASE}/${id}`, parsed)
-    },
+    mutationFn: async (data: any) => banksService.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['banks'] })
-      queryClient.invalidateQueries({ queryKey: ['banks', 'by-id', id] })
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY_ALL })
       success('Banco atualizado com sucesso')
     },
     onError: () => {
@@ -63,18 +49,17 @@ export function useUpdateBank(id: string) {
   })
 }
 
-export function useDeleteBank() {
-  const { success, error } = useToast()
+export function useBanksDeleteBanksById() {
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['banks', 'delete'],
-    mutationFn: async (id: string) => apiService.delete<void>(`${BASE}/${id}`),
+    mutationFn: async (id: string) => banksService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['banks'] })
-      success('Banco excluído com sucesso')
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY_ALL })
+      success('Banco deletado com sucesso')
     },
     onError: () => {
-      error('Erro ao excluir banco')
+      error('Erro ao deletar banco')
     },
   })
 }

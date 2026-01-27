@@ -1,25 +1,4 @@
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@radix-ui/react-navigation-menu'
-import { BiMoneyWithdraw } from 'react-icons/bi'
-import {
-  FiAlertCircle,
-  FiBarChart2,
-  FiCalendar,
-  FiCreditCard,
-  FiDollarSign,
-  FiList,
-  FiLogOut,
-  FiPieChart,
-  FiTrendingUp,
-  FiUser,
-} from 'react-icons/fi'
-import { HiOutlineAdjustments } from 'react-icons/hi'
+import { FiLogOut, FiUser } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { useLogout } from '@/hooks/auth'
 import { getUserById } from '@/lib/HTTP/user'

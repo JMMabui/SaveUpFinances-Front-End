@@ -7,7 +7,6 @@ import {
   FiEdit2,
   FiTrash2,
 } from 'react-icons/fi'
-import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -57,62 +56,56 @@ export const DebtList: React.FC<DebtListProps> = ({
 
   const totalPendentes = debts
     .filter(d => d.status === 'PENDING')
-    .reduce((acc, d) => acc + (d.amount || 0), 0)
+    .reduce((acc, d) => acc + (Number(d.amount) || 0), 0)
   const totalPagas = debts
     .filter(d => d.status === 'PAID')
-    .reduce((acc, d) => acc + (d.amount || 0), 0)
+    .reduce((acc, d) => acc + (Number(d.amount) || 0), 0)
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-2">
-        <h2
-          className="text-3xl font-extrabold tracking-tight"
-          style={{ color: COLORS.black[800] }}
-        >
-          Dívidas
-        </h2>
-        <Button onClick={onAdd} title="Adicionar nova dívida (Ctrl + N)">
-          Adicionar Dívida
-        </Button>
-      </div>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-        <div className="flex gap-4">
-          <span
-            className="px-4 py-1 rounded-full text-base font-semibold flex items-center gap-2 shadow-sm"
-            style={{
-              background: COLORS.yellow[100],
-              color: COLORS.yellow[800],
-            }}
-          >
-            <FiAlertCircle /> Pendentes: MT {totalPendentes.toFixed(2)}
-          </span>
-          <span
-            className="px-4 py-1 rounded-full text-base font-semibold flex items-center gap-2 shadow-sm"
-            style={{ background: COLORS.green[100], color: COLORS.green[800] }}
-          >
-            <FiCheckCircle /> Pagas: MT {totalPagas.toFixed(2)}
-          </span>
-        </div>
-        <div>
-          <label
-            className="mr-2 font-medium"
-            style={{ color: COLORS.black[700] }}
-          >
-            Filtrar:
-          </label>
-          <Select
-            value={statusFilter}
-            onValueChange={value => setStatusFilter(value as any)}
-          >
-            <SelectTrigger className="w-fit min-w-40">
-              <SelectValue placeholder="Filtrar status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todas</SelectItem>
-              <SelectItem value="pendente">Pendentes</SelectItem>
-              <SelectItem value="paga">Pagas</SelectItem>
-            </SelectContent>
-          </Select>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex gap-4 flex-wrap">
+            <span
+              className="px-4 py-1 rounded-full text-base font-semibold flex items-center gap-2 shadow-sm"
+              style={{
+                background: COLORS.yellow[100],
+                color: COLORS.yellow[800],
+              }}
+            >
+              <FiAlertCircle /> Pendentes: MT {totalPendentes.toFixed(2)}
+            </span>
+            <span
+              className="px-4 py-1 rounded-full text-base font-semibold flex items-center gap-2 shadow-sm"
+              style={{
+                background: COLORS.green[100],
+                color: COLORS.green[800],
+              }}
+            >
+              <FiCheckCircle /> Pagas: MT {totalPagas.toFixed(2)}
+            </span>
+          </div>
+          <div>
+            <label
+              className="mr-2 font-medium"
+              style={{ color: COLORS.black[700] }}
+            >
+              Filtrar:
+            </label>
+            <Select
+              value={statusFilter}
+              onValueChange={value => setStatusFilter(value as any)}
+            >
+              <SelectTrigger className="w-fit min-w-40">
+                <SelectValue placeholder="Filtrar status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todas">Todas</SelectItem>
+                <SelectItem value="pendente">Pendentes</SelectItem>
+                <SelectItem value="paga">Pagas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
       <div className="overflow-x-auto">

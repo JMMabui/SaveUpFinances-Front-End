@@ -42,6 +42,18 @@ export const AuthRoutes: RouteDef[] = [
     path: '/auth/reset-password',
     name: 'AuthPostAuthResetPassword',
   },
+  {
+    tag: 'Auth',
+    method: 'POST',
+    path: '/auth/verify-reset-token',
+    name: 'AuthPostAuthVerifyResetToken',
+  },
+  {
+    tag: 'Auth',
+    method: 'GET',
+    path: '/auth/reset-password/{token}',
+    name: 'AuthGetAuthResetPasswordByToken',
+  },
 ]
 export const UsersRoutes: RouteDef[] = [
   { tag: 'Users', method: 'POST', path: '/users', name: 'UsersPostUsers' },
@@ -69,6 +81,30 @@ export const UsersRoutes: RouteDef[] = [
     method: 'GET',
     path: '/users/{id}/profile',
     name: 'UsersGetUsersByIdProfile',
+  },
+  {
+    tag: 'Users',
+    method: 'PUT',
+    path: '/users/{id}/profile',
+    name: 'UsersPutUsersByIdProfile',
+  },
+  {
+    tag: 'Users',
+    method: 'POST',
+    path: '/users/{id}/change-password',
+    name: 'UsersPostUsersByIdChangePassword',
+  },
+  {
+    tag: 'Users',
+    method: 'GET',
+    path: '/users/{id}/settings',
+    name: 'UsersGetUsersByIdSettings',
+  },
+  {
+    tag: 'Users',
+    method: 'PUT',
+    path: '/users/{id}/settings',
+    name: 'UsersPutUsersByIdSettings',
   },
 ]
 export const AccountsRoutes: RouteDef[] = [
@@ -277,6 +313,12 @@ export const BudgetRoutes: RouteDef[] = [
     method: 'GET',
     path: '/budget/user/{userId}',
     name: 'BudgetGetBudgetUserByUserId',
+  },
+  {
+    tag: 'Budget',
+    method: 'POST',
+    path: '/budget/generate-recurring',
+    name: 'BudgetPostBudgetGenerateRecurring',
   },
 ]
 export const CreditCardsRoutes: RouteDef[] = [
@@ -628,6 +670,62 @@ export const TransactionsAttachmentRoutes: RouteDef[] = [
     name: 'TransactionsAttachmentDeleteTransactionAttachmentById',
   },
 ]
+export const NotificationsRoutes: RouteDef[] = [
+  {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications',
+    name: 'NotificationsGetNotifications',
+  },
+  {
+    tag: 'Notifications',
+    method: 'DELETE',
+    path: '/notifications',
+    name: 'NotificationsDeleteNotifications',
+  },
+  {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications/unread-count',
+    name: 'NotificationsGetNotificationsUnreadCount',
+  },
+  {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications/{id}',
+    name: 'NotificationsGetNotificationsById',
+  },
+  {
+    tag: 'Notifications',
+    method: 'DELETE',
+    path: '/notifications/{id}',
+    name: 'NotificationsDeleteNotificationsById',
+  },
+  {
+    tag: 'Notifications',
+    method: 'PUT',
+    path: '/notifications/{id}/read',
+    name: 'NotificationsPutNotificationsByIdRead',
+  },
+  {
+    tag: 'Notifications',
+    method: 'PUT',
+    path: '/notifications/read-all',
+    name: 'NotificationsPutNotificationsReadAll',
+  },
+  {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications/preferences',
+    name: 'NotificationsGetNotificationsPreferences',
+  },
+  {
+    tag: 'Notifications',
+    method: 'PUT',
+    path: '/notifications/preferences',
+    name: 'NotificationsPutNotificationsPreferences',
+  },
+]
 export const ReportsRoutes: RouteDef[] = [
   {
     tag: 'Reports',
@@ -640,6 +738,42 @@ export const ReportsRoutes: RouteDef[] = [
     method: 'GET',
     path: '/reports/evolution',
     name: 'ReportsGetReportsEvolution',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/cash-flow',
+    name: 'ReportsGetReportsCashFlow',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/net-worth',
+    name: 'ReportsGetReportsNetWorth',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/expense-analysis',
+    name: 'ReportsGetReportsExpenseAnalysis',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/income-analysis',
+    name: 'ReportsGetReportsIncomeAnalysis',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/financial-health',
+    name: 'ReportsGetReportsFinancialHealth',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/budget-vs-actual',
+    name: 'ReportsGetReportsBudgetVsActual',
   },
 ]
 export const HealthRoutes: RouteDef[] = [
@@ -682,6 +816,18 @@ export const AllRoutes: RouteDef[] = [
     path: '/auth/reset-password',
     name: 'AuthPostAuthResetPassword',
   },
+  {
+    tag: 'Auth',
+    method: 'POST',
+    path: '/auth/verify-reset-token',
+    name: 'AuthPostAuthVerifyResetToken',
+  },
+  {
+    tag: 'Auth',
+    method: 'GET',
+    path: '/auth/reset-password/{token}',
+    name: 'AuthGetAuthResetPasswordByToken',
+  },
   { tag: 'Users', method: 'POST', path: '/users', name: 'UsersPostUsers' },
   { tag: 'Users', method: 'GET', path: '/users', name: 'UsersGetUsers' },
   {
@@ -707,6 +853,30 @@ export const AllRoutes: RouteDef[] = [
     method: 'GET',
     path: '/users/{id}/profile',
     name: 'UsersGetUsersByIdProfile',
+  },
+  {
+    tag: 'Users',
+    method: 'PUT',
+    path: '/users/{id}/profile',
+    name: 'UsersPutUsersByIdProfile',
+  },
+  {
+    tag: 'Users',
+    method: 'POST',
+    path: '/users/{id}/change-password',
+    name: 'UsersPostUsersByIdChangePassword',
+  },
+  {
+    tag: 'Users',
+    method: 'GET',
+    path: '/users/{id}/settings',
+    name: 'UsersGetUsersByIdSettings',
+  },
+  {
+    tag: 'Users',
+    method: 'PUT',
+    path: '/users/{id}/settings',
+    name: 'UsersPutUsersByIdSettings',
   },
   {
     tag: 'Accounts',
@@ -903,6 +1073,12 @@ export const AllRoutes: RouteDef[] = [
     method: 'GET',
     path: '/budget/user/{userId}',
     name: 'BudgetGetBudgetUserByUserId',
+  },
+  {
+    tag: 'Budget',
+    method: 'POST',
+    path: '/budget/generate-recurring',
+    name: 'BudgetPostBudgetGenerateRecurring',
   },
   {
     tag: 'Credit Cards',
@@ -1232,6 +1408,60 @@ export const AllRoutes: RouteDef[] = [
     name: 'TransactionsAttachmentDeleteTransactionAttachmentById',
   },
   {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications',
+    name: 'NotificationsGetNotifications',
+  },
+  {
+    tag: 'Notifications',
+    method: 'DELETE',
+    path: '/notifications',
+    name: 'NotificationsDeleteNotifications',
+  },
+  {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications/unread-count',
+    name: 'NotificationsGetNotificationsUnreadCount',
+  },
+  {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications/{id}',
+    name: 'NotificationsGetNotificationsById',
+  },
+  {
+    tag: 'Notifications',
+    method: 'DELETE',
+    path: '/notifications/{id}',
+    name: 'NotificationsDeleteNotificationsById',
+  },
+  {
+    tag: 'Notifications',
+    method: 'PUT',
+    path: '/notifications/{id}/read',
+    name: 'NotificationsPutNotificationsByIdRead',
+  },
+  {
+    tag: 'Notifications',
+    method: 'PUT',
+    path: '/notifications/read-all',
+    name: 'NotificationsPutNotificationsReadAll',
+  },
+  {
+    tag: 'Notifications',
+    method: 'GET',
+    path: '/notifications/preferences',
+    name: 'NotificationsGetNotificationsPreferences',
+  },
+  {
+    tag: 'Notifications',
+    method: 'PUT',
+    path: '/notifications/preferences',
+    name: 'NotificationsPutNotificationsPreferences',
+  },
+  {
     tag: 'Reports',
     method: 'GET',
     path: '/reports/dashboard',
@@ -1242,6 +1472,42 @@ export const AllRoutes: RouteDef[] = [
     method: 'GET',
     path: '/reports/evolution',
     name: 'ReportsGetReportsEvolution',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/cash-flow',
+    name: 'ReportsGetReportsCashFlow',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/net-worth',
+    name: 'ReportsGetReportsNetWorth',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/expense-analysis',
+    name: 'ReportsGetReportsExpenseAnalysis',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/income-analysis',
+    name: 'ReportsGetReportsIncomeAnalysis',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/financial-health',
+    name: 'ReportsGetReportsFinancialHealth',
+  },
+  {
+    tag: 'Reports',
+    method: 'GET',
+    path: '/reports/budget-vs-actual',
+    name: 'ReportsGetReportsBudgetVsActual',
   },
   { tag: 'Health', method: 'GET', path: '/health', name: 'HealthGetHealth' },
 ]

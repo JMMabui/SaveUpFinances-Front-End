@@ -53,14 +53,14 @@ export const authService = {
     // console.log("Login response:", response);
 
     // Armazenar token e refreshToken
-    if (response.data && response.data.token) {
+    if (response.data?.token) {
       localStorage.setItem('token', response.data.token)
 
       if (response.data.refreshToken) {
         localStorage.setItem('refreshToken', response.data.refreshToken)
       }
 
-      if (response.data.user && response.data.user.id) {
+      if (response.data.user?.id) {
         localStorage.setItem('userId', response.data.user.id)
       }
     }
@@ -95,7 +95,7 @@ export const authService = {
     )
 
     // Atualizar token
-    if (response.data && response.data.token) {
+    if (response.data?.token) {
       localStorage.setItem('token', response.data.token)
 
       if (response.data.refreshToken) {
@@ -269,6 +269,8 @@ export const accountService = {
     )
   },
 }
+
+export const accountsService = accountService
 
 // Account Balance Services
 export const accountBalanceService = {
@@ -525,6 +527,250 @@ export const budgetService = {
 
   delete: async (id: string): Promise<ApiResponse<void>> => {
     return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.BUDGET.DELETE(id))
+  },
+}
+
+// Banks Services
+export const banksService = {
+  getAll: async (): Promise<ApiResponse<any[]>> => {
+    return apiClient.get<ApiResponse<any[]>>(API_ENDPOINTS.BANKS.BASE)
+  },
+
+  getById: async (id: string): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(API_ENDPOINTS.BANKS.BY_ID(id))
+  },
+
+  create: async (data: any): Promise<ApiResponse<any>> => {
+    return apiClient.post<ApiResponse<any>>(API_ENDPOINTS.BANKS.CREATE, data)
+  },
+
+  update: async (id: string, data: any): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(API_ENDPOINTS.BANKS.UPDATE(id), data)
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(API_ENDPOINTS.BANKS.DELETE(id))
+  },
+}
+
+// Users/Profile Services
+export const userProfileService = {
+  getProfile: async (userId: string): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(API_ENDPOINTS.USERS.PROFILE(userId))
+  },
+
+  updateProfile: async (
+    userId: string,
+    data: any
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(
+      API_ENDPOINTS.USERS.PROFILE(userId),
+      data
+    )
+  },
+
+  getSettings: async (userId: string): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/users/${userId}/settings`)
+  },
+
+  updateSettings: async (
+    userId: string,
+    data: any
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(`/users/${userId}/settings`, data)
+  },
+
+  changePassword: async (
+    userId: string,
+    data: any
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.post<ApiResponse<any>>(
+      `/users/${userId}/change-password`,
+      data
+    )
+  },
+}
+
+// Notifications Services
+export const notificationsService = {
+  getAll: async (
+    page: number = 1,
+    pageSize: number = 20
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(
+      `/notifications?page=${page}&pageSize=${pageSize}`
+    )
+  },
+
+  getById: async (id: string): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/notifications/${id}`)
+  },
+
+  markAsRead: async (
+    id: string,
+    isRead: boolean
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(`/notifications/${id}/read`, {
+      isRead,
+    })
+  },
+
+  markAllAsRead: async (): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(`/notifications/read-all`, {})
+  },
+
+  getUnreadCount: async (): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/notifications/unread-count`)
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(`/notifications/${id}`)
+  },
+
+  deleteAll: async (): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(`/notifications`)
+  },
+
+  getPreferences: async (): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/notifications/preferences`)
+  },
+
+  updatePreferences: async (data: any): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(`/notifications/preferences`, data)
+  },
+}
+
+// Reports/Financial Analysis Services
+export const reportsService = {
+  getDashboard: async (
+    month: number,
+    year: number
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(
+      `/reports/dashboard?month=${month}&year=${year}`
+    )
+  },
+
+  getEvolution: async (year?: number): Promise<ApiResponse<any>> => {
+    const query = year ? `?year=${year}` : ''
+    return apiClient.get<ApiResponse<any>>(`/reports/evolution${query}`)
+  },
+
+  getCashFlow: async (
+    dateFrom?: string,
+    dateTo?: string
+  ): Promise<ApiResponse<any>> => {
+    const query = new URLSearchParams()
+    if (dateFrom) query.append('dateFrom', dateFrom)
+    if (dateTo) query.append('dateTo', dateTo)
+    return apiClient.get<ApiResponse<any>>(
+      `/reports/cash-flow${query.toString() ? `?${query.toString()}` : ''}`
+    )
+  },
+
+  getNetWorth: async (): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/reports/net-worth`)
+  },
+
+  getExpenseAnalysis: async (
+    dateFrom?: string,
+    dateTo?: string
+  ): Promise<ApiResponse<any>> => {
+    const query = new URLSearchParams()
+    if (dateFrom) query.append('dateFrom', dateFrom)
+    if (dateTo) query.append('dateTo', dateTo)
+    return apiClient.get<ApiResponse<any>>(
+      `/reports/expense-analysis${query.toString() ? `?${query.toString()}` : ''}`
+    )
+  },
+
+  getIncomeAnalysis: async (
+    dateFrom?: string,
+    dateTo?: string
+  ): Promise<ApiResponse<any>> => {
+    const query = new URLSearchParams()
+    if (dateFrom) query.append('dateFrom', dateFrom)
+    if (dateTo) query.append('dateTo', dateTo)
+    return apiClient.get<ApiResponse<any>>(
+      `/reports/income-analysis${query.toString() ? `?${query.toString()}` : ''}`
+    )
+  },
+
+  getFinancialHealth: async (): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/reports/financial-health`)
+  },
+
+  getBudgetVsActual: async (
+    dateFrom?: string,
+    dateTo?: string
+  ): Promise<ApiResponse<any>> => {
+    const query = new URLSearchParams()
+    if (dateFrom) query.append('dateFrom', dateFrom)
+    if (dateTo) query.append('dateTo', dateTo)
+    return apiClient.get<ApiResponse<any>>(
+      `/reports/budget-vs-actual${query.toString() ? `?${query.toString()}` : ''}`
+    )
+  },
+}
+
+// Debt Payments Additional Services
+export const debtPaymentsDetailService = {
+  getByDebtId: async (
+    debtId: string
+  ): Promise<ApiResponse<debtPaymentsResponse[]>> => {
+    return apiClient.get<ApiResponse<debtPaymentsResponse[]>>(
+      `/debt-payments/debt/${debtId}`
+    )
+  },
+}
+
+// Investment Goals Services
+export const investmentGoalsService = {
+  getAll: async (): Promise<ApiResponse<any[]>> => {
+    return apiClient.get<ApiResponse<any[]>>(`/investment-goal`)
+  },
+
+  getById: async (id: string): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/investment-goal/${id}`)
+  },
+
+  create: async (data: any): Promise<ApiResponse<any>> => {
+    return apiClient.post<ApiResponse<any>>(`/investment-goal`, data)
+  },
+
+  update: async (id: string, data: any): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(`/investment-goal/${id}`, data)
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(`/investment-goal/${id}`)
+  },
+}
+
+// Investment Types Services (similar to investment goals but for types)
+export const investmentTypesService = {
+  // Use categories endpoint filtered by type or custom endpoint if available
+  getAll: async (): Promise<ApiResponse<any[]>> => {
+    return apiClient.get<ApiResponse<any[]>>(`/categories?type=investment`)
+  },
+
+  getById: async (id: string): Promise<ApiResponse<any>> => {
+    return apiClient.get<ApiResponse<any>>(`/categories/${id}`)
+  },
+
+  create: async (data: any): Promise<ApiResponse<any>> => {
+    return apiClient.post<ApiResponse<any>>(`/categories`, {
+      ...data,
+      categoryType: 'investment',
+    })
+  },
+
+  update: async (id: string, data: any): Promise<ApiResponse<any>> => {
+    return apiClient.put<ApiResponse<any>>(`/categories/${id}`, data)
+  },
+
+  delete: async (id: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete<ApiResponse<void>>(`/categories/${id}`)
   },
 }
 

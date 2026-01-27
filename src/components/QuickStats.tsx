@@ -11,8 +11,8 @@ import { useGetCreditCardsByUser } from '@/lib/HTTP/credit-card'
 import { useGetDebtsByUser } from '@/lib/HTTP/debts'
 import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
 import { useGetIncomeByUser } from '@/lib/HTTP/income'
-import { COLORS } from '../constants/colors'
 import { formatCurrency } from '@/lib/utils'
+import { COLORS } from '../constants/colors'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Spinner } from './ui/spinner'
 
@@ -63,7 +63,7 @@ const QuickStat = ({
         </CardTitle>
         <div
           className={`p-2 rounded-lg`}
-          style={{ backgroundColor: color + '20' }}
+          style={{ backgroundColor: `${color}20` }}
         >
           <div style={{ color: color }}>{icon}</div>
         </div>
@@ -99,7 +99,10 @@ export function QuickStats() {
 
   const accounts = accountsData?.data || []
   const totalBalance = Array.isArray(accounts)
-    ? accounts.reduce((sum: number, acc: any) => sum + (Number(acc?.balance) || 0), 0)
+    ? accounts.reduce(
+        (sum: number, acc: any) => sum + (Number(acc?.balance) || 0),
+        0
+      )
     : 0
 
   const incomes = incomeData?.data || []
@@ -133,25 +136,25 @@ export function QuickStats() {
   const stats = [
     {
       title: 'Saldo Total',
-      value: formatCurrency(totalBalance).replace('MZN ', '') + ' Mt',
+      value: `${formatCurrency(totalBalance).replace('MZN ', '')} Mt`,
       icon: <DollarSign className="w-5 h-5" />,
       color: COLORS.green[600],
     },
     {
       title: 'Receitas Totais',
-      value: formatCurrency(totalIncome).replace('MZN ', '') + ' Mt',
+      value: `${formatCurrency(totalIncome).replace('MZN ', '')} Mt`,
       icon: <TrendingUp className="w-5 h-5" />,
       color: COLORS.green[500],
     },
     {
       title: 'Despesas Totais',
-      value: formatCurrency(totalExpenses).replace('MZN ', '') + ' Mt',
+      value: `${formatCurrency(totalExpenses).replace('MZN ', '')} Mt`,
       icon: <TrendingDown className="w-5 h-5" />,
       color: '#ef4444',
     },
     {
       title: 'Poupança (estimada)',
-      value: formatCurrency(savings).replace('MZN ', '') + ' Mt',
+      value: `${formatCurrency(savings).replace('MZN ', '')} Mt`,
       icon: <PiggyBank className="w-5 h-5" />,
       color: COLORS.blue[600],
     },
@@ -163,7 +166,7 @@ export function QuickStats() {
     },
     {
       title: 'Dívidas Pendentes',
-      value: formatCurrency(pendingDebtsAmount).replace('MZN ', '') + ' Mt',
+      value: `${formatCurrency(pendingDebtsAmount).replace('MZN ', '')} Mt`,
       icon: <AlertTriangle className="w-5 h-5" />,
       color: COLORS.black[600],
     },

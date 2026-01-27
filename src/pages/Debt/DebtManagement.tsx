@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { Header } from '@/components/layout/header'
+import { MainLayout } from '@/components/layout/mainLayout'
+import { Button } from '@/components/ui/button'
+import { COLORS } from '@/constants/colors'
 import {
   useCreateDebt,
   useGetDebtsByUser,
@@ -72,29 +74,50 @@ export function DebtManagement() {
     setShowForm(false)
   }
 
-  return (
-    <div>
-      <Header />
-      {showForm ? (
+  if (showForm) {
+    return (
+      <MainLayout>
         <DebtForm
           initialDebt={editingDebt!}
           onSave={handleSave}
           onCancel={handleCancel}
         />
-      ) : payingDebt ? (
+      </MainLayout>
+    )
+  }
+
+  if (payingDebt) {
+    return (
+      <MainLayout>
         <DebtPaymentForm
           valorOriginal={payingDebt.amount}
           onSave={handleSavePayment}
           onCancel={handleCancelPayment}
         />
-      ) : (
+      </MainLayout>
+    )
+  }
+
+  return (
+    <MainLayout>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2
+            className="text-2xl font-bold"
+            style={{ color: COLORS.black[800] }}
+          >
+            Dívidas
+          </h2>
+          <Button onClick={handleAdd}>Nova Dívida</Button>
+        </div>
+
         <DebtList
           debts={debtsApi as any}
           onAdd={handleAdd}
           onEdit={handleEdit}
           onPay={handlePay}
         />
-      )}
-    </div>
+      </div>
+    </MainLayout>
   )
 }

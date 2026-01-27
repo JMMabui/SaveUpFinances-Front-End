@@ -30,6 +30,7 @@ import { COLORS } from '@/constants/colors'
 import { useGetDebtsByUser } from '@/lib/HTTP/debts'
 import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
 import { useGetIncomeByUser } from '@/lib/HTTP/income'
+import { formatCurrency, formatPercentage, getMonthName } from '@/lib/utils'
 
 Chart.register(ArcElement)
 Chart.register(
@@ -40,21 +41,6 @@ Chart.register(
   Tooltip,
   Legend
 )
-
-const getMonthName = (month: number) => {
-  return new Date(2000, month - 1).toLocaleString('pt-BR', { month: 'long' })
-}
-
-const formatCurrency = (value: number) => {
-  return value.toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'MZN',
-  })
-}
-
-const formatPercentage = (value: number) => {
-  return `${value.toFixed(1)}%`
-}
 
 export function ReportsDashboard() {
   const userId =
@@ -68,11 +54,16 @@ export function ReportsDashboard() {
   const debts = debtsData?.data || []
 
   const totalIncome = useMemo(
-    () => incomes.reduce((acc: number, t: any) => acc + (Number(t.amount) || 0), 0),
+    () =>
+      incomes.reduce((acc: number, t: any) => acc + (Number(t.amount) || 0), 0),
     [incomes]
   )
   const totalExpenses = useMemo(
-    () => expenses.reduce((acc: number, t: any) => acc + (Number(t.amount) || 0), 0),
+    () =>
+      expenses.reduce(
+        (acc: number, t: any) => acc + (Number(t.amount) || 0),
+        0
+      ),
     [expenses]
   )
   const totalInvestments = 0
@@ -90,18 +81,19 @@ export function ReportsDashboard() {
     for (const t of incomes) {
       const key = t.sourceId || 'income'
       map.set(key, {
-        amount: (map.get(key)?.amount || 0) + (t.amount || 0),
+        amount: (map.get(key)?.amount || 0) + (Number(t.amount) || 0),
         type: 'income',
       })
     }
     for (const t of expenses) {
       const key = t.categoryId || 'expense'
       map.set(key, {
-        amount: (map.get(key)?.amount || 0) + (t.amount || 0),
+        amount: (map.get(key)?.amount || 0) + (Number(t.amount) || 0),
         type: 'expense',
       })
     }
     const total = totalIncome + totalExpenses
+
     return Array.from(map.entries()).map(([categoryId, v]) => {
       const categoryName = v.type === 'income' ? 'Receita' : categoryId
       return {
@@ -120,10 +112,10 @@ export function ReportsDashboard() {
       const year = new Date().getFullYear()
       const income = incomes
         .filter((t: any) => new Date(t.date).getMonth() + 1 === month)
-        .reduce((acc: number, t: any) => acc + (t.amount || 0), 0)
+        .reduce((acc: number, t: any) => acc + (Number(t.amount) || 0), 0)
       const exp = expenses
         .filter((t: any) => new Date(t.date).getMonth() + 1 === month)
-        .reduce((acc: number, t: any) => acc + (t.amount || 0), 0)
+        .reduce((acc: number, t: any) => acc + (Number(t.amount) || 0), 0)
       const investments = 0
       return { month, year, income, expenses: exp, investments }
     })
@@ -211,8 +203,7 @@ export function ReportsDashboard() {
       <div
         className="p-4"
         style={{
-          background:
-            'linear-gradient(to bottom right, ' + COLORS.blue[50] + ', white)',
+          background: `linear-gradient(to bottom right, ${COLORS.blue[50]}, white)`,
         }}
       >
         <div className="flex justify-between items-center mb-6">

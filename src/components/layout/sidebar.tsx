@@ -1,6 +1,8 @@
 import { BiMoneyWithdraw } from 'react-icons/bi'
+import { BsBank } from 'react-icons/bs'
 import {
   FiBarChart2,
+  FiBell,
   FiCalendar,
   FiCreditCard,
   FiDollarSign,
@@ -8,10 +10,11 @@ import {
   FiPieChart,
   FiTrendingDown,
   FiTrendingUp,
+  FiUser,
 } from 'react-icons/fi'
 import { NavLink } from 'react-router-dom'
 
-const navItems = [
+const mainNavItems = [
   {
     to: '/dashboard',
     label: 'Dashboard',
@@ -42,23 +45,59 @@ const navItems = [
     label: 'Contas',
     icon: <BiMoneyWithdraw className="size-4" />,
   },
-  { to: '/debts', label: 'Dívidas', icon: <FiTrendingDown className="size-4" /> },
-  { to: '/expenses', label: 'Despesas', icon: <FiBarChart2 className="size-4" /> },
+  {
+    to: '/banks',
+    label: 'Bancos',
+    icon: <BsBank className="size-4" />,
+  },
+  {
+    to: '/debts',
+    label: 'Dívidas',
+    icon: <FiTrendingDown className="size-4" />,
+  },
+  {
+    to: '/debt-payments',
+    label: 'Pag. Dívidas',
+    icon: <FiBarChart2 className="size-4" />,
+  },
+  {
+    to: '/expenses',
+    label: 'Despesas',
+    icon: <FiBarChart2 className="size-4" />,
+  },
   {
     to: '/investments',
     label: 'Investimentos',
     icon: <FiTrendingUp className="size-4" />,
   },
   {
-    to: '/reports',
+    to: '/investment-types',
+    label: 'Tipos Inv.',
+    icon: <FiList className="size-4" />,
+  },
+  {
+    to: '/financial-reports',
     label: 'Relatórios',
     icon: <FiBarChart2 className="size-4" />,
   },
 ]
 
+const userNavItems = [
+  {
+    to: '/notifications',
+    label: 'Notificações',
+    icon: <FiBell className="size-4" />,
+  },
+  {
+    to: '/profile',
+    label: 'Meu Perfil',
+    icon: <FiUser className="size-4" />,
+  },
+]
+
 export function Sidebar() {
   return (
-    <aside className="h-screen border-r bg-sidebar text-sidebar-foreground fixed left-0 top-0 w-64 hidden md:block">
+    <aside className="h-screen border-r bg-sidebar text-sidebar-foreground fixed left-0 top-0 w-64 hidden md:block overflow-y-auto">
       <div className="h-16 flex items-center px-4 border-b">
         <div className="flex items-center gap-2">
           <img src="/vite.svg" alt="Logo" className="size-6" />
@@ -66,23 +105,51 @@ export function Sidebar() {
         </div>
       </div>
       <nav className="p-2 space-y-1">
-        {navItems.map(item => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              [
-                'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
-                isActive
-                  ? 'bg-accent text-accent-foreground'
-                  : 'hover:bg-accent hover:text-accent-foreground',
-              ].join(' ')
-            }
-          >
-            {item.icon}
-            <span className="text-sm">{item.label}</span>
-          </NavLink>
-        ))}
+        <div>
+          <p className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">
+            Principal
+          </p>
+          {mainNavItems.map(item => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                [
+                  'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
+                  isActive
+                    ? 'bg-accent text-accent-foreground'
+                    : 'hover:bg-accent hover:text-accent-foreground',
+                ].join(' ')
+              }
+            >
+              {item.icon}
+              <span className="text-sm">{item.label}</span>
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="border-t mt-4 pt-4">
+          <p className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">
+            Conta
+          </p>
+          {userNavItems.map(item => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                [
+                  'flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
+                  isActive
+                    ? 'bg-accent text-accent-foreground'
+                    : 'hover:bg-accent hover:text-accent-foreground',
+                ].join(' ')
+              }
+            >
+              {item.icon}
+              <span className="text-sm">{item.label}</span>
+            </NavLink>
+          ))}
+        </div>
       </nav>
     </aside>
   )

@@ -1,16 +1,50 @@
-import type { z } from 'zod'
-import type { CategoriesPostCategoriesBodySchema } from '@/lib/openapi/zod/Categories'
+// Auto-generated from Swagger API
+// Generated on: 2026-01-23T14:39:08.053Z
+import { z } from 'zod'
 
-export interface categoryResponse {
-  id: string
-  createdAt: Date
-  updatedAt: Date
-  categoryName: string
-  categoryType: z.infer<
-    typeof CategoriesPostCategoriesBodySchema
-  >['categoryType']
-  icon: string | null
-  color: string | null
-}
-
-export type categoryRequest = z.infer<typeof CategoriesPostCategoriesBodySchema>
+export const CategoriesPostCategoriesBodySchema = z.object({
+  categoryName: z.string(),
+  categoryType: z.enum([
+    'income',
+    'expense',
+    'transfer',
+    'investment',
+    'creditCardExpense',
+    'debtPayment',
+    'debtIncome',
+    'budgetExpense',
+    'budgetIncome',
+    'creditCardPayment',
+    'creditCardTransfer',
+    'creditCardIncome',
+  ]),
+  icon: z.union([z.string(), z.null()]).optional(),
+  color: z.union([z.string(), z.null()]).optional(),
+})
+export type CategoriesPostCategoriesBody = z.infer<
+  typeof CategoriesPostCategoriesBodySchema
+>
+export const CategoriesPutCategoriesByIdBodySchema = z.object({
+  categoryName: z.string().optional(),
+  categoryType: z
+    .enum([
+      'income',
+      'expense',
+      'transfer',
+      'investment',
+      'creditCardExpense',
+      'debtPayment',
+      'debtIncome',
+      'budgetExpense',
+      'budgetIncome',
+      'creditCardPayment',
+      'creditCardTransfer',
+      'creditCardIncome',
+    ])
+    .optional(),
+  icon: z.union([z.string(), z.null()]).optional(),
+  color: z.union([z.string(), z.null()]).optional(),
+})
+export type CategoriesPutCategoriesByIdBody = z.infer<
+  typeof CategoriesPutCategoriesByIdBodySchema
+>

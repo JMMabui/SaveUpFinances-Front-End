@@ -7,7 +7,7 @@ function capitalize(s: string) {
 export function Breadcrumbs() {
   const location = useLocation()
   const parts = location.pathname.split('/').filter(Boolean)
-  const paths = parts.map((_, i) => '/' + parts.slice(0, i + 1).join('/'))
+  const paths = parts.map((_, i) => `/${parts.slice(0, i + 1).join('/')}`)
 
   return (
     <nav aria-label="Breadcrumb" className="text-sm mb-4">

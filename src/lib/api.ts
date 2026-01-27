@@ -19,7 +19,7 @@ export class ApiError extends Error {
 }
 
 function getCookie(name: string): string | undefined {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))
   return match ? decodeURIComponent(match[2]) : undefined
 }
 
@@ -106,13 +106,13 @@ class ApiClient {
         try {
           // Try to parse error as JSON
           const contentType = response.headers.get('content-type')
-          if (contentType && contentType.includes('application/json')) {
+          if (contentType?.includes('application/json')) {
             errorData = await response.json()
             errorMessage = errorData.message || errorMessage
           } else {
             errorData = await response.text()
           }
-        } catch (e) {
+        } catch (_e) {
           // If parsing fails, use text
           errorData = await response.text()
         }
@@ -122,7 +122,7 @@ class ApiClient {
 
       // Handle empty responses
       const contentType = response.headers.get('content-type')
-      if (contentType && contentType.includes('application/json')) {
+      if (contentType?.includes('application/json')) {
         return await response.json()
       }
 

@@ -1,40 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
-
+import { apiService } from '../apiServices'
 import {
   DebtsPostDebtsBodySchema,
   DebtsPutDebtsByIdBodySchema,
-} from '@/lib/openapi/zod/Debts'
-import { apiService } from '../apiServices'
-import type { debtsRequest, debtsResponse } from './Type/debts.type'
+} from './Type/debts.type'
 
-const BASE = '/debts' as const
+const _BASE = '/debts' as const
 
-export function useGetDebtsByUser(userId: string) {
-  return useQuery({
-    queryKey: ['debts', 'by-user', userId],
-    queryFn: async () =>
-      apiService.get<debtsResponse[]>(`${BASE}/user/${userId}`),
-    enabled: !!userId,
-  })
-}
+export function useDebtsPostDebts() {
+  const queryClient = useQueryClient()
+  const { success, error } = useToast()
 
-export function useGetDebtById(id: string) {
-  return useQuery({
-    queryKey: ['debts', 'by-id', id],
-    queryFn: async () => apiService.get<debtsResponse>(`${BASE}/${id}`),
-    enabled: !!id,
+  return useMutation({
+    mutationFn: async (data: any) => apiService.post('/debts', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['debts'] })
+      success('Debts criado com sucesso')
+    },
+    onError: () => {
+      error('Erro ao criar debts')
+    },
   })
 }
 
 export function useCreateDebt() {
-  const { success, error } = useToast()
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
   return useMutation({
-    mutationKey: ['debts', 'create'],
-    mutationFn: async (data: debtsRequest) => {
+    mutationFn: async (data: any) => {
       const parsed = DebtsPostDebtsBodySchema.parse(data)
-      return apiService.post<debtsResponse>(BASE, parsed)
+      return apiService.post('/debts', parsed)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['debts'] })
@@ -46,18 +42,48 @@ export function useCreateDebt() {
   })
 }
 
-export function useUpdateDebt(id: string) {
-  const { success, error } = useToast()
+export function useDebtsGetDebts(params?: any) {
+  return useQuery({
+    queryKey: ['debts-get', params],
+    queryFn: async () => apiService.get('/debts'),
+    enabled: true,
+  })
+}
+
+export function useDebtsGetDebtsById(params?: any) {
+  return useQuery({
+    queryKey: ['debts-get', params],
+    queryFn: async () => apiService.get(`/debts/${params?.id}`),
+    enabled: Object.values(params || {}).every(Boolean),
+  })
+}
+
+export function useDebtsPutDebtsById() {
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
+
   return useMutation({
-    mutationKey: ['debts', 'update', id],
-    mutationFn: async (data: Partial<debtsRequest>) => {
+    mutationFn: async (data: any) => apiService.put(`/debts/${data?.id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['debts'] })
+      success('Debts atualizado com sucesso')
+    },
+    onError: () => {
+      error('Erro ao atualizar debts')
+    },
+  })
+}
+
+export function useUpdateDebt(id: string) {
+  const queryClient = useQueryClient()
+  const { success, error } = useToast()
+  return useMutation({
+    mutationFn: async (data: any) => {
       const parsed = DebtsPutDebtsByIdBodySchema.parse(data)
-      return apiService.put<debtsResponse>(`${BASE}/${id}`, parsed)
+      return apiService.put(`/debts/${id}`, parsed)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['debts'] })
-      queryClient.invalidateQueries({ queryKey: ['debts', 'by-id', id] })
       success('Dívida atualizada com sucesso')
     },
     onError: () => {
@@ -66,18 +92,34 @@ export function useUpdateDebt(id: string) {
   })
 }
 
-export function useDeleteDebt() {
-  const { success, error } = useToast()
+export function useDebtsDeleteDebtsById() {
   const queryClient = useQueryClient()
+  const { success, error } = useToast()
+
   return useMutation({
-    mutationKey: ['debts', 'delete'],
-    mutationFn: async (id: string) => apiService.delete<void>(`${BASE}/${id}`),
+    mutationFn: async (id: string) => apiService.delete(`/debts/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['debts'] })
-      success('Dívida excluída com sucesso')
+      success('Debts deletado com sucesso')
     },
     onError: () => {
-      error('Erro ao excluir dívida')
+      error('Erro ao deletar debts')
     },
+  })
+}
+
+export function useDebtsGetDebtsUserByUserId(params?: any) {
+  return useQuery({
+    queryKey: ['debts-get', params],
+    queryFn: async () => apiService.get(`/debts/user/${params?.userId}`),
+    enabled: Object.values(params || {}).every(Boolean),
+  })
+}
+
+export function useGetDebtsByUser(userId: string) {
+  return useQuery({
+    queryKey: ['debts-by-user', userId],
+    queryFn: async () => apiService.get(`/debts/user/${userId}`),
+    enabled: !!userId,
   })
 }

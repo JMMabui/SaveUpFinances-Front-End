@@ -4,6 +4,7 @@ export const InvestmentGoalsPostInvestmentGoalBodySchema = z.object({
   targetAmount: z.number(),
   currentAmount: z.number().optional(),
   targetDate: z.string(),
+  investmentId: z.string(),
 })
 export const InvestmentGoalsPostInvestmentGoalResponseSchema = z.unknown()
 export const InvestmentGoalsGetInvestmentGoalBodySchema = z.unknown()
@@ -13,6 +14,7 @@ export const InvestmentGoalsPutInvestmentGoalByIdBodySchema = z.object({
   targetAmount: z.number().optional(),
   currentAmount: z.number().optional(),
   targetDate: z.string().optional(),
+  investmentId: z.string().optional(),
 })
 export const InvestmentGoalsPutInvestmentGoalByIdResponseSchema = z.unknown()
 export const InvestmentGoalsDeleteInvestmentGoalByIdBodySchema = z.unknown()

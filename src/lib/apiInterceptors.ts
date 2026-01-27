@@ -36,7 +36,7 @@ class ApiInterceptorManager {
 
     try {
       const response = await fetch(
-        `${apiClient['config'].baseURL}${endpoint}`,
+        `${apiClient.config.baseURL}${endpoint}`,
         config
       )
 
@@ -120,7 +120,7 @@ interceptorManager.addInterceptor({
             // This would need to be implemented in the main API client
             console.log('Token refreshed successfully')
           }
-        } catch (refreshError) {
+        } catch (_refreshError) {
           // If refresh fails, redirect to login
           localStorage.removeItem('token')
           localStorage.removeItem('userId')

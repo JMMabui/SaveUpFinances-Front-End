@@ -1,19 +1,25 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { ToastProvider } from '@/components/ui/toast'
 import { AuthProvider } from './components/AuthProvider'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import { AccountsPage } from './pages/Accounts/AccountsPage'
+import { AccountsPage } from './pages/accounts/AccountsPage'
 import { LoginPage } from './pages/auth/LoginPage'
 import { RegisterPage } from './pages/auth/register'
+import BanksPage from './pages/Banks/banks'
 import { BudgetManagement } from './pages/Budget/BudgetManagement'
 import { CategoryManagement } from './pages/Category/CategoryManagement'
 import { CreditCardManagement } from './pages/Creadit Card/CreditCardManagement'
 import { DebtManagement } from './pages/Debt/DebtManagement'
+import DebtPaymentsPage from './pages/DebtPayments/debtpayments'
 import { Dashboard } from './pages/dashboard'
 import { ExpensesManagement } from './pages/Expenses/ExpensesManagement'
 import { IncomeSourceManagement } from './pages/Income Source/IncomeSourceManagement'
 import { InvestmentTracking } from './pages/Investiment/InvestmentTracking'
+import InvestmentTypesPage from './pages/Investment/InvestmentType'
+import NotificationsPage from './pages/notifications/notifications'
+import ProfilePage from './pages/profile/profile'
 import { ReportsDashboard } from './pages/Report/ReportsDashboard'
-import { ToastProvider } from '@/components/ui/toast'
+import FinancialReportsPage from './pages/Report/report'
 
 function AppRoutes() {
   return (
@@ -97,6 +103,54 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <ReportsDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/banks"
+        element={
+          <ProtectedRoute>
+            <BanksPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/debt-payments"
+        element={
+          <ProtectedRoute>
+            <DebtPaymentsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/investment-types"
+        element={
+          <ProtectedRoute>
+            <InvestmentTypesPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/financial-reports"
+        element={
+          <ProtectedRoute>
+            <FinancialReportsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <NotificationsPage />
           </ProtectedRoute>
         }
       />

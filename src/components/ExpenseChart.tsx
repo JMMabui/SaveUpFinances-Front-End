@@ -22,7 +22,7 @@ export function ExpenseChart() {
   const categories = categoriesData?.data || []
 
   const totalExpenses = expenses.reduce(
-    (sum: number, e: any) => sum + (e?.amount || 0),
+    (sum: number, e: any) => sum + (Number(e?.amount) || 0),
     0
   )
 
@@ -32,7 +32,7 @@ export function ExpenseChart() {
     const key = cat?.id || e?.categoryId || 'outros'
     const name = cat?.categoryName || 'Outros'
     const prev = categoryMap.get(key)?.amount || 0
-    categoryMap.set(key, { name, amount: prev + (e?.amount || 0) })
+    categoryMap.set(key, { name, amount: prev + (Number(e?.amount) || 0) })
   }
 
   const palette = [

@@ -8,8 +8,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { COLORS } from '@/constants/colors'
-import { formatCurrency } from '@/lib/utils'
 import type { accountResponse } from '@/lib/HTTP/Type/account.type'
+import { formatCurrency } from '@/lib/utils'
 import { AccountCard } from './AccountCard'
 
 interface AccountsListProps {

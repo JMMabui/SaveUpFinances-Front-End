@@ -4,6 +4,7 @@ export const DebtPaymentsPostDebtPaymentsBodySchema = z.object({
   date: z.string(),
   debtId: z.string(),
   accountId: z.union([z.string(), z.null()]).optional(),
+  userId: z.string(),
   notes: z.union([z.string(), z.null()]).optional(),
 })
 export const DebtPaymentsPostDebtPaymentsResponseSchema = z.unknown()
@@ -16,6 +17,7 @@ export const DebtPaymentsPutDebtPaymentsByIdBodySchema = z.object({
   date: z.string().optional(),
   debtId: z.string().optional(),
   accountId: z.union([z.string(), z.null()]).optional(),
+  userId: z.string().optional(),
   notes: z.union([z.string(), z.null()]).optional(),
 })
 export const DebtPaymentsPutDebtPaymentsByIdResponseSchema = z.unknown()

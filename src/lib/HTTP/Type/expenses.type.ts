@@ -1,15 +1,30 @@
-import type { z } from 'zod'
-import type { ExpensesPostExpensesBodySchema } from '@/lib/openapi/zod/Expenses'
+// Auto-generated from Swagger API
+// Generated on: 2026-01-23T14:39:08.530Z
+import { z } from 'zod'
 
-export interface expensesResponse {
-  id: string
-  userId: string
-  createdAt: string
-  updatedAt: string
-  date: string
-  description: string
-  amount: number
-  categoryId: string
-}
-
-export type expensesRequest = z.infer<typeof ExpensesPostExpensesBodySchema>
+export const ExpensesPostExpensesBodySchema = z.object({
+  description: z.string(),
+  amount: z.number(),
+  date: z.string(),
+  month: z.number(),
+  year: z.number(),
+  categoryId: z.string(),
+  accountId: z.string(),
+  userId: z.string(),
+})
+export type ExpensesPostExpensesBody = z.infer<
+  typeof ExpensesPostExpensesBodySchema
+>
+export const ExpensesPutExpensesByIdBodySchema = z.object({
+  description: z.string().optional(),
+  amount: z.number().optional(),
+  date: z.string().optional(),
+  month: z.number().optional(),
+  year: z.number().optional(),
+  categoryId: z.string().optional(),
+  accountId: z.string().optional(),
+  userId: z.string().optional(),
+})
+export type ExpensesPutExpensesByIdBody = z.infer<
+  typeof ExpensesPutExpensesByIdBodySchema
+>

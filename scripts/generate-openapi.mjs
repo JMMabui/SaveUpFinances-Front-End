@@ -5,6 +5,8 @@ const cwd = process.cwd()
 const swaggerPath = path.resolve(cwd, 'swagger.json')
 const outDir = path.resolve(cwd, 'src', 'lib', 'openapi')
 const zodDir = path.resolve(outDir, 'zod')
+const httpDir = path.resolve(cwd, 'src', 'lib', 'HTTP')
+const typeDir = path.resolve(httpDir, 'Type')
 
 function readJson(file) {
   const raw = fs.readFileSync(file, 'utf-8')
@@ -29,7 +31,7 @@ function normalizePathName(p) {
   return segs
     .map(s => {
       const m = s.match(/^\{(.+)\}$/)
-      if (m) return 'By' + pascalCase(m[1])
+      if (m) return `By${pascalCase(m[1])}`
       return pascalCase(s)
     })
     .join('')
@@ -44,22 +46,12 @@ function pickResponseSchema(responses) {
   const preferred = ['200', '201', '202']
   for (const code of preferred) {
     const r = responses[code]
-    if (
-      r &&
-      r.content &&
-      r.content['application/json'] &&
-      r.content['application/json'].schema
-    ) {
+    if (r?.content?.['application/json']?.schema) {
       return r.content['application/json'].schema
     }
   }
   for (const [_, r] of Object.entries(responses)) {
-    if (
-      r &&
-      r.content &&
-      r.content['application/json'] &&
-      r.content['application/json'].schema
-    ) {
+    if (r?.content?.['application/json']?.schema) {
       return r.content['application/json'].schema
     }
   }
@@ -161,11 +153,7 @@ function generateTypes(sw) {
       const paramsTs = buildParamsTs(extractParams(op.parameters || []))
       const queryTs = buildQueryTs(op.parameters || [])
       let bodySchema = null
-      if (
-        op.requestBody &&
-        op.requestBody.content &&
-        op.requestBody.content['application/json']
-      ) {
+      if (op.requestBody?.content?.['application/json']) {
         bodySchema = op.requestBody.content['application/json'].schema || null
       }
       const responseSchema = pickResponseSchema(op.responses)
@@ -296,11 +284,7 @@ function buildZodSchemas(sw, routes) {
       const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
       if (!op) continue
       let bodySchema = null
-      if (
-        op.requestBody &&
-        op.requestBody.content &&
-        op.requestBody.content['application/json']
-      ) {
+      if (op.requestBody?.content?.['application/json']) {
         bodySchema = op.requestBody.content['application/json'].schema || null
       }
       const respSchema = pickResponseSchema(op.responses)
@@ -320,14 +304,223 @@ function buildZodSchemas(sw, routes) {
   )
 }
 
+function extractTag(tag) {
+  // Convert tag to kebab-case for filename
+  return tag
+    .replace(/([A-Z])/g, '-$1')
+    .toLowerCase()
+    .replace(/^-/, '')
+}
+
+function buildTypeFiles(routes, sw) {
+  const groups = groupRoutes(routes)
+  ensureDir(typeDir)
+
+  for (const [group, arr] of Object.entries(groups)) {
+    const fileName = extractTag(group)
+    const filePath = path.join(typeDir, `${fileName}.type.ts`)
+
+    const lines = [
+      `// Auto-generated from Swagger API`,
+      `// Generated on: ${new Date().toISOString()}`,
+      `import { z } from 'zod'`,
+      ``,
+    ]
+
+    // Extract unique response types and schemas
+    for (const r of arr) {
+      const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
+      if (op) {
+        const respSchema = pickResponseSchema(op.responses)
+        if (respSchema) {
+          const typeName = `${r.name}Response`
+          const zodSchema = jsonSchemaToZod(respSchema)
+          lines.push(`export const ${typeName}Schema = ${zodSchema}`)
+          lines.push(
+            `export type ${typeName} = z.infer<typeof ${typeName}Schema>`
+          )
+        }
+      }
+    }
+
+    // Add request body types with Zod
+    for (const r of arr) {
+      const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
+      if (op?.requestBody) {
+        const bodySchema = op.requestBody.content?.['application/json']?.schema
+        if (bodySchema) {
+          const typeName = `${r.name}Body`
+          const zodSchema = jsonSchemaToZod(bodySchema)
+          lines.push(`export const ${typeName}Schema = ${zodSchema}`)
+          lines.push(
+            `export type ${typeName} = z.infer<typeof ${typeName}Schema>`
+          )
+        }
+      }
+    }
+
+    if (lines.length > 3) {
+      fs.writeFileSync(filePath, lines.join('\n'), 'utf-8')
+      console.log(`✓ Updated ${fileName}.type.ts`)
+    }
+  }
+}
+
+function buildHttpFiles(routes, sw) {
+  const groups = groupRoutes(routes)
+  ensureDir(httpDir)
+
+  for (const [group, arr] of Object.entries(groups)) {
+    const fileName = extractTag(group)
+    const filePath = path.join(httpDir, `${fileName}.ts`)
+
+    const lines = [
+      `import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'`,
+      `import { useToast } from '@/components/ui/toast'`,
+      `import { apiService } from '../apiServices'`,
+      `import type { `,
+    ]
+
+    // Collect all types needed
+    const types = []
+    for (const r of arr) {
+      const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
+      if (op) {
+        const respSchema = pickResponseSchema(op.responses)
+        if (respSchema) {
+          types.push(`${r.name}Response`)
+        }
+        if (op.requestBody?.content?.['application/json']?.schema) {
+          types.push(`${r.name}Body`)
+        }
+      }
+    }
+
+    if (types.length > 0) {
+      lines[3] += `${types.join(', ')} } from './Type/${fileName}.type'`
+    } else {
+      lines[3] += `} from './Type/${fileName}.type'`
+    }
+
+    lines.push(``)
+    lines.push(`const BASE = '/${group.toLowerCase()}' as const`)
+    lines.push(``)
+
+    // Generate hooks from routes
+    for (const r of arr) {
+      const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
+      if (!op) continue
+
+      const hookName = `use${r.name}`
+      const pathParams = extractParams(op.parameters || [])
+      const hasParams = pathParams.length > 0
+      const hasQuery = (op.parameters || []).some(p => p.in === 'query')
+      const _hasBody = !!op.requestBody?.content?.['application/json']?.schema
+      const friendlyName = fileName.replace(/-/g, ' ').trim()
+
+      if (r.method === 'GET') {
+        lines.push(
+          `export function ${hookName}(${hasParams || hasQuery ? 'params?: any' : ''}) {`
+        )
+        lines.push(`  return useQuery({`)
+        lines.push(
+          `    queryKey: ['${fileName}-${r.method.toLowerCase()}', params],`
+        )
+        lines.push(
+          `    queryFn: async () => apiService.get('${r.path}', ${hasParams || hasQuery ? 'params' : ''}),`
+        )
+        lines.push(
+          `    enabled: ${hasParams ? 'Object.values(params || {}).every(Boolean)' : 'true'},`
+        )
+        lines.push(`  })`)
+        lines.push(`}`)
+      } else if (
+        r.method === 'POST' ||
+        r.method === 'PUT' ||
+        r.method === 'PATCH'
+      ) {
+        lines.push(`export function ${hookName}() {`)
+        lines.push(`  const queryClient = useQueryClient()`)
+        lines.push(`  const { success, error } = useToast()`)
+        lines.push(``)
+        lines.push(`  return useMutation({`)
+        lines.push(
+          `    mutationFn: async (data: any) => apiService.${r.method === 'POST' ? 'post' : r.method === 'PUT' ? 'put' : 'patch'}('${r.path}', data),`
+        )
+        lines.push(`    onSuccess: () => {`)
+        lines.push(
+          `      queryClient.invalidateQueries({ queryKey: ['${fileName}'] })`
+        )
+        const successMsg =
+          r.method === 'POST'
+            ? `${friendlyName.charAt(0).toUpperCase() + friendlyName.slice(1)} criado com sucesso`
+            : `${friendlyName.charAt(0).toUpperCase() + friendlyName.slice(1)} atualizado com sucesso`
+        const errorMsg =
+          r.method === 'POST'
+            ? `Erro ao criar ${friendlyName.toLowerCase()}`
+            : `Erro ao atualizar ${friendlyName.toLowerCase()}`
+        lines.push(`      success('${successMsg}')`)
+        lines.push(`    },`)
+        lines.push(`    onError: () => {`)
+        lines.push(`      error('${errorMsg}')`)
+        lines.push(`    },`)
+        lines.push(`  })`)
+        lines.push(`}`)
+      } else if (r.method === 'DELETE') {
+        lines.push(`export function ${hookName}() {`)
+        lines.push(`  const queryClient = useQueryClient()`)
+        lines.push(`  const { success, error } = useToast()`)
+        lines.push(``)
+        lines.push(`  return useMutation({`)
+        lines.push(
+          `    mutationFn: async (id: string) => apiService.delete('${r.path}'.replace('{id}', id)),`
+        )
+        lines.push(`    onSuccess: () => {`)
+        lines.push(
+          `      queryClient.invalidateQueries({ queryKey: ['${fileName}'] })`
+        )
+        lines.push(
+          `      success('${friendlyName.charAt(0).toUpperCase() + friendlyName.slice(1)} deletado com sucesso')`
+        )
+        lines.push(`    },`)
+        lines.push(`    onError: () => {`)
+        lines.push(
+          `      error('Erro ao deletar ${friendlyName.toLowerCase()}')`
+        )
+        lines.push(`    },`)
+        lines.push(`  })`)
+        lines.push(`}`)
+      }
+      lines.push(``)
+    }
+
+    fs.writeFileSync(filePath, lines.join('\n'), 'utf-8')
+    console.log(`✓ Generated ${fileName}.ts`)
+  }
+}
+
 function main() {
+  console.log('📦 Generating OpenAPI files...\n')
   const sw = readJson(swaggerPath)
   ensureDir(outDir)
   const { typesSource, routes } = generateTypes(sw)
   fs.writeFileSync(path.join(outDir, 'types.ts'), typesSource, 'utf-8')
+  console.log('✓ Generated types.ts')
+
   const routesSource = buildRoutesSource(routes)
   fs.writeFileSync(path.join(outDir, 'routes.ts'), routesSource, 'utf-8')
+  console.log('✓ Generated routes.ts')
+
   buildZodSchemas(sw, routes)
+  console.log('✓ Generated Zod schemas\n')
+
+  console.log('📝 Generating Type files...\n')
+  buildTypeFiles(routes, sw)
+
+  console.log('\n📡 Generating HTTP hook files...\n')
+  buildHttpFiles(routes, sw)
+
+  console.log('\n✅ All files generated successfully!')
 }
 
 main()

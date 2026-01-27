@@ -39,7 +39,7 @@ export function useAuth(): UseAuthReturn {
       // Buscar dados do usuário atual
       const response = await authService.getCurrentUser(userId!)
 
-      if (response && response.data) {
+      if (response?.data) {
         setUser(response.data)
         setIsAuthenticated(true)
         return true
@@ -64,7 +64,7 @@ export function useAuth(): UseAuthReturn {
     try {
       const response = await authService.login(data)
 
-      if (response && response.data) {
+      if (response?.data) {
         setUser(response.data.user)
         setIsAuthenticated(true)
         navigate('/dashboard')

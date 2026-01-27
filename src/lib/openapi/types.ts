@@ -26,6 +26,14 @@ export type AuthPostAuthResetPasswordBody = {
   confirmPassword: string
 }
 export type AuthPostAuthResetPasswordResponse = unknown
+export type AuthPostAuthVerifyResetTokenParams = Record<string, never>
+export type AuthPostAuthVerifyResetTokenQuery = Record<string, never>
+export type AuthPostAuthVerifyResetTokenBody = { token: string }
+export type AuthPostAuthVerifyResetTokenResponse = unknown
+export type AuthGetAuthResetPasswordByTokenParams = { token: string }
+export type AuthGetAuthResetPasswordByTokenQuery = Record<string, never>
+export type AuthGetAuthResetPasswordByTokenBody = unknown
+export type AuthGetAuthResetPasswordByTokenResponse = unknown
 export type UsersPostUsersParams = Record<string, never>
 export type UsersPostUsersQuery = Record<string, never>
 export type UsersPostUsersBody = {
@@ -63,6 +71,48 @@ export type UsersGetUsersByIdProfileParams = { id: string }
 export type UsersGetUsersByIdProfileQuery = Record<string, never>
 export type UsersGetUsersByIdProfileBody = unknown
 export type UsersGetUsersByIdProfileResponse = unknown
+export type UsersPutUsersByIdProfileParams = { id: string }
+export type UsersPutUsersByIdProfileQuery = Record<string, never>
+export type UsersPutUsersByIdProfileBody = {
+  name?: string
+  surname?: string
+  contact?: string
+}
+export type UsersPutUsersByIdProfileResponse = unknown
+export type UsersPostUsersByIdChangePasswordParams = { id: string }
+export type UsersPostUsersByIdChangePasswordQuery = Record<string, never>
+export type UsersPostUsersByIdChangePasswordBody = {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+export type UsersPostUsersByIdChangePasswordResponse = unknown
+export type UsersGetUsersByIdSettingsParams = { id: string }
+export type UsersGetUsersByIdSettingsQuery = Record<string, never>
+export type UsersGetUsersByIdSettingsBody = unknown
+export type UsersGetUsersByIdSettingsResponse = unknown
+export type UsersPutUsersByIdSettingsParams = { id: string }
+export type UsersPutUsersByIdSettingsQuery = Record<string, never>
+export type UsersPutUsersByIdSettingsBody = {
+  language?: 'pt-BR' | 'en-US' | 'es-ES'
+  currency?:
+    | 'MZN'
+    | 'USD'
+    | 'EUR'
+    | 'GBP'
+    | 'BRL'
+    | 'JPY'
+    | 'CNY'
+    | 'INR'
+    | 'RUB'
+    | 'AUD'
+    | 'CAD'
+  theme?: 'light' | 'dark' | 'auto'
+  timezone?: string
+  dateFormat?: string
+  twoFactorEnabled?: boolean
+}
+export type UsersPutUsersByIdSettingsResponse = unknown
 export type AccountsPostAccountsParams = Record<string, never>
 export type AccountsPostAccountsQuery = Record<string, never>
 export type AccountsPostAccountsBody = {
@@ -337,6 +387,14 @@ export type BudgetGetBudgetUserByUserIdParams = { userId: string }
 export type BudgetGetBudgetUserByUserIdQuery = Record<string, never>
 export type BudgetGetBudgetUserByUserIdBody = unknown
 export type BudgetGetBudgetUserByUserIdResponse = unknown
+export type BudgetPostBudgetGenerateRecurringParams = Record<string, never>
+export type BudgetPostBudgetGenerateRecurringQuery = {
+  userId: string
+  month: string
+  year: string
+}
+export type BudgetPostBudgetGenerateRecurringBody = unknown
+export type BudgetPostBudgetGenerateRecurringResponse = unknown
 export type CreditCardsPostCreditCardsParams = Record<string, never>
 export type CreditCardsPostCreditCardsQuery = Record<string, never>
 export type CreditCardsPostCreditCardsBody = {
@@ -430,6 +488,7 @@ export type DebtPaymentsPostDebtPaymentsBody = {
   date: string
   debtId: string
   accountId?: string | null
+  userId: string
   notes?: string | null
 }
 export type DebtPaymentsPostDebtPaymentsResponse = unknown
@@ -448,6 +507,7 @@ export type DebtPaymentsPutDebtPaymentsByIdBody = {
   date?: string
   debtId?: string
   accountId?: string | null
+  userId?: string
   notes?: string | null
 }
 export type DebtPaymentsPutDebtPaymentsByIdResponse = unknown
@@ -465,7 +525,10 @@ export type ExpensesPostExpensesBody = {
   description: string
   amount: number
   date: string
+  month: number
+  year: number
   categoryId: string
+  accountId: string
   userId: string
 }
 export type ExpensesPostExpensesResponse = unknown
@@ -490,7 +553,10 @@ export type ExpensesPutExpensesByIdBody = {
   description?: string
   amount?: number
   date?: string
+  month?: number
+  year?: number
   categoryId?: string
+  accountId?: string
   userId?: string
 }
 export type ExpensesPutExpensesByIdResponse = unknown
@@ -514,6 +580,7 @@ export type IncomesPostIncomeBody = {
   description: string
   amount: number
   sourceId: string
+  accountId?: string
   date: string
   userId: string
 }
@@ -532,6 +599,7 @@ export type IncomesPutIncomeByIdBody = {
   description?: string
   amount?: number
   sourceId?: string
+  accountId?: string
   date?: string
   userId?: string
 }
@@ -627,6 +695,7 @@ export type InvestmentGoalsPostInvestmentGoalBody = {
   targetAmount: number
   currentAmount?: number
   targetDate: string
+  investmentId: string
 }
 export type InvestmentGoalsPostInvestmentGoalResponse = unknown
 export type InvestmentGoalsGetInvestmentGoalParams = Record<string, never>
@@ -640,6 +709,7 @@ export type InvestmentGoalsPutInvestmentGoalByIdBody = {
   targetAmount?: number
   currentAmount?: number
   targetDate?: string
+  investmentId?: string
 }
 export type InvestmentGoalsPutInvestmentGoalByIdResponse = unknown
 export type InvestmentGoalsDeleteInvestmentGoalByIdParams = { id: string }
@@ -796,6 +866,74 @@ export type TransactionsAttachmentDeleteTransactionAttachmentByIdQuery = Record<
 export type TransactionsAttachmentDeleteTransactionAttachmentByIdBody = unknown
 export type TransactionsAttachmentDeleteTransactionAttachmentByIdResponse =
   unknown
+export type NotificationsGetNotificationsParams = Record<string, never>
+export type NotificationsGetNotificationsQuery = {
+  page?: string
+  pageSize?: string
+}
+export type NotificationsGetNotificationsBody = unknown
+export type NotificationsGetNotificationsResponse = unknown
+export type NotificationsDeleteNotificationsParams = Record<string, never>
+export type NotificationsDeleteNotificationsQuery = Record<string, never>
+export type NotificationsDeleteNotificationsBody = unknown
+export type NotificationsDeleteNotificationsResponse = unknown
+export type NotificationsGetNotificationsUnreadCountParams = Record<
+  string,
+  never
+>
+export type NotificationsGetNotificationsUnreadCountQuery = Record<
+  string,
+  never
+>
+export type NotificationsGetNotificationsUnreadCountBody = unknown
+export type NotificationsGetNotificationsUnreadCountResponse = unknown
+export type NotificationsGetNotificationsByIdParams = { id: string }
+export type NotificationsGetNotificationsByIdQuery = Record<string, never>
+export type NotificationsGetNotificationsByIdBody = unknown
+export type NotificationsGetNotificationsByIdResponse = unknown
+export type NotificationsDeleteNotificationsByIdParams = { id: string }
+export type NotificationsDeleteNotificationsByIdQuery = Record<string, never>
+export type NotificationsDeleteNotificationsByIdBody = unknown
+export type NotificationsDeleteNotificationsByIdResponse = unknown
+export type NotificationsPutNotificationsByIdReadParams = { id: string }
+export type NotificationsPutNotificationsByIdReadQuery = Record<string, never>
+export type NotificationsPutNotificationsByIdReadBody = { isRead: boolean }
+export type NotificationsPutNotificationsByIdReadResponse = unknown
+export type NotificationsPutNotificationsReadAllParams = Record<string, never>
+export type NotificationsPutNotificationsReadAllQuery = Record<string, never>
+export type NotificationsPutNotificationsReadAllBody = unknown
+export type NotificationsPutNotificationsReadAllResponse = unknown
+export type NotificationsGetNotificationsPreferencesParams = Record<
+  string,
+  never
+>
+export type NotificationsGetNotificationsPreferencesQuery = Record<
+  string,
+  never
+>
+export type NotificationsGetNotificationsPreferencesBody = unknown
+export type NotificationsGetNotificationsPreferencesResponse = unknown
+export type NotificationsPutNotificationsPreferencesParams = Record<
+  string,
+  never
+>
+export type NotificationsPutNotificationsPreferencesQuery = Record<
+  string,
+  never
+>
+export type NotificationsPutNotificationsPreferencesBody = {
+  emailNotifications?: boolean
+  inAppNotifications?: boolean
+  notifyExpenses?: boolean
+  notifyIncomes?: boolean
+  notifyDebts?: boolean
+  notifyBudgetAlerts?: boolean
+  notifyInvestmentAlerts?: boolean
+  notifyAccountTransfers?: boolean
+  dailyDigest?: boolean
+  digestTime?: string
+}
+export type NotificationsPutNotificationsPreferencesResponse = unknown
 export type ReportsGetReportsDashboardParams = Record<string, never>
 export type ReportsGetReportsDashboardQuery = { month: number; year: number }
 export type ReportsGetReportsDashboardBody = unknown
@@ -804,6 +942,42 @@ export type ReportsGetReportsEvolutionParams = Record<string, never>
 export type ReportsGetReportsEvolutionQuery = { year?: number }
 export type ReportsGetReportsEvolutionBody = unknown
 export type ReportsGetReportsEvolutionResponse = unknown
+export type ReportsGetReportsCashFlowParams = Record<string, never>
+export type ReportsGetReportsCashFlowQuery = {
+  dateFrom?: string
+  dateTo?: string
+}
+export type ReportsGetReportsCashFlowBody = unknown
+export type ReportsGetReportsCashFlowResponse = unknown
+export type ReportsGetReportsNetWorthParams = Record<string, never>
+export type ReportsGetReportsNetWorthQuery = Record<string, never>
+export type ReportsGetReportsNetWorthBody = unknown
+export type ReportsGetReportsNetWorthResponse = unknown
+export type ReportsGetReportsExpenseAnalysisParams = Record<string, never>
+export type ReportsGetReportsExpenseAnalysisQuery = {
+  dateFrom?: string
+  dateTo?: string
+}
+export type ReportsGetReportsExpenseAnalysisBody = unknown
+export type ReportsGetReportsExpenseAnalysisResponse = unknown
+export type ReportsGetReportsIncomeAnalysisParams = Record<string, never>
+export type ReportsGetReportsIncomeAnalysisQuery = {
+  dateFrom?: string
+  dateTo?: string
+}
+export type ReportsGetReportsIncomeAnalysisBody = unknown
+export type ReportsGetReportsIncomeAnalysisResponse = unknown
+export type ReportsGetReportsFinancialHealthParams = Record<string, never>
+export type ReportsGetReportsFinancialHealthQuery = Record<string, never>
+export type ReportsGetReportsFinancialHealthBody = unknown
+export type ReportsGetReportsFinancialHealthResponse = unknown
+export type ReportsGetReportsBudgetVsActualParams = Record<string, never>
+export type ReportsGetReportsBudgetVsActualQuery = {
+  dateFrom?: string
+  dateTo?: string
+}
+export type ReportsGetReportsBudgetVsActualBody = unknown
+export type ReportsGetReportsBudgetVsActualResponse = unknown
 export type HealthGetHealthParams = Record<string, never>
 export type HealthGetHealthQuery = Record<string, never>
 export type HealthGetHealthBody = unknown
