@@ -2,6 +2,7 @@ import { ArrowDownLeft, ArrowUpRight, MoreHorizontal } from 'lucide-react'
 import { useGetCategories } from '@/lib/HTTP/categories'
 import { useGetTransactionsByUser } from '@/lib/HTTP/transactions'
 import { COLORS } from '../constants/colors'
+import { Button, Spinner } from './ui'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 export function RecentTransactions() {
@@ -54,7 +55,7 @@ export function RecentTransactions() {
           {(loadingTx || loadingCat) && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <div className="h-4 w-4 rounded-full border-2 border-gray-300 border-t-green-500 animate-spin" />
-              Carregando transações...
+              <Spinner />
             </div>
           )}
           {transactions.map((transaction: any) => (
@@ -64,9 +65,8 @@ export function RecentTransactions() {
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`p-2 rounded-full ${
-                    transaction.amount >= 0 ? 'bg-green-100' : 'bg-red-100'
-                  }`}
+                  className={`p-2 rounded-full ${transaction.amount >= 0 ? 'bg-green-100' : 'bg-red-100'
+                    }`}
                 >
                   {transaction.amount >= 0 ? (
                     <ArrowDownLeft className="w-4 h-4 text-green-600" />
@@ -99,31 +99,28 @@ export function RecentTransactions() {
 
               <div className="flex items-center gap-2">
                 <span
-                  className={`font-semibold text-sm ${
-                    transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`}
+                  className={`font-semibold text-sm ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'
+                    }`}
                 >
                   {transaction.amount >= 0 ? '+' : '-'}
                   {Math.abs(transaction.amount).toLocaleString()} Mt
                 </span>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="p-1 hover:bg-gray-200 rounded-full transition-colors"
                 >
                   <MoreHorizontal className="w-4 h-4 text-gray-400" />
-                </button>
+                </Button>
               </div>
             </div>
           ))}
         </div>
 
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <button
-            type="button"
-            className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded-lg transition-colors"
-          >
+          <Button className="w-full text-center text-sm text-blue-600 hover:text-blue-700 font-medium py-2 hover:bg-blue-50 rounded-lg transition-colors">
             Ver Todas as Transações
-          </button>
+          </Button>
         </div>
       </CardContent>
     </Card>

@@ -1,25 +1,11 @@
 import { z } from 'zod'
-export const DebtPaymentsPostDebtPaymentsBodySchema = z.object({
-  amount: z.number(),
-  date: z.string(),
-  debtId: z.string(),
-  accountId: z.union([z.string(), z.null()]).optional(),
-  userId: z.string(),
-  notes: z.union([z.string(), z.null()]).optional(),
-})
+export const DebtPaymentsPostDebtPaymentsBodySchema = z.object({ "amount": z.number(), "date": z.string(), "debtId": z.string(), "accountId": z.union([z.string(), z.null()]).optional(), "userId": z.string(), "notes": z.union([z.string(), z.null()]).optional() })
 export const DebtPaymentsPostDebtPaymentsResponseSchema = z.unknown()
 export const DebtPaymentsGetDebtPaymentsBodySchema = z.unknown()
 export const DebtPaymentsGetDebtPaymentsResponseSchema = z.unknown()
 export const DebtPaymentsGetDebtPaymentsByIdBodySchema = z.unknown()
 export const DebtPaymentsGetDebtPaymentsByIdResponseSchema = z.unknown()
-export const DebtPaymentsPutDebtPaymentsByIdBodySchema = z.object({
-  amount: z.number().optional(),
-  date: z.string().optional(),
-  debtId: z.string().optional(),
-  accountId: z.union([z.string(), z.null()]).optional(),
-  userId: z.string().optional(),
-  notes: z.union([z.string(), z.null()]).optional(),
-})
+export const DebtPaymentsPutDebtPaymentsByIdBodySchema = z.object({ "amount": z.number().optional(), "date": z.string().optional(), "debtId": z.string().optional(), "accountId": z.union([z.string(), z.null()]).optional(), "userId": z.string().optional(), "notes": z.union([z.string(), z.null()]).optional() })
 export const DebtPaymentsPutDebtPaymentsByIdResponseSchema = z.unknown()
 export const DebtPaymentsDeleteDebtPaymentsByIdBodySchema = z.unknown()
 export const DebtPaymentsDeleteDebtPaymentsByIdResponseSchema = z.unknown()

@@ -1,25 +1,11 @@
 import { z } from 'zod'
-export const IncomesPostIncomeBodySchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  sourceId: z.string(),
-  accountId: z.string().optional(),
-  date: z.string(),
-  userId: z.string(),
-})
+export const IncomesPostIncomeBodySchema = z.object({ "description": z.string(), "amount": z.number(), "sourceId": z.string(), "accountId": z.string().optional(), "date": z.string(), "userId": z.string() })
 export const IncomesPostIncomeResponseSchema = z.unknown()
 export const IncomesGetIncomeBodySchema = z.unknown()
 export const IncomesGetIncomeResponseSchema = z.unknown()
 export const IncomesGetIncomeByIdBodySchema = z.unknown()
 export const IncomesGetIncomeByIdResponseSchema = z.unknown()
-export const IncomesPutIncomeByIdBodySchema = z.object({
-  description: z.string().optional(),
-  amount: z.number().optional(),
-  sourceId: z.string().optional(),
-  accountId: z.string().optional(),
-  date: z.string().optional(),
-  userId: z.string().optional(),
-})
+export const IncomesPutIncomeByIdBodySchema = z.object({ "description": z.string().optional(), "amount": z.number().optional(), "sourceId": z.string().optional(), "accountId": z.string().optional(), "date": z.string().optional(), "userId": z.string().optional() })
 export const IncomesPutIncomeByIdResponseSchema = z.unknown()
 export const IncomesDeleteIncomeByIdBodySchema = z.unknown()
 export const IncomesDeleteIncomeByIdResponseSchema = z.unknown()

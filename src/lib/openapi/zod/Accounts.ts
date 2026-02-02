@@ -1,71 +1,11 @@
 import { z } from 'zod'
-export const AccountsPostAccountsBodySchema = z.object({
-  accountName: z.string(),
-  accountType: z.enum([
-    'current',
-    'savings',
-    'salary',
-    'digital',
-    'joint',
-    'investment',
-  ]),
-  accountHolderName: z.string(),
-  balance: z.number().optional(),
-  userId: z.string(),
-  bankId: z.union([z.string(), z.null()]).optional(),
-  currency: z
-    .enum([
-      'MZN',
-      'USD',
-      'EUR',
-      'GBP',
-      'BRL',
-      'JPY',
-      'CNY',
-      'INR',
-      'RUB',
-      'AUD',
-      'CAD',
-    ])
-    .optional(),
-  isActive: z.boolean().optional(),
-  isDefault: z.boolean().optional(),
-  isJoint: z.boolean().optional(),
-})
+export const AccountsPostAccountsBodySchema = z.object({ "accountName": z.string(), "accountType": z.enum(["current", "savings", "salary", "digital", "joint", "investment"]), "accountHolderName": z.string(), "balance": z.number().optional(), "userId": z.string(), "bankId": z.union([z.string(), z.null()]).optional(), "currency": z.enum(["MZN", "USD", "EUR", "GBP", "BRL", "JPY", "CNY", "INR", "RUB", "AUD", "CAD"]).optional(), "isActive": z.boolean().optional(), "isDefault": z.boolean().optional(), "isJoint": z.boolean().optional() })
 export const AccountsPostAccountsResponseSchema = z.unknown()
 export const AccountsGetAccountsBodySchema = z.unknown()
 export const AccountsGetAccountsResponseSchema = z.unknown()
 export const AccountsGetAccountsByIdBodySchema = z.unknown()
 export const AccountsGetAccountsByIdResponseSchema = z.unknown()
-export const AccountsPutAccountsByIdBodySchema = z.object({
-  accountName: z.string().optional(),
-  accountType: z
-    .enum(['current', 'savings', 'salary', 'digital', 'joint', 'investment'])
-    .optional(),
-  accountHolderName: z.string().optional(),
-  balance: z.number().optional(),
-  userId: z.string().optional(),
-  bankId: z.union([z.string(), z.null()]).optional(),
-  currency: z
-    .enum([
-      'MZN',
-      'USD',
-      'EUR',
-      'GBP',
-      'BRL',
-      'JPY',
-      'CNY',
-      'INR',
-      'RUB',
-      'AUD',
-      'CAD',
-    ])
-    .optional(),
-  isActive: z.boolean().optional(),
-  isDefault: z.boolean().optional(),
-  isJoint: z.boolean().optional(),
-  updateAt: z.string().optional(),
-})
+export const AccountsPutAccountsByIdBodySchema = z.object({ "accountName": z.string().optional(), "accountType": z.enum(["current", "savings", "salary", "digital", "joint", "investment"]).optional(), "accountHolderName": z.string().optional(), "balance": z.number().optional(), "userId": z.string().optional(), "bankId": z.union([z.string(), z.null()]).optional(), "currency": z.enum(["MZN", "USD", "EUR", "GBP", "BRL", "JPY", "CNY", "INR", "RUB", "AUD", "CAD"]).optional(), "isActive": z.boolean().optional(), "isDefault": z.boolean().optional(), "isJoint": z.boolean().optional(), "updateAt": z.string().optional() })
 export const AccountsPutAccountsByIdResponseSchema = z.unknown()
 export const AccountsDeleteAccountsByIdBodySchema = z.unknown()
 export const AccountsDeleteAccountsByIdResponseSchema = z.unknown()

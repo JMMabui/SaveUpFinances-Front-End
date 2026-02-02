@@ -1,7 +1,21 @@
+import { ArrowBigDown } from 'lucide-react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { COLORS } from '@/constants/colors'
 import { useDeleteCreditCard } from '@/lib/HTTP/credit-card'
+import { formatCurrency } from '@/lib/utils'
+import { CreditCardExpensesList } from './CreditCardExpensesList'
 
 interface CreditCard {
   id: string
@@ -25,15 +39,6 @@ function DeleteCardButton({ id }: { id: string }) {
 }
 
 export function CreditCardList({ cards, onEdit }: CreditCardListProps) {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-MZ', {
-      style: 'currency',
-      currency: 'MZN',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)
-  }
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {cards.map(card => {
@@ -65,6 +70,33 @@ export function CreditCardList({ cards, onEdit }: CreditCardListProps) {
                     Editar
                   </Button>
                   <DeleteCardButton id={card.id} />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        Faturas
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Faturas do Cartão</DialogTitle>
+                        <DialogDescription>
+                          Aqui estão as faturas do cartão de crédito.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <CreditCardExpensesList creditCardId={card.id} />
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <div className="flex justify-between w-full">
+                            <Button variant="outline" size="sm">
+                              <ArrowBigDown className="mr-2 h-4 w-4" />
+                              Baixar Faturas
+                            </Button>
+                            <Button variant="secondary">Fechar</Button>
+                          </div>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
 

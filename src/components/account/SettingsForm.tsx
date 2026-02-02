@@ -139,18 +139,17 @@ const SettingsForm = ({ userId }: SettingsFormProps) => {
 
         {message && (
           <div
-            className={`p-3 rounded text-sm ${
-              message.type === 'success'
+            className={`p-3 rounded text-sm ${message.type === 'success'
                 ? 'bg-green-100 text-green-800'
                 : 'bg-red-100 text-red-800'
-            }`}
+              }`}
           >
             {message.text}
           </div>
         )}
 
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? 'Salvando...' : 'Salvar Configurações'}
+        <Button type="submit" className="w-full">
+          Salvar Configurações
         </Button>
       </form>
     </Card>

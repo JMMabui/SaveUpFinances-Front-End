@@ -4,7 +4,7 @@ export type AuthGetAuthCsrfTokenBody = unknown
 export type AuthGetAuthCsrfTokenResponse = unknown
 export type AuthPostAuthLoginParams = Record<string, never>
 export type AuthPostAuthLoginQuery = Record<string, never>
-export type AuthPostAuthLoginBody = { email: string; password: string }
+export type AuthPostAuthLoginBody = { "email": string; "password": string }
 export type AuthPostAuthLoginResponse = unknown
 export type AuthPostAuthRefreshTokenParams = Record<string, never>
 export type AuthPostAuthRefreshTokenQuery = Record<string, never>
@@ -16,937 +16,510 @@ export type AuthPostAuthLogoutBody = unknown
 export type AuthPostAuthLogoutResponse = unknown
 export type AuthPostAuthForgotPasswordParams = Record<string, never>
 export type AuthPostAuthForgotPasswordQuery = Record<string, never>
-export type AuthPostAuthForgotPasswordBody = { email: string }
+export type AuthPostAuthForgotPasswordBody = { "email": string }
 export type AuthPostAuthForgotPasswordResponse = unknown
 export type AuthPostAuthResetPasswordParams = Record<string, never>
 export type AuthPostAuthResetPasswordQuery = Record<string, never>
-export type AuthPostAuthResetPasswordBody = {
-  token: string
-  newPassword: string
-  confirmPassword: string
-}
+export type AuthPostAuthResetPasswordBody = { "token": string; "newPassword": string; "confirmPassword": string }
 export type AuthPostAuthResetPasswordResponse = unknown
 export type AuthPostAuthVerifyResetTokenParams = Record<string, never>
 export type AuthPostAuthVerifyResetTokenQuery = Record<string, never>
-export type AuthPostAuthVerifyResetTokenBody = { token: string }
+export type AuthPostAuthVerifyResetTokenBody = { "token": string }
 export type AuthPostAuthVerifyResetTokenResponse = unknown
-export type AuthGetAuthResetPasswordByTokenParams = { token: string }
+export type AuthGetAuthResetPasswordByTokenParams = { "token": string }
 export type AuthGetAuthResetPasswordByTokenQuery = Record<string, never>
 export type AuthGetAuthResetPasswordByTokenBody = unknown
 export type AuthGetAuthResetPasswordByTokenResponse = unknown
 export type UsersPostUsersParams = Record<string, never>
 export type UsersPostUsersQuery = Record<string, never>
-export type UsersPostUsersBody = {
-  name: string
-  surname: string
-  email: string
-  password: string
-  contact: string
-}
+export type UsersPostUsersBody = { "name": string; "surname": string; "email": string; "password": string; "contact": string }
 export type UsersPostUsersResponse = unknown
 export type UsersGetUsersParams = Record<string, never>
 export type UsersGetUsersQuery = Record<string, never>
 export type UsersGetUsersBody = unknown
 export type UsersGetUsersResponse = unknown
-export type UsersGetUsersByIdParams = { id: string }
+export type UsersGetUsersByIdParams = { "id": string }
 export type UsersGetUsersByIdQuery = Record<string, never>
 export type UsersGetUsersByIdBody = unknown
 export type UsersGetUsersByIdResponse = unknown
-export type UsersPutUsersByIdParams = { id: string }
+export type UsersPutUsersByIdParams = { "id": string }
 export type UsersPutUsersByIdQuery = Record<string, never>
-export type UsersPutUsersByIdBody = {
-  name?: string
-  surname?: string
-  email?: string
-  password?: string
-  contact?: string
-  updateAt?: string
-}
+export type UsersPutUsersByIdBody = { "name"?: string; "surname"?: string; "email"?: string; "password"?: string; "contact"?: string; "updateAt"?: string }
 export type UsersPutUsersByIdResponse = unknown
-export type UsersDeleteUsersByIdParams = { id: string }
+export type UsersDeleteUsersByIdParams = { "id": string }
 export type UsersDeleteUsersByIdQuery = Record<string, never>
 export type UsersDeleteUsersByIdBody = unknown
 export type UsersDeleteUsersByIdResponse = unknown
-export type UsersGetUsersByIdProfileParams = { id: string }
+export type UsersGetUsersByIdProfileParams = { "id": string }
 export type UsersGetUsersByIdProfileQuery = Record<string, never>
 export type UsersGetUsersByIdProfileBody = unknown
 export type UsersGetUsersByIdProfileResponse = unknown
-export type UsersPutUsersByIdProfileParams = { id: string }
+export type UsersPutUsersByIdProfileParams = { "id": string }
 export type UsersPutUsersByIdProfileQuery = Record<string, never>
-export type UsersPutUsersByIdProfileBody = {
-  name?: string
-  surname?: string
-  contact?: string
-}
+export type UsersPutUsersByIdProfileBody = { "name"?: string; "surname"?: string; "contact"?: string }
 export type UsersPutUsersByIdProfileResponse = unknown
-export type UsersPostUsersByIdChangePasswordParams = { id: string }
+export type UsersPostUsersByIdChangePasswordParams = { "id": string }
 export type UsersPostUsersByIdChangePasswordQuery = Record<string, never>
-export type UsersPostUsersByIdChangePasswordBody = {
-  currentPassword: string
-  newPassword: string
-  confirmPassword: string
-}
+export type UsersPostUsersByIdChangePasswordBody = { "currentPassword": string; "newPassword": string; "confirmPassword": string }
 export type UsersPostUsersByIdChangePasswordResponse = unknown
-export type UsersGetUsersByIdSettingsParams = { id: string }
+export type UsersGetUsersByIdSettingsParams = { "id": string }
 export type UsersGetUsersByIdSettingsQuery = Record<string, never>
 export type UsersGetUsersByIdSettingsBody = unknown
 export type UsersGetUsersByIdSettingsResponse = unknown
-export type UsersPutUsersByIdSettingsParams = { id: string }
+export type UsersPutUsersByIdSettingsParams = { "id": string }
 export type UsersPutUsersByIdSettingsQuery = Record<string, never>
-export type UsersPutUsersByIdSettingsBody = {
-  language?: 'pt-BR' | 'en-US' | 'es-ES'
-  currency?:
-    | 'MZN'
-    | 'USD'
-    | 'EUR'
-    | 'GBP'
-    | 'BRL'
-    | 'JPY'
-    | 'CNY'
-    | 'INR'
-    | 'RUB'
-    | 'AUD'
-    | 'CAD'
-  theme?: 'light' | 'dark' | 'auto'
-  timezone?: string
-  dateFormat?: string
-  twoFactorEnabled?: boolean
-}
+export type UsersPutUsersByIdSettingsBody = { "language"?: "pt-BR" | "en-US" | "es-ES"; "currency"?: "MZN" | "USD" | "EUR" | "GBP" | "BRL" | "JPY" | "CNY" | "INR" | "RUB" | "AUD" | "CAD"; "theme"?: "light" | "dark" | "auto"; "timezone"?: string; "dateFormat"?: string; "twoFactorEnabled"?: boolean }
 export type UsersPutUsersByIdSettingsResponse = unknown
 export type AccountsPostAccountsParams = Record<string, never>
 export type AccountsPostAccountsQuery = Record<string, never>
-export type AccountsPostAccountsBody = {
-  accountName: string
-  accountType:
-    | 'current'
-    | 'savings'
-    | 'salary'
-    | 'digital'
-    | 'joint'
-    | 'investment'
-  accountHolderName: string
-  balance?: number
-  userId: string
-  bankId?: string | null
-  currency?:
-    | 'MZN'
-    | 'USD'
-    | 'EUR'
-    | 'GBP'
-    | 'BRL'
-    | 'JPY'
-    | 'CNY'
-    | 'INR'
-    | 'RUB'
-    | 'AUD'
-    | 'CAD'
-  isActive?: boolean
-  isDefault?: boolean
-  isJoint?: boolean
-}
+export type AccountsPostAccountsBody = { "accountName": string; "accountType": "current" | "savings" | "salary" | "digital" | "joint" | "investment"; "accountHolderName": string; "balance"?: number; "userId": string; "bankId"?: string | null; "currency"?: "MZN" | "USD" | "EUR" | "GBP" | "BRL" | "JPY" | "CNY" | "INR" | "RUB" | "AUD" | "CAD"; "isActive"?: boolean; "isDefault"?: boolean; "isJoint"?: boolean }
 export type AccountsPostAccountsResponse = unknown
 export type AccountsGetAccountsParams = Record<string, never>
 export type AccountsGetAccountsQuery = Record<string, never>
 export type AccountsGetAccountsBody = unknown
 export type AccountsGetAccountsResponse = unknown
-export type AccountsGetAccountsByIdParams = { id: string }
+export type AccountsGetAccountsByIdParams = { "id": string }
 export type AccountsGetAccountsByIdQuery = Record<string, never>
 export type AccountsGetAccountsByIdBody = unknown
 export type AccountsGetAccountsByIdResponse = unknown
-export type AccountsPutAccountsByIdParams = { id: string }
+export type AccountsPutAccountsByIdParams = { "id": string }
 export type AccountsPutAccountsByIdQuery = Record<string, never>
-export type AccountsPutAccountsByIdBody = {
-  accountName?: string
-  accountType?:
-    | 'current'
-    | 'savings'
-    | 'salary'
-    | 'digital'
-    | 'joint'
-    | 'investment'
-  accountHolderName?: string
-  balance?: number
-  userId?: string
-  bankId?: string | null
-  currency?:
-    | 'MZN'
-    | 'USD'
-    | 'EUR'
-    | 'GBP'
-    | 'BRL'
-    | 'JPY'
-    | 'CNY'
-    | 'INR'
-    | 'RUB'
-    | 'AUD'
-    | 'CAD'
-  isActive?: boolean
-  isDefault?: boolean
-  isJoint?: boolean
-  updateAt?: string
-}
+export type AccountsPutAccountsByIdBody = { "accountName"?: string; "accountType"?: "current" | "savings" | "salary" | "digital" | "joint" | "investment"; "accountHolderName"?: string; "balance"?: number; "userId"?: string; "bankId"?: string | null; "currency"?: "MZN" | "USD" | "EUR" | "GBP" | "BRL" | "JPY" | "CNY" | "INR" | "RUB" | "AUD" | "CAD"; "isActive"?: boolean; "isDefault"?: boolean; "isJoint"?: boolean; "updateAt"?: string }
 export type AccountsPutAccountsByIdResponse = unknown
-export type AccountsDeleteAccountsByIdParams = { id: string }
+export type AccountsDeleteAccountsByIdParams = { "id": string }
 export type AccountsDeleteAccountsByIdQuery = Record<string, never>
 export type AccountsDeleteAccountsByIdBody = unknown
 export type AccountsDeleteAccountsByIdResponse = unknown
-export type AccountsGetAccountsByIdTransactionsParams = { id: string }
+export type AccountsGetAccountsByIdTransactionsParams = { "id": string }
 export type AccountsGetAccountsByIdTransactionsQuery = Record<string, never>
 export type AccountsGetAccountsByIdTransactionsBody = unknown
 export type AccountsGetAccountsByIdTransactionsResponse = unknown
-export type AccountsGetAccountsDefaultByUserIdParams = { id: string }
+export type AccountsGetAccountsDefaultByUserIdParams = { "id": string }
 export type AccountsGetAccountsDefaultByUserIdQuery = Record<string, never>
 export type AccountsGetAccountsDefaultByUserIdBody = unknown
 export type AccountsGetAccountsDefaultByUserIdResponse = unknown
-export type AccountsGetAccountByUserIdParams = { userId: string }
+export type AccountsGetAccountByUserIdParams = { "userId": string }
 export type AccountsGetAccountByUserIdQuery = Record<string, never>
 export type AccountsGetAccountByUserIdBody = unknown
 export type AccountsGetAccountByUserIdResponse = unknown
 export type AccountsBalancePostAccountBalanceParams = Record<string, never>
 export type AccountsBalancePostAccountBalanceQuery = Record<string, never>
-export type AccountsBalancePostAccountBalanceBody = {
-  accountId: string
-  date: string
-  balance: number
-}
+export type AccountsBalancePostAccountBalanceBody = { "accountId": string; "date": string; "balance": number }
 export type AccountsBalancePostAccountBalanceResponse = unknown
 export type AccountsBalanceGetAccountBalanceParams = Record<string, never>
 export type AccountsBalanceGetAccountBalanceQuery = Record<string, never>
 export type AccountsBalanceGetAccountBalanceBody = unknown
 export type AccountsBalanceGetAccountBalanceResponse = unknown
-export type AccountsBalanceGetAccountBalanceByIdParams = { id: string }
+export type AccountsBalanceGetAccountBalanceByIdParams = { "id": string }
 export type AccountsBalanceGetAccountBalanceByIdQuery = Record<string, never>
 export type AccountsBalanceGetAccountBalanceByIdBody = unknown
 export type AccountsBalanceGetAccountBalanceByIdResponse = unknown
-export type AccountsBalancePutAccountBalanceByIdParams = { id: string }
+export type AccountsBalancePutAccountBalanceByIdParams = { "id": string }
 export type AccountsBalancePutAccountBalanceByIdQuery = Record<string, never>
-export type AccountsBalancePutAccountBalanceByIdBody = {
-  accountId?: string
-  date?: string
-  balance?: number
-}
+export type AccountsBalancePutAccountBalanceByIdBody = { "accountId"?: string; "date"?: string; "balance"?: number }
 export type AccountsBalancePutAccountBalanceByIdResponse = unknown
-export type AccountsBalanceDeleteAccountBalanceByIdParams = { id: string }
+export type AccountsBalanceDeleteAccountBalanceByIdParams = { "id": string }
 export type AccountsBalanceDeleteAccountBalanceByIdQuery = Record<string, never>
 export type AccountsBalanceDeleteAccountBalanceByIdBody = unknown
 export type AccountsBalanceDeleteAccountBalanceByIdResponse = unknown
-export type AccountsBalanceGetAccountBalanceAccountByAccountIdParams = {
-  accountId: string
-}
-export type AccountsBalanceGetAccountBalanceAccountByAccountIdQuery = Record<
-  string,
-  never
->
+export type AccountsBalanceGetAccountBalanceAccountByAccountIdParams = { "accountId": string }
+export type AccountsBalanceGetAccountBalanceAccountByAccountIdQuery = Record<string, never>
 export type AccountsBalanceGetAccountBalanceAccountByAccountIdBody = unknown
 export type AccountsBalanceGetAccountBalanceAccountByAccountIdResponse = unknown
 export type AccountsSourcePostAccountSourceParams = Record<string, never>
 export type AccountsSourcePostAccountSourceQuery = Record<string, never>
-export type AccountsSourcePostAccountSourceBody = {
-  accountId: string
-  source: string
-}
+export type AccountsSourcePostAccountSourceBody = { "accountId": string; "source": string }
 export type AccountsSourcePostAccountSourceResponse = unknown
 export type AccountsSourceGetAccountSourceParams = Record<string, never>
 export type AccountsSourceGetAccountSourceQuery = Record<string, never>
 export type AccountsSourceGetAccountSourceBody = unknown
 export type AccountsSourceGetAccountSourceResponse = unknown
-export type AccountsSourceGetAccountSourceByIdParams = { id: string }
+export type AccountsSourceGetAccountSourceByIdParams = { "id": string }
 export type AccountsSourceGetAccountSourceByIdQuery = Record<string, never>
 export type AccountsSourceGetAccountSourceByIdBody = unknown
 export type AccountsSourceGetAccountSourceByIdResponse = unknown
-export type AccountsSourcePutAccountSourceByIdParams = { id: string }
+export type AccountsSourcePutAccountSourceByIdParams = { "id": string }
 export type AccountsSourcePutAccountSourceByIdQuery = Record<string, never>
-export type AccountsSourcePutAccountSourceByIdBody = {
-  accountId?: string
-  source?: string
-}
+export type AccountsSourcePutAccountSourceByIdBody = { "accountId"?: string; "source"?: string }
 export type AccountsSourcePutAccountSourceByIdResponse = unknown
-export type AccountsSourceDeleteAccountSourceByIdParams = { id: string }
+export type AccountsSourceDeleteAccountSourceByIdParams = { "id": string }
 export type AccountsSourceDeleteAccountSourceByIdQuery = Record<string, never>
 export type AccountsSourceDeleteAccountSourceByIdBody = unknown
 export type AccountsSourceDeleteAccountSourceByIdResponse = unknown
-export type AccountsSourceGetAccountSourceAccountByAccountIdParams = {
-  accountId: string
-}
-export type AccountsSourceGetAccountSourceAccountByAccountIdQuery = Record<
-  string,
-  never
->
+export type AccountsSourceGetAccountSourceAccountByAccountIdParams = { "accountId": string }
+export type AccountsSourceGetAccountSourceAccountByAccountIdQuery = Record<string, never>
 export type AccountsSourceGetAccountSourceAccountByAccountIdBody = unknown
 export type AccountsSourceGetAccountSourceAccountByAccountIdResponse = unknown
 export type BanksPostBanksParams = Record<string, never>
 export type BanksPostBanksQuery = Record<string, never>
-export type BanksPostBanksBody = { bankName: string; logoUrl?: string | null }
+export type BanksPostBanksBody = { "bankName": string; "logoUrl"?: string | null }
 export type BanksPostBanksResponse = unknown
 export type BanksGetBanksParams = Record<string, never>
 export type BanksGetBanksQuery = Record<string, never>
 export type BanksGetBanksBody = unknown
 export type BanksGetBanksResponse = unknown
-export type BanksGetBanksByIdParams = { id: string }
+export type BanksGetBanksByIdParams = { "id": string }
 export type BanksGetBanksByIdQuery = Record<string, never>
 export type BanksGetBanksByIdBody = unknown
 export type BanksGetBanksByIdResponse = unknown
-export type BanksPutBanksByIdParams = { id: string }
+export type BanksPutBanksByIdParams = { "id": string }
 export type BanksPutBanksByIdQuery = Record<string, never>
-export type BanksPutBanksByIdBody = {
-  bankName?: string
-  logoUrl?: string | null
-}
+export type BanksPutBanksByIdBody = { "bankName"?: string; "logoUrl"?: string | null }
 export type BanksPutBanksByIdResponse = unknown
-export type BanksDeleteBanksByIdParams = { id: string }
+export type BanksDeleteBanksByIdParams = { "id": string }
 export type BanksDeleteBanksByIdQuery = Record<string, never>
 export type BanksDeleteBanksByIdBody = unknown
 export type BanksDeleteBanksByIdResponse = unknown
 export type CategoriesPostCategoriesParams = Record<string, never>
 export type CategoriesPostCategoriesQuery = Record<string, never>
-export type CategoriesPostCategoriesBody = {
-  categoryName: string
-  categoryType:
-    | 'income'
-    | 'expense'
-    | 'transfer'
-    | 'investment'
-    | 'creditCardExpense'
-    | 'debtPayment'
-    | 'debtIncome'
-    | 'budgetExpense'
-    | 'budgetIncome'
-    | 'creditCardPayment'
-    | 'creditCardTransfer'
-    | 'creditCardIncome'
-  icon?: string | null
-  color?: string | null
-}
+export type CategoriesPostCategoriesBody = { "categoryName": string; "categoryType": "income" | "expense" | "transfer" | "investment" | "creditCardExpense" | "debtPayment" | "debtIncome" | "budgetExpense" | "budgetIncome" | "creditCardPayment" | "creditCardTransfer" | "creditCardIncome"; "icon"?: string | null; "color"?: string | null }
 export type CategoriesPostCategoriesResponse = unknown
 export type CategoriesGetCategoriesParams = Record<string, never>
 export type CategoriesGetCategoriesQuery = Record<string, never>
 export type CategoriesGetCategoriesBody = unknown
 export type CategoriesGetCategoriesResponse = unknown
-export type CategoriesGetCategoriesByIdParams = { id: string }
+export type CategoriesGetCategoriesByIdParams = { "id": string }
 export type CategoriesGetCategoriesByIdQuery = Record<string, never>
 export type CategoriesGetCategoriesByIdBody = unknown
 export type CategoriesGetCategoriesByIdResponse = unknown
-export type CategoriesPutCategoriesByIdParams = { id: string }
+export type CategoriesPutCategoriesByIdParams = { "id": string }
 export type CategoriesPutCategoriesByIdQuery = Record<string, never>
-export type CategoriesPutCategoriesByIdBody = {
-  categoryName?: string
-  categoryType?:
-    | 'income'
-    | 'expense'
-    | 'transfer'
-    | 'investment'
-    | 'creditCardExpense'
-    | 'debtPayment'
-    | 'debtIncome'
-    | 'budgetExpense'
-    | 'budgetIncome'
-    | 'creditCardPayment'
-    | 'creditCardTransfer'
-    | 'creditCardIncome'
-  icon?: string | null
-  color?: string | null
-}
+export type CategoriesPutCategoriesByIdBody = { "categoryName"?: string; "categoryType"?: "income" | "expense" | "transfer" | "investment" | "creditCardExpense" | "debtPayment" | "debtIncome" | "budgetExpense" | "budgetIncome" | "creditCardPayment" | "creditCardTransfer" | "creditCardIncome"; "icon"?: string | null; "color"?: string | null }
 export type CategoriesPutCategoriesByIdResponse = unknown
-export type CategoriesDeleteCateoriesByIdParams = { id: string }
+export type CategoriesDeleteCateoriesByIdParams = { "id": string }
 export type CategoriesDeleteCateoriesByIdQuery = Record<string, never>
 export type CategoriesDeleteCateoriesByIdBody = unknown
 export type CategoriesDeleteCateoriesByIdResponse = unknown
 export type BudgetPostBudgetParams = Record<string, never>
 export type BudgetPostBudgetQuery = Record<string, never>
-export type BudgetPostBudgetBody = {
-  userId: string
-  categoryId: string
-  month: number
-  year: number
-  limit: number
-}
+export type BudgetPostBudgetBody = { "userId": string; "categoryId": string; "month": number; "year": number; "limit": number }
 export type BudgetPostBudgetResponse = unknown
 export type BudgetGetBudgetParams = Record<string, never>
 export type BudgetGetBudgetQuery = Record<string, never>
 export type BudgetGetBudgetBody = unknown
 export type BudgetGetBudgetResponse = unknown
-export type BudgetGetBudgetByIdParams = { id: string }
+export type BudgetGetBudgetByIdParams = { "id": string }
 export type BudgetGetBudgetByIdQuery = Record<string, never>
 export type BudgetGetBudgetByIdBody = unknown
 export type BudgetGetBudgetByIdResponse = unknown
-export type BudgetPutBudgetByIdParams = { id: string }
+export type BudgetPutBudgetByIdParams = { "id": string }
 export type BudgetPutBudgetByIdQuery = Record<string, never>
-export type BudgetPutBudgetByIdBody = {
-  userId?: string
-  categoryId?: string
-  month?: number
-  year?: number
-  limit?: number
-}
+export type BudgetPutBudgetByIdBody = { "userId"?: string; "categoryId"?: string; "month"?: number; "year"?: number; "limit"?: number }
 export type BudgetPutBudgetByIdResponse = unknown
-export type BudgetDeleteBudgetByIdParams = { id: string }
+export type BudgetDeleteBudgetByIdParams = { "id": string }
 export type BudgetDeleteBudgetByIdQuery = Record<string, never>
 export type BudgetDeleteBudgetByIdBody = unknown
 export type BudgetDeleteBudgetByIdResponse = unknown
-export type BudgetGetBudgetUserByUserIdParams = { userId: string }
+export type BudgetGetBudgetUserByUserIdParams = { "userId": string }
 export type BudgetGetBudgetUserByUserIdQuery = Record<string, never>
 export type BudgetGetBudgetUserByUserIdBody = unknown
 export type BudgetGetBudgetUserByUserIdResponse = unknown
 export type BudgetPostBudgetGenerateRecurringParams = Record<string, never>
-export type BudgetPostBudgetGenerateRecurringQuery = {
-  userId: string
-  month: string
-  year: string
-}
+export type BudgetPostBudgetGenerateRecurringQuery = { "userId": string; "month": string; "year": string }
 export type BudgetPostBudgetGenerateRecurringBody = unknown
 export type BudgetPostBudgetGenerateRecurringResponse = unknown
 export type CreditCardsPostCreditCardsParams = Record<string, never>
 export type CreditCardsPostCreditCardsQuery = Record<string, never>
-export type CreditCardsPostCreditCardsBody = {
-  name: string
-  limit: number
-  dueDay: number
-  userId: string
-}
+export type CreditCardsPostCreditCardsBody = { "name": string; "limit": number; "dueDay": number; "userId": string }
 export type CreditCardsPostCreditCardsResponse = unknown
 export type CreditCardsGetCreditCardsParams = Record<string, never>
 export type CreditCardsGetCreditCardsQuery = Record<string, never>
 export type CreditCardsGetCreditCardsBody = unknown
 export type CreditCardsGetCreditCardsResponse = unknown
-export type CreditCardsGetCreditCardsByIdParams = { id: string }
+export type CreditCardsGetCreditCardsByIdParams = { "id": string }
 export type CreditCardsGetCreditCardsByIdQuery = Record<string, never>
 export type CreditCardsGetCreditCardsByIdBody = unknown
 export type CreditCardsGetCreditCardsByIdResponse = unknown
-export type CreditCardsPutCreditCardsByIdParams = { id: string }
+export type CreditCardsPutCreditCardsByIdParams = { "id": string }
 export type CreditCardsPutCreditCardsByIdQuery = Record<string, never>
-export type CreditCardsPutCreditCardsByIdBody = {
-  name?: string
-  limit?: number
-  dueDay?: number
-  userId?: string
-}
+export type CreditCardsPutCreditCardsByIdBody = { "name"?: string; "limit"?: number; "dueDay"?: number; "userId"?: string }
 export type CreditCardsPutCreditCardsByIdResponse = unknown
-export type CreditCardsDeleteCreditCardsByIdParams = { id: string }
+export type CreditCardsDeleteCreditCardsByIdParams = { "id": string }
 export type CreditCardsDeleteCreditCardsByIdQuery = Record<string, never>
 export type CreditCardsDeleteCreditCardsByIdBody = unknown
 export type CreditCardsDeleteCreditCardsByIdResponse = unknown
-export type CreditCardsGetCreditCardsUserByUserIdParams = {
-  id: string
-  userId: { userId?: string }
-}
+export type CreditCardsGetCreditCardsUserByUserIdParams = { "userId": string }
 export type CreditCardsGetCreditCardsUserByUserIdQuery = Record<string, never>
 export type CreditCardsGetCreditCardsUserByUserIdBody = unknown
 export type CreditCardsGetCreditCardsUserByUserIdResponse = unknown
+export type CreditCardExpensesPostCreditCardExpensesParams = Record<string, never>
+export type CreditCardExpensesPostCreditCardExpensesQuery = Record<string, never>
+export type CreditCardExpensesPostCreditCardExpensesBody = { "description": string; "amount": number; "date": string; "categoryId": string; "creditCardId": string }
+export type CreditCardExpensesPostCreditCardExpensesResponse = unknown
+export type CreditCardExpensesGetCreditCardExpensesParams = Record<string, never>
+export type CreditCardExpensesGetCreditCardExpensesQuery = Record<string, never>
+export type CreditCardExpensesGetCreditCardExpensesBody = unknown
+export type CreditCardExpensesGetCreditCardExpensesResponse = unknown
+export type CreditCardExpensesGetCreditCardExpensesByIdParams = { "id": string }
+export type CreditCardExpensesGetCreditCardExpensesByIdQuery = Record<string, never>
+export type CreditCardExpensesGetCreditCardExpensesByIdBody = unknown
+export type CreditCardExpensesGetCreditCardExpensesByIdResponse = unknown
+export type CreditCardExpensesPutCreditCardExpensesByIdParams = { "id": string }
+export type CreditCardExpensesPutCreditCardExpensesByIdQuery = Record<string, never>
+export type CreditCardExpensesPutCreditCardExpensesByIdBody = { "description"?: string; "amount"?: number; "date"?: string; "categoryId"?: string; "creditCardId"?: string }
+export type CreditCardExpensesPutCreditCardExpensesByIdResponse = unknown
+export type CreditCardExpensesDeleteCreditCardExpensesByIdParams = { "id": string }
+export type CreditCardExpensesDeleteCreditCardExpensesByIdQuery = Record<string, never>
+export type CreditCardExpensesDeleteCreditCardExpensesByIdBody = unknown
+export type CreditCardExpensesDeleteCreditCardExpensesByIdResponse = unknown
+export type CreditCardExpensesGetCreditCardExpensesCreditCardByCreditCardIdParams = { "id": string }
+export type CreditCardExpensesGetCreditCardExpensesCreditCardByCreditCardIdQuery = Record<string, never>
+export type CreditCardExpensesGetCreditCardExpensesCreditCardByCreditCardIdBody = unknown
+export type CreditCardExpensesGetCreditCardExpensesCreditCardByCreditCardIdResponse = unknown
+export type CreditCardExpensesGetCreditCardExpensesCategoryByCategoryIdParams = { "id": string }
+export type CreditCardExpensesGetCreditCardExpensesCategoryByCategoryIdQuery = Record<string, never>
+export type CreditCardExpensesGetCreditCardExpensesCategoryByCategoryIdBody = unknown
+export type CreditCardExpensesGetCreditCardExpensesCategoryByCategoryIdResponse = unknown
 export type DebtsPostDebtsParams = Record<string, never>
 export type DebtsPostDebtsQuery = Record<string, never>
-export type DebtsPostDebtsBody = {
-  description: string
-  amount: number
-  creditor: string
-  dueDate: string
-  status: 'PENDING' | 'PAID'
-  notes?: string | null
-  paymentDate?: string | null
-  userId: string
-}
+export type DebtsPostDebtsBody = { "description": string; "amount": number; "creditor": string; "dueDate": string; "status": "PENDING" | "PAID"; "notes"?: string | null; "paymentDate"?: string | null; "userId": string }
 export type DebtsPostDebtsResponse = unknown
 export type DebtsGetDebtsParams = Record<string, never>
-export type DebtsGetDebtsQuery = {
-  page?: number
-  pageSize?: number
-  userId?: string
-  status?: 'PENDING' | 'PAID'
-  dateFrom?: string
-  dateTo?: string
-}
+export type DebtsGetDebtsQuery = { "page"?: number; "pageSize"?: number; "userId"?: string; "status"?: "PENDING" | "PAID"; "dateFrom"?: string; "dateTo"?: string }
 export type DebtsGetDebtsBody = unknown
 export type DebtsGetDebtsResponse = unknown
-export type DebtsGetDebtsByIdParams = { id: string }
+export type DebtsGetDebtsByIdParams = { "id": string }
 export type DebtsGetDebtsByIdQuery = Record<string, never>
 export type DebtsGetDebtsByIdBody = unknown
 export type DebtsGetDebtsByIdResponse = unknown
-export type DebtsPutDebtsByIdParams = { id: string }
+export type DebtsPutDebtsByIdParams = { "id": string }
 export type DebtsPutDebtsByIdQuery = Record<string, never>
-export type DebtsPutDebtsByIdBody = {
-  description?: string
-  amount?: number
-  creditor?: string
-  dueDate?: string
-  status?: 'PENDING' | 'PAID'
-  notes?: string | null
-  paymentDate?: string | null
-  userId?: string
-}
+export type DebtsPutDebtsByIdBody = { "description"?: string; "amount"?: number; "creditor"?: string; "dueDate"?: string; "status"?: "PENDING" | "PAID"; "notes"?: string | null; "paymentDate"?: string | null; "userId"?: string }
 export type DebtsPutDebtsByIdResponse = unknown
-export type DebtsDeleteDebtsByIdParams = { id: string }
+export type DebtsDeleteDebtsByIdParams = { "id": string }
 export type DebtsDeleteDebtsByIdQuery = Record<string, never>
 export type DebtsDeleteDebtsByIdBody = unknown
 export type DebtsDeleteDebtsByIdResponse = unknown
-export type DebtsGetDebtsUserByUserIdParams = { userId: string }
+export type DebtsGetDebtsUserByUserIdParams = { "userId": string }
 export type DebtsGetDebtsUserByUserIdQuery = Record<string, never>
 export type DebtsGetDebtsUserByUserIdBody = unknown
 export type DebtsGetDebtsUserByUserIdResponse = unknown
 export type DebtPaymentsPostDebtPaymentsParams = Record<string, never>
 export type DebtPaymentsPostDebtPaymentsQuery = Record<string, never>
-export type DebtPaymentsPostDebtPaymentsBody = {
-  amount: number
-  date: string
-  debtId: string
-  accountId?: string | null
-  userId: string
-  notes?: string | null
-}
+export type DebtPaymentsPostDebtPaymentsBody = { "amount": number; "date": string; "debtId": string; "accountId"?: string | null; "userId": string; "notes"?: string | null }
 export type DebtPaymentsPostDebtPaymentsResponse = unknown
 export type DebtPaymentsGetDebtPaymentsParams = Record<string, never>
 export type DebtPaymentsGetDebtPaymentsQuery = Record<string, never>
 export type DebtPaymentsGetDebtPaymentsBody = unknown
 export type DebtPaymentsGetDebtPaymentsResponse = unknown
-export type DebtPaymentsGetDebtPaymentsByIdParams = { id: string }
+export type DebtPaymentsGetDebtPaymentsByIdParams = { "id": string }
 export type DebtPaymentsGetDebtPaymentsByIdQuery = Record<string, never>
 export type DebtPaymentsGetDebtPaymentsByIdBody = unknown
 export type DebtPaymentsGetDebtPaymentsByIdResponse = unknown
-export type DebtPaymentsPutDebtPaymentsByIdParams = { id: string }
+export type DebtPaymentsPutDebtPaymentsByIdParams = { "id": string }
 export type DebtPaymentsPutDebtPaymentsByIdQuery = Record<string, never>
-export type DebtPaymentsPutDebtPaymentsByIdBody = {
-  amount?: number
-  date?: string
-  debtId?: string
-  accountId?: string | null
-  userId?: string
-  notes?: string | null
-}
+export type DebtPaymentsPutDebtPaymentsByIdBody = { "amount"?: number; "date"?: string; "debtId"?: string; "accountId"?: string | null; "userId"?: string; "notes"?: string | null }
 export type DebtPaymentsPutDebtPaymentsByIdResponse = unknown
-export type DebtPaymentsDeleteDebtPaymentsByIdParams = { id: string }
+export type DebtPaymentsDeleteDebtPaymentsByIdParams = { "id": string }
 export type DebtPaymentsDeleteDebtPaymentsByIdQuery = Record<string, never>
 export type DebtPaymentsDeleteDebtPaymentsByIdBody = unknown
 export type DebtPaymentsDeleteDebtPaymentsByIdResponse = unknown
-export type DebtPaymentsGetDebtPaymentsDebtByDebtIdParams = { debtId: string }
+export type DebtPaymentsGetDebtPaymentsDebtByDebtIdParams = { "debtId": string }
 export type DebtPaymentsGetDebtPaymentsDebtByDebtIdQuery = Record<string, never>
 export type DebtPaymentsGetDebtPaymentsDebtByDebtIdBody = unknown
 export type DebtPaymentsGetDebtPaymentsDebtByDebtIdResponse = unknown
 export type ExpensesPostExpensesParams = Record<string, never>
 export type ExpensesPostExpensesQuery = Record<string, never>
-export type ExpensesPostExpensesBody = {
-  description: string
-  amount: number
-  date: string
-  month: number
-  year: number
-  categoryId: string
-  accountId: string
-  userId: string
-}
+export type ExpensesPostExpensesBody = { "description": string; "amount": number; "date": string; "month": number; "year": number; "categoryId": string; "accountId": string; "userId": string }
 export type ExpensesPostExpensesResponse = unknown
 export type ExpensesGetExpensesParams = Record<string, never>
-export type ExpensesGetExpensesQuery = {
-  page?: number
-  pageSize?: number
-  userId?: string
-  categoryId?: string
-  dateFrom?: string
-  dateTo?: string
-}
+export type ExpensesGetExpensesQuery = { "page"?: number; "pageSize"?: number; "userId"?: string; "categoryId"?: string; "dateFrom"?: string; "dateTo"?: string }
 export type ExpensesGetExpensesBody = unknown
 export type ExpensesGetExpensesResponse = unknown
-export type ExpensesGetExpensesByIdParams = { id: string }
+export type ExpensesGetExpensesByIdParams = { "id": string }
 export type ExpensesGetExpensesByIdQuery = Record<string, never>
 export type ExpensesGetExpensesByIdBody = unknown
 export type ExpensesGetExpensesByIdResponse = unknown
-export type ExpensesPutExpensesByIdParams = { id: string }
+export type ExpensesPutExpensesByIdParams = { "id": string }
 export type ExpensesPutExpensesByIdQuery = Record<string, never>
-export type ExpensesPutExpensesByIdBody = {
-  description?: string
-  amount?: number
-  date?: string
-  month?: number
-  year?: number
-  categoryId?: string
-  accountId?: string
-  userId?: string
-}
+export type ExpensesPutExpensesByIdBody = { "description"?: string; "amount"?: number; "date"?: string; "month"?: number; "year"?: number; "categoryId"?: string; "accountId"?: string; "userId"?: string }
 export type ExpensesPutExpensesByIdResponse = unknown
-export type ExpensesDeleteExpensesByIdParams = { id: string }
+export type ExpensesDeleteExpensesByIdParams = { "id": string }
 export type ExpensesDeleteExpensesByIdQuery = Record<string, never>
 export type ExpensesDeleteExpensesByIdBody = unknown
 export type ExpensesDeleteExpensesByIdResponse = unknown
-export type ExpensesGetExpensesUserByUserIdParams = { userId: string }
+export type ExpensesGetExpensesUserByUserIdParams = { "userId": string }
 export type ExpensesGetExpensesUserByUserIdQuery = Record<string, never>
 export type ExpensesGetExpensesUserByUserIdBody = unknown
 export type ExpensesGetExpensesUserByUserIdResponse = unknown
-export type ExpensesGetExpensesCategoryByCategoryIdParams = {
-  categoryId: string
-}
+export type ExpensesGetExpensesCategoryByCategoryIdParams = { "categoryId": string }
 export type ExpensesGetExpensesCategoryByCategoryIdQuery = Record<string, never>
 export type ExpensesGetExpensesCategoryByCategoryIdBody = unknown
 export type ExpensesGetExpensesCategoryByCategoryIdResponse = unknown
 export type IncomesPostIncomeParams = Record<string, never>
 export type IncomesPostIncomeQuery = Record<string, never>
-export type IncomesPostIncomeBody = {
-  description: string
-  amount: number
-  sourceId: string
-  accountId?: string
-  date: string
-  userId: string
-}
+export type IncomesPostIncomeBody = { "description": string; "amount": number; "sourceId": string; "accountId"?: string; "date": string; "userId": string }
 export type IncomesPostIncomeResponse = unknown
 export type IncomesGetIncomeParams = Record<string, never>
 export type IncomesGetIncomeQuery = Record<string, never>
 export type IncomesGetIncomeBody = unknown
 export type IncomesGetIncomeResponse = unknown
-export type IncomesGetIncomeByIdParams = { id: string }
+export type IncomesGetIncomeByIdParams = { "id": string }
 export type IncomesGetIncomeByIdQuery = Record<string, never>
 export type IncomesGetIncomeByIdBody = unknown
 export type IncomesGetIncomeByIdResponse = unknown
-export type IncomesPutIncomeByIdParams = { id: string }
+export type IncomesPutIncomeByIdParams = { "id": string }
 export type IncomesPutIncomeByIdQuery = Record<string, never>
-export type IncomesPutIncomeByIdBody = {
-  description?: string
-  amount?: number
-  sourceId?: string
-  accountId?: string
-  date?: string
-  userId?: string
-}
+export type IncomesPutIncomeByIdBody = { "description"?: string; "amount"?: number; "sourceId"?: string; "accountId"?: string; "date"?: string; "userId"?: string }
 export type IncomesPutIncomeByIdResponse = unknown
-export type IncomesDeleteIncomeByIdParams = { id: string }
+export type IncomesDeleteIncomeByIdParams = { "id": string }
 export type IncomesDeleteIncomeByIdQuery = Record<string, never>
 export type IncomesDeleteIncomeByIdBody = unknown
 export type IncomesDeleteIncomeByIdResponse = unknown
-export type IncomesGetIncomeUserByUserIdParams = { userId: string }
+export type IncomesGetIncomeUserByUserIdParams = { "userId": string }
 export type IncomesGetIncomeUserByUserIdQuery = Record<string, never>
 export type IncomesGetIncomeUserByUserIdBody = unknown
 export type IncomesGetIncomeUserByUserIdResponse = unknown
-export type IncomesGetIncomeSourceBySourceIdParams = { sourceId: string }
+export type IncomesGetIncomeSourceBySourceIdParams = { "sourceId": string }
 export type IncomesGetIncomeSourceBySourceIdQuery = Record<string, never>
 export type IncomesGetIncomeSourceBySourceIdBody = unknown
 export type IncomesGetIncomeSourceBySourceIdResponse = unknown
 export type IncomeSourcePostIncomeSourceParams = Record<string, never>
 export type IncomeSourcePostIncomeSourceQuery = Record<string, never>
-export type IncomeSourcePostIncomeSourceBody = {
-  name: string
-  frequency: string
-  startDate: string
-  endDate?: string | null
-  isActive?: boolean
-  userId: string
-}
+export type IncomeSourcePostIncomeSourceBody = { "name": string; "frequency": string; "startDate": string; "endDate"?: string | null; "isActive"?: boolean; "userId": string }
 export type IncomeSourcePostIncomeSourceResponse = unknown
 export type IncomeSourceGetIncomeSourceParams = Record<string, never>
 export type IncomeSourceGetIncomeSourceQuery = Record<string, never>
 export type IncomeSourceGetIncomeSourceBody = unknown
 export type IncomeSourceGetIncomeSourceResponse = unknown
-export type IncomeSourceGetIncomeSourceByIdParams = { id: string }
+export type IncomeSourceGetIncomeSourceByIdParams = { "id": string }
 export type IncomeSourceGetIncomeSourceByIdQuery = Record<string, never>
 export type IncomeSourceGetIncomeSourceByIdBody = unknown
 export type IncomeSourceGetIncomeSourceByIdResponse = unknown
-export type IncomeSourcePutIncomeSourceByIdParams = { id: string }
+export type IncomeSourcePutIncomeSourceByIdParams = { "id": string }
 export type IncomeSourcePutIncomeSourceByIdQuery = Record<string, never>
-export type IncomeSourcePutIncomeSourceByIdBody = {
-  name?: string
-  frequency?: string
-  startDate?: string
-  endDate?: string | null
-  isActive?: boolean
-  userId?: string
-}
+export type IncomeSourcePutIncomeSourceByIdBody = { "name"?: string; "frequency"?: string; "startDate"?: string; "endDate"?: string | null; "isActive"?: boolean; "userId"?: string }
 export type IncomeSourcePutIncomeSourceByIdResponse = unknown
-export type IncomeSourceDeleteIncomeSourceByIdParams = { id: string }
+export type IncomeSourceDeleteIncomeSourceByIdParams = { "id": string }
 export type IncomeSourceDeleteIncomeSourceByIdQuery = Record<string, never>
 export type IncomeSourceDeleteIncomeSourceByIdBody = unknown
 export type IncomeSourceDeleteIncomeSourceByIdResponse = unknown
-export type DefaultGetIncomeSourcesUserByUserIdParams = { userId: string }
+export type DefaultGetIncomeSourcesUserByUserIdParams = { "userId": string }
 export type DefaultGetIncomeSourcesUserByUserIdQuery = Record<string, never>
 export type DefaultGetIncomeSourcesUserByUserIdBody = unknown
 export type DefaultGetIncomeSourcesUserByUserIdResponse = unknown
 export type InvestmentsPostInvestmentParams = Record<string, never>
 export type InvestmentsPostInvestmentQuery = Record<string, never>
-export type InvestmentsPostInvestmentBody = {
-  investimentName: string
-  amount: number
-  investmentTypeId: string
-  investmentGoalId?: string | null
-  notes?: string | null
-  userId: string
-}
+export type InvestmentsPostInvestmentBody = { "investimentName": string; "amount": number; "investmentTypeId": string; "investmentGoalId"?: string | null; "notes"?: string | null; "userId": string }
 export type InvestmentsPostInvestmentResponse = unknown
 export type InvestmentsGetInvestmentParams = Record<string, never>
 export type InvestmentsGetInvestmentQuery = Record<string, never>
 export type InvestmentsGetInvestmentBody = unknown
 export type InvestmentsGetInvestmentResponse = unknown
-export type InvestmentsGetInvestmentUserByUserIdParams = { userId: string }
+export type InvestmentsGetInvestmentUserByUserIdParams = { "userId": string }
 export type InvestmentsGetInvestmentUserByUserIdQuery = Record<string, never>
 export type InvestmentsGetInvestmentUserByUserIdBody = unknown
 export type InvestmentsGetInvestmentUserByUserIdResponse = unknown
-export type InvestmentsPutInvestmentByIdParams = { id: string }
+export type InvestmentsPutInvestmentByIdParams = { "id": string }
 export type InvestmentsPutInvestmentByIdQuery = Record<string, never>
-export type InvestmentsPutInvestmentByIdBody = {
-  investimentName?: string
-  amount?: number
-  investmentTypeId?: string
-  investmentGoalId?: string | null
-  notes?: string | null
-  userId?: string
-}
+export type InvestmentsPutInvestmentByIdBody = { "investimentName"?: string; "amount"?: number; "investmentTypeId"?: string; "investmentGoalId"?: string | null; "notes"?: string | null; "userId"?: string }
 export type InvestmentsPutInvestmentByIdResponse = unknown
-export type InvestmentsDeleteInvestmentByIdParams = { id: string }
+export type InvestmentsDeleteInvestmentByIdParams = { "id": string }
 export type InvestmentsDeleteInvestmentByIdQuery = Record<string, never>
 export type InvestmentsDeleteInvestmentByIdBody = unknown
 export type InvestmentsDeleteInvestmentByIdResponse = unknown
 export type InvestmentGoalsPostInvestmentGoalParams = Record<string, never>
 export type InvestmentGoalsPostInvestmentGoalQuery = Record<string, never>
-export type InvestmentGoalsPostInvestmentGoalBody = {
-  name: string
-  targetAmount: number
-  currentAmount?: number
-  targetDate: string
-  investmentId: string
-}
+export type InvestmentGoalsPostInvestmentGoalBody = { "name": string; "targetAmount": number; "currentAmount"?: number; "targetDate": string; "investmentId": string }
 export type InvestmentGoalsPostInvestmentGoalResponse = unknown
 export type InvestmentGoalsGetInvestmentGoalParams = Record<string, never>
 export type InvestmentGoalsGetInvestmentGoalQuery = Record<string, never>
 export type InvestmentGoalsGetInvestmentGoalBody = unknown
 export type InvestmentGoalsGetInvestmentGoalResponse = unknown
-export type InvestmentGoalsPutInvestmentGoalByIdParams = { id: string }
+export type InvestmentGoalsPutInvestmentGoalByIdParams = { "id": string }
 export type InvestmentGoalsPutInvestmentGoalByIdQuery = Record<string, never>
-export type InvestmentGoalsPutInvestmentGoalByIdBody = {
-  name?: string
-  targetAmount?: number
-  currentAmount?: number
-  targetDate?: string
-  investmentId?: string
-}
+export type InvestmentGoalsPutInvestmentGoalByIdBody = { "name"?: string; "targetAmount"?: number; "currentAmount"?: number; "targetDate"?: string; "investmentId"?: string }
 export type InvestmentGoalsPutInvestmentGoalByIdResponse = unknown
-export type InvestmentGoalsDeleteInvestmentGoalByIdParams = { id: string }
+export type InvestmentGoalsDeleteInvestmentGoalByIdParams = { "id": string }
 export type InvestmentGoalsDeleteInvestmentGoalByIdQuery = Record<string, never>
 export type InvestmentGoalsDeleteInvestmentGoalByIdBody = unknown
 export type InvestmentGoalsDeleteInvestmentGoalByIdResponse = unknown
 export type TransactionPostTransactionParams = Record<string, never>
 export type TransactionPostTransactionQuery = Record<string, never>
-export type TransactionPostTransactionBody = {
-  description: string
-  amount: number
-  type:
-    | 'income'
-    | 'expense'
-    | 'transfer'
-    | 'investment'
-    | 'creditCardExpense'
-    | 'debtPayment'
-    | 'debtIncome'
-    | 'budgetExpense'
-    | 'budgetIncome'
-    | 'creditCardPayment'
-    | 'creditCardTransfer'
-    | 'creditCardIncome'
-  date: string
-  month: number
-  year: number
-  userId: string
-  accountId: string
-  debitAccountId?: string | null
-  categoryId: string
-  incomeSourceId?: string | null
-  incomeId?: string | null
-}
+export type TransactionPostTransactionBody = { "description": string; "amount": number; "type": "income" | "expense" | "transfer" | "investment" | "creditCardExpense" | "debtPayment" | "debtIncome" | "budgetExpense" | "budgetIncome" | "creditCardPayment" | "creditCardTransfer" | "creditCardIncome"; "date": string; "month": number; "year": number; "userId": string; "accountId": string; "debitAccountId"?: string | null; "categoryId": string; "incomeSourceId"?: string | null; "incomeId"?: string | null }
 export type TransactionPostTransactionResponse = unknown
 export type TransactionGetTransactionParams = Record<string, never>
-export type TransactionGetTransactionQuery = {
-  page?: number
-  pageSize?: number
-  userId?: string
-  accountId?: string
-  categoryId?: string
-  type?:
-    | 'income'
-    | 'expense'
-    | 'transfer'
-    | 'investment'
-    | 'creditCardExpense'
-    | 'debtPayment'
-    | 'debtIncome'
-    | 'budgetExpense'
-    | 'budgetIncome'
-    | 'creditCardPayment'
-    | 'creditCardTransfer'
-    | 'creditCardIncome'
-  dateFrom?: string
-  dateTo?: string
-}
+export type TransactionGetTransactionQuery = { "page"?: number; "pageSize"?: number; "userId"?: string; "accountId"?: string; "categoryId"?: string; "type"?: "income" | "expense" | "transfer" | "investment" | "creditCardExpense" | "debtPayment" | "debtIncome" | "budgetExpense" | "budgetIncome" | "creditCardPayment" | "creditCardTransfer" | "creditCardIncome"; "dateFrom"?: string; "dateTo"?: string }
 export type TransactionGetTransactionBody = unknown
 export type TransactionGetTransactionResponse = unknown
-export type TransactionGetTransactionByIdParams = { id: string }
+export type TransactionGetTransactionByIdParams = { "id": string }
 export type TransactionGetTransactionByIdQuery = Record<string, never>
 export type TransactionGetTransactionByIdBody = unknown
 export type TransactionGetTransactionByIdResponse = unknown
-export type TransactionPutTransactionByIdParams = { id: string }
+export type TransactionPutTransactionByIdParams = { "id": string }
 export type TransactionPutTransactionByIdQuery = Record<string, never>
-export type TransactionPutTransactionByIdBody = {
-  description?: string
-  amount?: number
-  type?:
-    | 'income'
-    | 'expense'
-    | 'transfer'
-    | 'investment'
-    | 'creditCardExpense'
-    | 'debtPayment'
-    | 'debtIncome'
-    | 'budgetExpense'
-    | 'budgetIncome'
-    | 'creditCardPayment'
-    | 'creditCardTransfer'
-    | 'creditCardIncome'
-  date?: string
-  month?: number
-  year?: number
-  userId?: string
-  accountId?: string
-  debitAccountId?: string | null
-  categoryId?: string
-  incomeSourceId?: string | null
-  incomeId?: string | null
-}
+export type TransactionPutTransactionByIdBody = { "description"?: string; "amount"?: number; "type"?: "income" | "expense" | "transfer" | "investment" | "creditCardExpense" | "debtPayment" | "debtIncome" | "budgetExpense" | "budgetIncome" | "creditCardPayment" | "creditCardTransfer" | "creditCardIncome"; "date"?: string; "month"?: number; "year"?: number; "userId"?: string; "accountId"?: string; "debitAccountId"?: string | null; "categoryId"?: string; "incomeSourceId"?: string | null; "incomeId"?: string | null }
 export type TransactionPutTransactionByIdResponse = unknown
-export type TransactionDeleteTransactionByIdParams = { id: string }
+export type TransactionDeleteTransactionByIdParams = { "id": string }
 export type TransactionDeleteTransactionByIdQuery = Record<string, never>
 export type TransactionDeleteTransactionByIdBody = unknown
 export type TransactionDeleteTransactionByIdResponse = unknown
-export type TransactionsAttachmentPostTransactionAttachmentParams = Record<
-  string,
-  never
->
-export type TransactionsAttachmentPostTransactionAttachmentQuery = Record<
-  string,
-  never
->
-export type TransactionsAttachmentPostTransactionAttachmentBody = {
-  fileUrl: string
-  fileType: string
-  transactionId: string
-  expensesId?: string | null
-}
+export type TransactionsAttachmentPostTransactionAttachmentParams = Record<string, never>
+export type TransactionsAttachmentPostTransactionAttachmentQuery = Record<string, never>
+export type TransactionsAttachmentPostTransactionAttachmentBody = { "fileUrl": string; "fileType": string; "transactionId": string; "expensesId"?: string | null }
 export type TransactionsAttachmentPostTransactionAttachmentResponse = unknown
-export type TransactionsAttachmentGetTransactionAttachmentParams = Record<
-  string,
-  never
->
-export type TransactionsAttachmentGetTransactionAttachmentQuery = Record<
-  string,
-  never
->
+export type TransactionsAttachmentGetTransactionAttachmentParams = Record<string, never>
+export type TransactionsAttachmentGetTransactionAttachmentQuery = Record<string, never>
 export type TransactionsAttachmentGetTransactionAttachmentBody = unknown
 export type TransactionsAttachmentGetTransactionAttachmentResponse = unknown
-export type TransactionsAttachmentGetTransactionAttachmentByIdParams = {
-  id: string
-}
-export type TransactionsAttachmentGetTransactionAttachmentByIdQuery = Record<
-  string,
-  never
->
+export type TransactionsAttachmentGetTransactionAttachmentByIdParams = { "id": string }
+export type TransactionsAttachmentGetTransactionAttachmentByIdQuery = Record<string, never>
 export type TransactionsAttachmentGetTransactionAttachmentByIdBody = unknown
 export type TransactionsAttachmentGetTransactionAttachmentByIdResponse = unknown
-export type TransactionsAttachmentPutTransactionAttachmentByIdParams = {
-  id: string
-}
-export type TransactionsAttachmentPutTransactionAttachmentByIdQuery = Record<
-  string,
-  never
->
-export type TransactionsAttachmentPutTransactionAttachmentByIdBody = {
-  fileUrl: string
-  fileType: string
-  transactionId: string
-  expensesId?: string | null
-  id: string
-}
+export type TransactionsAttachmentPutTransactionAttachmentByIdParams = { "id": string }
+export type TransactionsAttachmentPutTransactionAttachmentByIdQuery = Record<string, never>
+export type TransactionsAttachmentPutTransactionAttachmentByIdBody = { "fileUrl": string; "fileType": string; "transactionId": string; "expensesId"?: string | null; "id": string }
 export type TransactionsAttachmentPutTransactionAttachmentByIdResponse = unknown
-export type TransactionsAttachmentDeleteTransactionAttachmentByIdParams = {
-  id: string
-}
-export type TransactionsAttachmentDeleteTransactionAttachmentByIdQuery = Record<
-  string,
-  never
->
+export type TransactionsAttachmentDeleteTransactionAttachmentByIdParams = { "id": string }
+export type TransactionsAttachmentDeleteTransactionAttachmentByIdQuery = Record<string, never>
 export type TransactionsAttachmentDeleteTransactionAttachmentByIdBody = unknown
-export type TransactionsAttachmentDeleteTransactionAttachmentByIdResponse =
-  unknown
+export type TransactionsAttachmentDeleteTransactionAttachmentByIdResponse = unknown
 export type NotificationsGetNotificationsParams = Record<string, never>
-export type NotificationsGetNotificationsQuery = {
-  page?: string
-  pageSize?: string
-}
+export type NotificationsGetNotificationsQuery = { "page"?: string; "pageSize"?: string }
 export type NotificationsGetNotificationsBody = unknown
 export type NotificationsGetNotificationsResponse = unknown
 export type NotificationsDeleteNotificationsParams = Record<string, never>
 export type NotificationsDeleteNotificationsQuery = Record<string, never>
 export type NotificationsDeleteNotificationsBody = unknown
 export type NotificationsDeleteNotificationsResponse = unknown
-export type NotificationsGetNotificationsUnreadCountParams = Record<
-  string,
-  never
->
-export type NotificationsGetNotificationsUnreadCountQuery = Record<
-  string,
-  never
->
+export type NotificationsGetNotificationsUnreadCountParams = Record<string, never>
+export type NotificationsGetNotificationsUnreadCountQuery = Record<string, never>
 export type NotificationsGetNotificationsUnreadCountBody = unknown
 export type NotificationsGetNotificationsUnreadCountResponse = unknown
-export type NotificationsGetNotificationsByIdParams = { id: string }
+export type NotificationsGetNotificationsByIdParams = { "id": string }
 export type NotificationsGetNotificationsByIdQuery = Record<string, never>
 export type NotificationsGetNotificationsByIdBody = unknown
 export type NotificationsGetNotificationsByIdResponse = unknown
-export type NotificationsDeleteNotificationsByIdParams = { id: string }
+export type NotificationsDeleteNotificationsByIdParams = { "id": string }
 export type NotificationsDeleteNotificationsByIdQuery = Record<string, never>
 export type NotificationsDeleteNotificationsByIdBody = unknown
 export type NotificationsDeleteNotificationsByIdResponse = unknown
-export type NotificationsPutNotificationsByIdReadParams = { id: string }
+export type NotificationsPutNotificationsByIdReadParams = { "id": string }
 export type NotificationsPutNotificationsByIdReadQuery = Record<string, never>
-export type NotificationsPutNotificationsByIdReadBody = { isRead: boolean }
+export type NotificationsPutNotificationsByIdReadBody = { "isRead": boolean }
 export type NotificationsPutNotificationsByIdReadResponse = unknown
 export type NotificationsPutNotificationsReadAllParams = Record<string, never>
 export type NotificationsPutNotificationsReadAllQuery = Record<string, never>
 export type NotificationsPutNotificationsReadAllBody = unknown
 export type NotificationsPutNotificationsReadAllResponse = unknown
-export type NotificationsGetNotificationsPreferencesParams = Record<
-  string,
-  never
->
-export type NotificationsGetNotificationsPreferencesQuery = Record<
-  string,
-  never
->
+export type NotificationsGetNotificationsPreferencesParams = Record<string, never>
+export type NotificationsGetNotificationsPreferencesQuery = Record<string, never>
 export type NotificationsGetNotificationsPreferencesBody = unknown
 export type NotificationsGetNotificationsPreferencesResponse = unknown
-export type NotificationsPutNotificationsPreferencesParams = Record<
-  string,
-  never
->
-export type NotificationsPutNotificationsPreferencesQuery = Record<
-  string,
-  never
->
-export type NotificationsPutNotificationsPreferencesBody = {
-  emailNotifications?: boolean
-  inAppNotifications?: boolean
-  notifyExpenses?: boolean
-  notifyIncomes?: boolean
-  notifyDebts?: boolean
-  notifyBudgetAlerts?: boolean
-  notifyInvestmentAlerts?: boolean
-  notifyAccountTransfers?: boolean
-  dailyDigest?: boolean
-  digestTime?: string
-}
+export type NotificationsPutNotificationsPreferencesParams = Record<string, never>
+export type NotificationsPutNotificationsPreferencesQuery = Record<string, never>
+export type NotificationsPutNotificationsPreferencesBody = { "emailNotifications"?: boolean; "inAppNotifications"?: boolean; "notifyExpenses"?: boolean; "notifyIncomes"?: boolean; "notifyDebts"?: boolean; "notifyBudgetAlerts"?: boolean; "notifyInvestmentAlerts"?: boolean; "notifyAccountTransfers"?: boolean; "dailyDigest"?: boolean; "digestTime"?: string }
 export type NotificationsPutNotificationsPreferencesResponse = unknown
 export type ReportsGetReportsDashboardParams = Record<string, never>
-export type ReportsGetReportsDashboardQuery = { month: number; year: number }
+export type ReportsGetReportsDashboardQuery = { "month": number; "year": number }
 export type ReportsGetReportsDashboardBody = unknown
 export type ReportsGetReportsDashboardResponse = unknown
 export type ReportsGetReportsEvolutionParams = Record<string, never>
-export type ReportsGetReportsEvolutionQuery = { year?: number }
+export type ReportsGetReportsEvolutionQuery = { "year"?: number }
 export type ReportsGetReportsEvolutionBody = unknown
 export type ReportsGetReportsEvolutionResponse = unknown
 export type ReportsGetReportsCashFlowParams = Record<string, never>
-export type ReportsGetReportsCashFlowQuery = {
-  dateFrom?: string
-  dateTo?: string
-}
+export type ReportsGetReportsCashFlowQuery = { "dateFrom"?: string; "dateTo"?: string }
 export type ReportsGetReportsCashFlowBody = unknown
 export type ReportsGetReportsCashFlowResponse = unknown
 export type ReportsGetReportsNetWorthParams = Record<string, never>
@@ -954,17 +527,11 @@ export type ReportsGetReportsNetWorthQuery = Record<string, never>
 export type ReportsGetReportsNetWorthBody = unknown
 export type ReportsGetReportsNetWorthResponse = unknown
 export type ReportsGetReportsExpenseAnalysisParams = Record<string, never>
-export type ReportsGetReportsExpenseAnalysisQuery = {
-  dateFrom?: string
-  dateTo?: string
-}
+export type ReportsGetReportsExpenseAnalysisQuery = { "dateFrom"?: string; "dateTo"?: string }
 export type ReportsGetReportsExpenseAnalysisBody = unknown
 export type ReportsGetReportsExpenseAnalysisResponse = unknown
 export type ReportsGetReportsIncomeAnalysisParams = Record<string, never>
-export type ReportsGetReportsIncomeAnalysisQuery = {
-  dateFrom?: string
-  dateTo?: string
-}
+export type ReportsGetReportsIncomeAnalysisQuery = { "dateFrom"?: string; "dateTo"?: string }
 export type ReportsGetReportsIncomeAnalysisBody = unknown
 export type ReportsGetReportsIncomeAnalysisResponse = unknown
 export type ReportsGetReportsFinancialHealthParams = Record<string, never>
@@ -972,18 +539,10 @@ export type ReportsGetReportsFinancialHealthQuery = Record<string, never>
 export type ReportsGetReportsFinancialHealthBody = unknown
 export type ReportsGetReportsFinancialHealthResponse = unknown
 export type ReportsGetReportsBudgetVsActualParams = Record<string, never>
-export type ReportsGetReportsBudgetVsActualQuery = {
-  dateFrom?: string
-  dateTo?: string
-}
+export type ReportsGetReportsBudgetVsActualQuery = { "dateFrom"?: string; "dateTo"?: string }
 export type ReportsGetReportsBudgetVsActualBody = unknown
 export type ReportsGetReportsBudgetVsActualResponse = unknown
 export type HealthGetHealthParams = Record<string, never>
 export type HealthGetHealthQuery = Record<string, never>
 export type HealthGetHealthBody = unknown
-export type HealthGetHealthResponse = {
-  status: string
-  uptime?: number
-  timestamp?: number
-  database?: string
-}
+export type HealthGetHealthResponse = { "status": string; "uptime"?: number; "timestamp"?: number; "database"?: string }

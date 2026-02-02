@@ -1,5 +1,5 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-23T14:39:08.309Z
+// Generated on: 2026-01-28T12:59:52.103Z
 import { z } from 'zod'
 
 export const DebtsPostDebtsBodySchema = z.object({
@@ -25,18 +25,16 @@ export const DebtsPutDebtsByIdBodySchema = z.object({
 })
 export type DebtsPutDebtsByIdBody = z.infer<typeof DebtsPutDebtsByIdBodySchema>
 
-export interface debtsResponse {
+export interface DebtsResponse {
   id: string
-  description: string
-  amount: number
+  alertTriggered: boolean
+  amount: string
+  createdAt: string
   creditor: string
+  description: string
   dueDate: string
-  status: 'PENDING' | 'PAID'
   notes: string | null
   paymentDate: string | null
+  status: string
   userId: string
-  createdAt?: string | Date
-  updatedAt?: string | Date
 }
-
-export type debtsRequest = z.infer<typeof DebtsPostDebtsBodySchema>

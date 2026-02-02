@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import InvestmentTypeModal from '@/components/investment/InvestmentTypeModal'
 import InvestmentTypesList from '@/components/investment/InvestmentTypesList'
+import { MainLayout } from '@/components/layout/mainLayout'
 import { Button } from '@/components/ui/button'
 import { Title } from '@/components/ui/title'
 import { useApi } from '@/hooks/useApi'
@@ -43,31 +44,33 @@ const InvestmentTypesPage = () => {
   }
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Title>Tipos de Investimento</Title>
-          <p className="text-gray-600">
-            Categorias de investimento disponíveis
-          </p>
+    <MainLayout>
+      <div className="space-y-6 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <Title>Tipos de Investimento</Title>
+            <p className="text-gray-600">
+              Categorias de investimento disponíveis
+            </p>
+          </div>
+          <Button onClick={() => handleOpenModal()}>Novo Tipo</Button>
         </div>
-        <Button onClick={() => handleOpenModal()}>Novo Tipo</Button>
-      </div>
 
-      <InvestmentTypesList
-        types={types}
-        onEdit={handleOpenModal}
-        onDelete={loadTypes}
-      />
-
-      {showModal && (
-        <InvestmentTypeModal
-          type={selectedType}
-          onClose={handleCloseModal}
-          onSuccess={handleSuccess}
+        <InvestmentTypesList
+          types={types}
+          onEdit={handleOpenModal}
+          onDelete={loadTypes}
         />
-      )}
-    </div>
+
+        {showModal && (
+          <InvestmentTypeModal
+            type={selectedType}
+            onClose={handleCloseModal}
+            onSuccess={handleSuccess}
+          />
+        )}
+      </div>
+    </MainLayout>
   )
 }
 

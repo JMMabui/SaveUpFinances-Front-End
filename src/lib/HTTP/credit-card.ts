@@ -10,7 +10,7 @@ import type {
   creditCardResponse,
 } from './Type/credit-card.type'
 
-const BASE = '/credit-card' as const
+const BASE = '/credit-cards' as const
 
 export function useGetCreditCardsByUser(userId: string) {
   return useQuery({

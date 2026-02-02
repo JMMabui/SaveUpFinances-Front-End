@@ -1,21 +1,13 @@
 import { z } from 'zod'
-export const AccountsSourcePostAccountSourceBodySchema = z.object({
-  accountId: z.string(),
-  source: z.string(),
-})
+export const AccountsSourcePostAccountSourceBodySchema = z.object({ "accountId": z.string(), "source": z.string() })
 export const AccountsSourcePostAccountSourceResponseSchema = z.unknown()
 export const AccountsSourceGetAccountSourceBodySchema = z.unknown()
 export const AccountsSourceGetAccountSourceResponseSchema = z.unknown()
 export const AccountsSourceGetAccountSourceByIdBodySchema = z.unknown()
 export const AccountsSourceGetAccountSourceByIdResponseSchema = z.unknown()
-export const AccountsSourcePutAccountSourceByIdBodySchema = z.object({
-  accountId: z.string().optional(),
-  source: z.string().optional(),
-})
+export const AccountsSourcePutAccountSourceByIdBodySchema = z.object({ "accountId": z.string().optional(), "source": z.string().optional() })
 export const AccountsSourcePutAccountSourceByIdResponseSchema = z.unknown()
 export const AccountsSourceDeleteAccountSourceByIdBodySchema = z.unknown()
 export const AccountsSourceDeleteAccountSourceByIdResponseSchema = z.unknown()
-export const AccountsSourceGetAccountSourceAccountByAccountIdBodySchema =
-  z.unknown()
-export const AccountsSourceGetAccountSourceAccountByAccountIdResponseSchema =
-  z.unknown()
+export const AccountsSourceGetAccountSourceAccountByAccountIdBodySchema = z.unknown()
+export const AccountsSourceGetAccountSourceAccountByAccountIdResponseSchema = z.unknown()

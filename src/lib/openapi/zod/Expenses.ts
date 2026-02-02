@@ -1,29 +1,11 @@
 import { z } from 'zod'
-export const ExpensesPostExpensesBodySchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  date: z.string(),
-  month: z.number(),
-  year: z.number(),
-  categoryId: z.string(),
-  accountId: z.string(),
-  userId: z.string(),
-})
+export const ExpensesPostExpensesBodySchema = z.object({ "description": z.string(), "amount": z.number(), "date": z.string(), "month": z.number(), "year": z.number(), "categoryId": z.string(), "accountId": z.string(), "userId": z.string() })
 export const ExpensesPostExpensesResponseSchema = z.unknown()
 export const ExpensesGetExpensesBodySchema = z.unknown()
 export const ExpensesGetExpensesResponseSchema = z.unknown()
 export const ExpensesGetExpensesByIdBodySchema = z.unknown()
 export const ExpensesGetExpensesByIdResponseSchema = z.unknown()
-export const ExpensesPutExpensesByIdBodySchema = z.object({
-  description: z.string().optional(),
-  amount: z.number().optional(),
-  date: z.string().optional(),
-  month: z.number().optional(),
-  year: z.number().optional(),
-  categoryId: z.string().optional(),
-  accountId: z.string().optional(),
-  userId: z.string().optional(),
-})
+export const ExpensesPutExpensesByIdBodySchema = z.object({ "description": z.string().optional(), "amount": z.number().optional(), "date": z.string().optional(), "month": z.number().optional(), "year": z.number().optional(), "categoryId": z.string().optional(), "accountId": z.string().optional(), "userId": z.string().optional() })
 export const ExpensesPutExpensesByIdResponseSchema = z.unknown()
 export const ExpensesDeleteExpensesByIdBodySchema = z.unknown()
 export const ExpensesDeleteExpensesByIdResponseSchema = z.unknown()

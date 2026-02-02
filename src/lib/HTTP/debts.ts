@@ -4,6 +4,7 @@ import { apiService } from '../apiServices'
 import {
   DebtsPostDebtsBodySchema,
   DebtsPutDebtsByIdBodySchema,
+  type DebtsResponse,
 } from './Type/debts.type'
 
 const _BASE = '/debts' as const
@@ -16,10 +17,10 @@ export function useDebtsPostDebts() {
     mutationFn: async (data: any) => apiService.post('/debts', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['debts'] })
-      success('Debts criado com sucesso')
+      success('Dívida criada com sucesso')
     },
     onError: () => {
-      error('Erro ao criar debts')
+      error('Erro ao criar dívida')
     },
   })
 }
@@ -119,7 +120,8 @@ export function useDebtsGetDebtsUserByUserId(params?: any) {
 export function useGetDebtsByUser(userId: string) {
   return useQuery({
     queryKey: ['debts-by-user', userId],
-    queryFn: async () => apiService.get(`/debts/user/${userId}`),
+    queryFn: async () =>
+      apiService.get<DebtsResponse[]>(`/debts/user/${userId}`),
     enabled: !!userId,
   })
 }

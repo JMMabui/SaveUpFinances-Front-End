@@ -1,5 +1,5 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-23T14:39:08.530Z
+// Generated on: 2026-01-28T12:59:52.116Z
 import { z } from 'zod'
 
 export const ExpensesPostExpensesBodySchema = z.object({
@@ -28,3 +28,17 @@ export const ExpensesPutExpensesByIdBodySchema = z.object({
 export type ExpensesPutExpensesByIdBody = z.infer<
   typeof ExpensesPutExpensesByIdBodySchema
 >
+
+export interface ExpensesResponse {
+  id: string
+  description: string
+  amount: number
+  date: string
+  month: number
+  year: number
+  categoryId: string
+  accountId: string
+  userId: string
+  createdAt: string
+  updatedAt: string
+}

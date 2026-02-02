@@ -1,25 +1,11 @@
 import { z } from 'zod'
-export const InvestmentsPostInvestmentBodySchema = z.object({
-  investimentName: z.string(),
-  amount: z.number(),
-  investmentTypeId: z.string(),
-  investmentGoalId: z.union([z.string(), z.null()]).optional(),
-  notes: z.union([z.string(), z.null()]).optional(),
-  userId: z.string(),
-})
+export const InvestmentsPostInvestmentBodySchema = z.object({ "investimentName": z.string(), "amount": z.number(), "investmentTypeId": z.string(), "investmentGoalId": z.union([z.string(), z.null()]).optional(), "notes": z.union([z.string(), z.null()]).optional(), "userId": z.string() })
 export const InvestmentsPostInvestmentResponseSchema = z.unknown()
 export const InvestmentsGetInvestmentBodySchema = z.unknown()
 export const InvestmentsGetInvestmentResponseSchema = z.unknown()
 export const InvestmentsGetInvestmentUserByUserIdBodySchema = z.unknown()
 export const InvestmentsGetInvestmentUserByUserIdResponseSchema = z.unknown()
-export const InvestmentsPutInvestmentByIdBodySchema = z.object({
-  investimentName: z.string().optional(),
-  amount: z.number().optional(),
-  investmentTypeId: z.string().optional(),
-  investmentGoalId: z.union([z.string(), z.null()]).optional(),
-  notes: z.union([z.string(), z.null()]).optional(),
-  userId: z.string().optional(),
-})
+export const InvestmentsPutInvestmentByIdBodySchema = z.object({ "investimentName": z.string().optional(), "amount": z.number().optional(), "investmentTypeId": z.string().optional(), "investmentGoalId": z.union([z.string(), z.null()]).optional(), "notes": z.union([z.string(), z.null()]).optional(), "userId": z.string().optional() })
 export const InvestmentsPutInvestmentByIdResponseSchema = z.unknown()
 export const InvestmentsDeleteInvestmentByIdBodySchema = z.unknown()
 export const InvestmentsDeleteInvestmentByIdResponseSchema = z.unknown()

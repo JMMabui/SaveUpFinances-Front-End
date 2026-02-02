@@ -48,13 +48,19 @@ export function MonthlySummary() {
       )
       .reduce((sum: number, i: any) => sum + (Number(i.amount) || 0), 0)
 
+    // console.log('Month Income for', month + 1, year, monthIncome)
+
     const monthExpenses = expenses
       .filter(
         (e: any) => e.date.getMonth() === month && e.date.getFullYear() === year
       )
       .reduce((sum: number, e: any) => sum + (Number(e.amount) || 0), 0)
 
+    // console.log('Month Expenses for', month + 1, year, monthExpenses)
+
     const savings = Math.max(monthIncome - monthExpenses, 0)
+
+    // console.log('Savings for', month + 1, year, savings)
 
     return {
       month: monthLabel(m),
@@ -217,8 +223,8 @@ export function MonthlySummary() {
             <div className="text-xs text-gray-500 mt-1">
               {currentMonth.income
                 ? ((currentMonth.savings / currentMonth.income) * 100).toFixed(
-                    1
-                  )
+                  1
+                )
                 : '0.0'}
               % do rendimento
             </div>

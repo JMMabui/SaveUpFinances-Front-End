@@ -1,3 +1,4 @@
+import { Console } from 'console'
 import {
   AlertTriangle,
   CreditCard,
@@ -11,6 +12,7 @@ import { useGetCreditCardsByUser } from '@/lib/HTTP/credit-card'
 import { useGetDebtsByUser } from '@/lib/HTTP/debts'
 import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
 import { useGetIncomeByUser } from '@/lib/HTTP/income'
+import type { accountsResponse } from '@/lib/HTTP/Type/account.type'
 import { formatCurrency } from '@/lib/utils'
 import { COLORS } from '../constants/colors'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
@@ -97,13 +99,20 @@ export function QuickStats() {
   const { data: creditCardsData, isLoading: loadingCards } =
     useGetCreditCardsByUser(userId)
 
-  const accounts = accountsData?.data || []
+  const accounts: accountsResponse = accountsData?.data || []
+
+  console.log('Accounts', accounts)
+
+  const totalAmount = accounts?.totalAmount || 0
+
   const totalBalance = Array.isArray(accounts)
     ? accounts.reduce(
-        (sum: number, acc: any) => sum + (Number(acc?.balance) || 0),
-        0
-      )
+      (sum: number, acc: any) => sum + (Number(acc?.balance) || 0),
+      0
+    )
     : 0
+
+  console.log('Total Balance:', totalBalance)
 
   const incomes = incomeData?.data || []
   const expenses = expensesData?.data || []
@@ -118,6 +127,7 @@ export function QuickStats() {
   const savings = Math.max(totalIncome - totalExpenses, 0)
 
   const debts = debtsData?.data || []
+  // console.log('Debts Data', debtsData)
   const pendingDebts = debts.filter((d: any) => d?.status === 'PENDING')
   const pendingDebtsAmount = pendingDebts.reduce(
     (sum: number, d: any) => sum + (Number(d?.amount) || 0),

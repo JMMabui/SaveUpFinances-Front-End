@@ -4,6 +4,7 @@ import { apiService } from '../apiServices'
 import {
   ExpensesPostExpensesBodySchema,
   ExpensesPutExpensesByIdBodySchema,
+  type ExpensesResponse,
 } from './Type/expenses.type'
 
 const _BASE = '/expenses' as const
@@ -27,14 +28,15 @@ export function useExpensesPostExpenses() {
 export function useGetExpensesByUser(userId: string) {
   return useQuery({
     queryKey: ['expenses-get-user', userId],
-    queryFn: async () => apiService.get(`/expenses/user/${userId}`),
+    queryFn: async () =>
+      apiService.get<ExpensesResponse[]>(`/expenses/user/${userId}`),
   })
 }
 
 export function useExpensesGetExpenses(params?: any) {
   return useQuery({
     queryKey: ['expenses-get', params],
-    queryFn: async () => apiService.get('/expenses'),
+    queryFn: async () => apiService.get<ExpensesResponse[]>('/expenses'),
     enabled: true,
   })
 }
