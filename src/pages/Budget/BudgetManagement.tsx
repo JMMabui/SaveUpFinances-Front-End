@@ -2,7 +2,7 @@ import { BudgetList } from '@/components/budget/BudgetList'
 import { MainLayout } from '@/components/layout/mainLayout'
 import { Button } from '@/components/ui/button'
 import { COLORS } from '@/constants/colors'
-import { useDeleteBudget, useGetBudgetsByUser } from '@/lib/HTTP/budget'
+import { useDeleteBudget, useGetBudgetByUser } from '@/lib/HTTP/budget'
 import { useGetCategories } from '@/lib/HTTP/categories'
 import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
 
@@ -10,7 +10,7 @@ export function BudgetManagement() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
 
-  const { data: budgetsQuery } = useGetBudgetsByUser(userId)
+  const { data: budgetsQuery } = useGetBudgetByUser(userId)
   const { data: categoriesQuery } = useGetCategories()
   const { data: expensesQuery } = useGetExpensesByUser(userId)
 

@@ -26,19 +26,86 @@ function pascalCase(str) {
     .join('')
 }
 
-function normalizePathName(p) {
+function normalizeParamAlias(name) {
+  if (name === 'id') return 'ById'
+  if (name === 'userId') return 'ByUser'
+  if (name === 'accountId') return 'ByAccount'
+  if (name === 'categoryId') return 'ByCategory'
+  if (name === 'creditCardId') return 'ByCreditCard'
+  if (name.endsWith('Id')) return 'ById'
+  return 'By' + pascalCase(name)
+}
+
+function normalizePathName(p, tagNamePascal) {
   const segs = p.split('/').filter(Boolean)
-  return segs
+  let parts = segs
     .map(s => {
       const m = s.match(/^\{(.+)\}$/)
-      if (m) return `By${pascalCase(m[1])}`
-      return pascalCase(s)
+      if (m) return normalizeParamAlias(m[1])
+      const pas = pascalCase(s)
+      // drop segment if it equals the tag name (resource duplication)
+      if (pas === tagNamePascal) return ''
+      return pas
     })
-    .join('')
+    .filter(Boolean)
+
+  // compress patterns like "User" + "ByUser" -> "ByUser"
+  const compressPairs = [
+    ['User', 'ByUser'],
+    ['Account', 'ByAccount'],
+    ['Category', 'ByCategory'],
+    ['CreditCard', 'ByCreditCard'],
+    ['Transactions', 'ByTransactions'],
+    ['Debt', 'ByDebt'],
+    ['Bank', 'ByBank'],
+    ['Income', 'ByIncome'],
+    ['Investment', 'ByInvestment'],
+    ['Default', 'ByDefault'],
+  ]
+  for (let i = 0; i < parts.length - 1; i++) {
+    for (const [lit, by] of compressPairs) {
+      if (parts[i] === lit && parts[i + 1] === by) {
+        parts[i] = ''
+      }
+    }
+  }
+  parts = parts.filter(Boolean)
+
+  return parts.join('')
 }
 
 function methodName(m) {
   return pascalCase(m.toLowerCase())
+}
+
+function isArraySchema(schema) {
+  if (!schema) return false
+  if (schema.type === 'array') return true
+  if (Array.isArray(schema.type) && schema.type.includes('array')) return true
+  if (schema.anyOf) return schema.anyOf.some(s => isArraySchema(s))
+  if (schema.oneOf) return schema.oneOf.some(s => isArraySchema(s))
+  if (schema.allOf) return schema.allOf.some(s => isArraySchema(s))
+  return false
+}
+
+function resolveAction(method, responseSchema, pathKey, tagNamePascal) {
+  const suffix = normalizePathName(pathKey, tagNamePascal)
+  switch (method.toLowerCase()) {
+    case 'get': {
+      const isList = isArraySchema(responseSchema)
+      const base = isList ? 'List' : 'Get'
+      return base + (suffix ? suffix : '')
+    }
+    case 'post':
+      return 'Create' + (suffix ? suffix : '')
+    case 'put':
+    case 'patch':
+      return 'Update' + (suffix ? suffix : '')
+    case 'delete':
+      return 'Delete' + (suffix ? suffix : '')
+    default:
+      return methodName(method) + (suffix ? suffix : '')
+  }
 }
 
 function pickResponseSchema(responses) {
@@ -148,15 +215,21 @@ function generateTypes(sw) {
     for (const [method, op] of Object.entries(pathItem)) {
       const tags = op.tags || []
       const tag = tags[0] || 'Default'
-      const baseName =
-        pascalCase(tag) + methodName(method) + normalizePathName(pathKey)
-      const paramsTs = buildParamsTs(extractParams(op.parameters || []))
-      const queryTs = buildQueryTs(op.parameters || [])
+      const tagNamePascal = pascalCase(tag)
       let bodySchema = null
       if (op.requestBody?.content?.['application/json']) {
         bodySchema = op.requestBody.content['application/json'].schema || null
       }
       const responseSchema = pickResponseSchema(op.responses)
+      const actionName = resolveAction(
+        method,
+        responseSchema,
+        pathKey,
+        tagNamePascal
+      )
+      const baseName = tagNamePascal + actionName
+      const paramsTs = buildParamsTs(extractParams(op.parameters || []))
+      const queryTs = buildQueryTs(op.parameters || [])
       const BodyType = jsonSchemaToTs(bodySchema)
       const ResponseType = jsonSchemaToTs(responseSchema)
       out.push(`export type ${baseName}Params = ${paramsTs}`)
@@ -229,10 +302,23 @@ function jsonSchemaToZod(schema) {
     return `z.intersection(${parts.join(', ')})`
   }
   if (schema.enum) {
-    const vals = schema.enum
-      .map(v => (typeof v === 'string' ? JSON.stringify(v) : String(v)))
-      .join(', ')
-    return `z.enum([${vals}])`
+    const enums = schema.enum
+    const stringVals = enums.filter(v => typeof v === 'string')
+    const otherVals = enums.filter(v => typeof v !== 'string' && v !== null)
+    const hasNull = enums.some(v => v === null)
+    const parts = []
+    if (stringVals.length) {
+      parts.push(
+        `z.enum([${stringVals.map(v => JSON.stringify(v)).join(', ')}])`
+      )
+    }
+    for (const v of otherVals) {
+      parts.push(`z.literal(${JSON.stringify(v)})`)
+    }
+    if (hasNull) {
+      parts.push('z.null()')
+    }
+    return parts.length === 1 ? parts[0] : `z.union([${parts.join(', ')}])`
   }
   const type = schema.type
   if (!type) return 'z.unknown()'
@@ -324,39 +410,51 @@ function buildTypeFiles(routes, sw) {
       `// Auto-generated from Swagger API`,
       `// Generated on: ${new Date().toISOString()}`,
       `import { z } from 'zod'`,
-      ``,
     ]
 
-    // Extract unique response types and schemas
+    const importSchemas = []
+    const bodyExports = []
+    const responseExports = []
+
     for (const r of arr) {
       const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
-      if (op) {
-        const respSchema = pickResponseSchema(op.responses)
-        if (respSchema) {
-          const typeName = `${r.name}Response`
-          const zodSchema = jsonSchemaToZod(respSchema)
-          lines.push(`export const ${typeName}Schema = ${zodSchema}`)
-          lines.push(
-            `export type ${typeName} = z.infer<typeof ${typeName}Schema>`
-          )
-        }
+      if (!op) continue
+      const hasBody = !!op.requestBody?.content?.['application/json']?.schema
+      const hasResponse = !!pickResponseSchema(op.responses)
+      if (hasBody) {
+        importSchemas.push(`${r.name}BodySchema`)
+        bodyExports.push(
+          `export type ${r.name}Body = z.infer<typeof ${r.name}BodySchema>`
+        )
+      }
+      if (hasResponse) {
+        importSchemas.push(`${r.name}ResponseSchema`)
+        responseExports.push(
+          `export type ${r.name}Response = z.infer<typeof ${r.name}ResponseSchema>`
+        )
       }
     }
 
-    // Add request body types with Zod
-    for (const r of arr) {
-      const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
-      if (op?.requestBody) {
-        const bodySchema = op.requestBody.content?.['application/json']?.schema
-        if (bodySchema) {
-          const typeName = `${r.name}Body`
-          const zodSchema = jsonSchemaToZod(bodySchema)
-          lines.push(`export const ${typeName}Schema = ${zodSchema}`)
-          lines.push(
-            `export type ${typeName} = z.infer<typeof ${typeName}Schema>`
-          )
-        }
-      }
+    if (importSchemas.length > 0) {
+      lines.push(
+        `import type { ${importSchemas.join(
+          ', '
+        )} } from '@/lib/openapi/zod/${group}'`
+      )
+    }
+    lines.push(``)
+    lines.push(...responseExports)
+    lines.push(...bodyExports)
+
+    // Legacy type aliases for compatibility
+    if (group === 'Debts') {
+      lines.push(`export type debtsResponse = DebtsGetResponse['data'][number]`)
+      lines.push(`export type debtsRequest = DebtsCreateBody`)
+    }
+    if (group === 'Transactions') {
+      lines.push(
+        `export type TransactionResponse = TransactionsGetTransactionByIdResponse['data']`
+      )
     }
 
     if (lines.length > 3) {
@@ -374,46 +472,87 @@ function buildHttpFiles(routes, sw) {
     const fileName = extractTag(group)
     const filePath = path.join(httpDir, `${fileName}.ts`)
 
-    const lines = [
-      `import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'`,
-      `import { useToast } from '@/components/ui/toast'`,
-      `import { apiService } from '../apiServices'`,
-      `import type { `,
-    ]
+    // determine which hooks/utilities are needed
+    let needsMutation = false
+    let needsQuery = false
+    let needsQueryClient = false
+    let needsToast = false
+    for (const r of arr) {
+      if (r.method === 'GET') needsQuery = true
+      if (
+        r.method === 'POST' ||
+        r.method === 'PUT' ||
+        r.method === 'PATCH' ||
+        r.method === 'DELETE'
+      ) {
+        needsMutation = true
+        needsQueryClient = true
+        needsToast = true
+      }
+    }
+    const rqImports = [
+      needsMutation ? 'useMutation' : null,
+      needsQuery ? 'useQuery' : null,
+      needsQueryClient ? 'useQueryClient' : null,
+    ].filter(Boolean)
+    const lines = []
+    if (rqImports.length) {
+      lines.push(
+        `import { ${rqImports.join(', ')} } from '@tanstack/react-query'`
+      )
+    } else {
+      // fallback to useQuery to avoid empty import (rare)
+      lines.push(`import { useQuery } from '@tanstack/react-query'`)
+    }
+    if (needsToast) {
+      lines.push(`import { useToast } from '@/components/ui/toast'`)
+    }
+    lines.push(`import { apiService } from '../apiServices'`)
 
     // Collect all types needed
     const types = []
+    const bodySchemasImport = []
+    const responseSchemasImport = []
     for (const r of arr) {
       const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
       if (op) {
         const respSchema = pickResponseSchema(op.responses)
         if (respSchema) {
           types.push(`${r.name}Response`)
+          if (r.method === 'GET') {
+            responseSchemasImport.push(`${r.name}ResponseSchema`)
+          }
         }
         if (op.requestBody?.content?.['application/json']?.schema) {
           types.push(`${r.name}Body`)
+          bodySchemasImport.push(`${r.name}BodySchema`)
         }
       }
     }
 
-    if (types.length > 0) {
-      lines[3] += `${types.join(', ')} } from './Type/${fileName}.type'`
-    } else {
-      lines[3] += `} from './Type/${fileName}.type'`
-    }
+    // omit unused type imports to avoid TS6192
 
-    lines.push(``)
-    lines.push(`const BASE = '/${group.toLowerCase()}' as const`)
+    if (bodySchemasImport.length > 0 || responseSchemasImport.length > 0) {
+      lines.push(
+        `import { ${[...responseSchemasImport, ...bodySchemasImport].join(
+          ', '
+        )} } from '@/lib/openapi/zod/${group}'`
+      )
+    }
     lines.push(``)
 
     // Generate hooks from routes
+    const createdHooks = new Set()
     for (const r of arr) {
       const op = sw.paths?.[r.path]?.[r.method.toLowerCase()]
       if (!op) continue
 
       const hookName = `use${r.name}`
-      const pathParams = extractParams(op.parameters || [])
-      const hasParams = pathParams.length > 0
+      createdHooks.add(hookName)
+      const pathParamNamesFromPath = (r.path.match(/\{([^}]+)\}/g) || []).map(
+        s => s.slice(1, -1)
+      )
+      const hasParams = pathParamNamesFromPath.length > 0
       const hasQuery = (op.parameters || []).some(p => p.in === 'query')
       const _hasBody = !!op.requestBody?.content?.['application/json']?.schema
       const friendlyName = fileName.replace(/-/g, ' ').trim()
@@ -424,11 +563,39 @@ function buildHttpFiles(routes, sw) {
         )
         lines.push(`  return useQuery({`)
         lines.push(
-          `    queryKey: ['${fileName}-${r.method.toLowerCase()}', params],`
+          `    queryKey: ['get-${fileName}', ${hasParams || hasQuery ? 'params' : 'undefined'}],`
         )
-        lines.push(
-          `    queryFn: async () => apiService.get('${r.path}', ${hasParams || hasQuery ? 'params' : ''}),`
-        )
+        lines.push(`    queryFn: async (): Promise<any> => {`)
+        let buildPathLine = `const _path = '${r.path}'`
+        for (const pName of pathParamNamesFromPath) {
+          buildPathLine += `.replace('{${pName}}', encodeURIComponent(String((params ?? {})['${pName}'] ?? '')))`
+        }
+        lines.push(`      ${buildPathLine}`)
+        if (hasQuery) {
+          const queryParamNames = (op.parameters || [])
+            .filter(p => p.in === 'query')
+            .map(p => p.name)
+          lines.push(`      const _usp = new URLSearchParams()`)
+          for (const qName of queryParamNames) {
+            lines.push(
+              `      if ((params ?? {})['${qName}'] !== undefined && (params ?? {})['${qName}'] !== null) { _usp.append('${qName}', String((params ?? {})['${qName}'])) }`
+            )
+          }
+          lines.push(
+            `      const _url = _path + (_usp.toString() ? \`?\${_usp.toString()}\` : '')`
+          )
+        } else {
+          lines.push(`      const _url = _path`)
+        }
+        lines.push(`      const res = await apiService.get(_url)`)
+        if (responseSchemasImport.includes(`${r.name}ResponseSchema`)) {
+          lines.push(
+            `      return ${r.name}ResponseSchema.safeParse(res).success ? ${r.name}ResponseSchema.parse(res) : res`
+          )
+        } else {
+          lines.push(`      return res`)
+        }
+        lines.push(`    },`)
         lines.push(
           `    enabled: ${hasParams ? 'Object.values(params || {}).every(Boolean)' : 'true'},`
         )
@@ -444,12 +611,27 @@ function buildHttpFiles(routes, sw) {
         lines.push(`  const { success, error } = useToast()`)
         lines.push(``)
         lines.push(`  return useMutation({`)
+        const pathParamsNames = pathParamNamesFromPath
+        if (_hasBody && bodySchemasImport.includes(`${r.name}BodySchema`)) {
+          lines.push(
+            `    mutationFn: async (data: any) => { const parsed = ${r.name}BodySchema.parse(data); let _path = '${r.path}';`
+          )
+        } else {
+          lines.push(
+            `    mutationFn: async (data: any) => { let _path = '${r.path}';`
+          )
+        }
+        for (const pName of pathParamsNames) {
+          lines.push(
+            `      _path = _path.replace('{${pName}}', encodeURIComponent(String((data ?? {})['${pName}'] ?? '')))`
+          )
+        }
         lines.push(
-          `    mutationFn: async (data: any) => apiService.${r.method === 'POST' ? 'post' : r.method === 'PUT' ? 'put' : 'patch'}('${r.path}', data),`
+          `      return apiService.${r.method === 'POST' ? 'post' : r.method === 'PUT' ? 'put' : 'patch'}(_path, ${_hasBody && bodySchemasImport.includes(`${r.name}BodySchema`) ? 'parsed' : 'data'}) },`
         )
         lines.push(`    onSuccess: () => {`)
         lines.push(
-          `      queryClient.invalidateQueries({ queryKey: ['${fileName}'] })`
+          `      queryClient.invalidateQueries({ queryKey: ['get-${fileName}'] })`
         )
         const successMsg =
           r.method === 'POST'
@@ -472,12 +654,27 @@ function buildHttpFiles(routes, sw) {
         lines.push(`  const { success, error } = useToast()`)
         lines.push(``)
         lines.push(`  return useMutation({`)
-        lines.push(
-          `    mutationFn: async (id: string) => apiService.delete('${r.path}'.replace('{id}', id)),`
-        )
+        const pathParamsNames = pathParamNamesFromPath
+        if (pathParamsNames.length === 1) {
+          const pName = pathParamsNames[0]
+          lines.push(
+            `    mutationFn: async (${pName}: string) => apiService.delete('${r.path}'.replace('{${pName}}', ${pName})),`
+          )
+        } else {
+          // Fallback to object params if multiple path params
+          lines.push(
+            `    mutationFn: async (params: any) => { let _path = '${r.path}';`
+          )
+          for (const pName of pathParamsNames) {
+            lines.push(
+              `      _path = _path.replace('{${pName}}', encodeURIComponent(String((params ?? {})['${pName}'] ?? '')))`
+            )
+          }
+          lines.push(`      return apiService.delete(_path) },`)
+        }
         lines.push(`    onSuccess: () => {`)
         lines.push(
-          `      queryClient.invalidateQueries({ queryKey: ['${fileName}'] })`
+          `      queryClient.invalidateQueries({ queryKey: ['get-${fileName}'] })`
         )
         lines.push(
           `      success('${friendlyName.charAt(0).toUpperCase() + friendlyName.slice(1)} deletado com sucesso')`
@@ -492,6 +689,41 @@ function buildHttpFiles(routes, sw) {
         lines.push(`}`)
       }
       lines.push(``)
+    }
+
+    // Backwards-compatibility aliases
+    let singular = group.endsWith('s') ? group.slice(0, -1) : group
+    if (group === 'Categories') singular = 'Category'
+    if (createdHooks.has(`use${group}Create`)) {
+      lines.push(`export { use${group}Create as useCreate${singular} }`)
+    }
+    if (createdHooks.has(`use${group}UpdateById`)) {
+      lines.push(`export { use${group}UpdateById as useUpdate${singular} }`)
+    }
+    if (group === 'Categories') {
+      lines.push(`export { useCategoriesCreate as useCreateCategory }`)
+      lines.push(`export { useCategoriesUpdateById as useUpdateCategory }`)
+      lines.push(
+        `export { useCategoriesDeleteCateoriesById as useDeleteCategory }`
+      )
+    } else {
+      if (createdHooks.has(`use${group}DeleteById`)) {
+        lines.push(`export { use${group}DeleteById as useDelete${singular} }`)
+      }
+    }
+    if (createdHooks.has(`use${group}Get`)) {
+      lines.push(`export { use${group}Get as useGet${group} }`)
+    }
+    if (createdHooks.has(`use${group}GetById`)) {
+      const aliasA = `useGet${group}ById`
+      const aliasB = `useGet${singular}ById`
+      lines.push(`export { use${group}GetById as ${aliasA} }`)
+      if (aliasB !== aliasA) {
+        lines.push(`export { use${group}GetById as ${aliasB} }`)
+      }
+    }
+    if (createdHooks.has(`use${group}GetByUser`)) {
+      lines.push(`export { use${group}GetByUser as useGet${group}ByUser }`)
     }
 
     fs.writeFileSync(filePath, lines.join('\n'), 'utf-8')

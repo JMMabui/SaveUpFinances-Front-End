@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/sheet'
 import { COLORS } from '@/constants/colors'
 import { useUpdateAccount } from '@/lib/HTTP/account'
-import { useCreateTransaction } from '@/lib/HTTP/transactions'
+import { useCreateTransaction } from '@/lib/HTTP/transaction'
 
 interface TransferModalProps {
   onClose: () => void

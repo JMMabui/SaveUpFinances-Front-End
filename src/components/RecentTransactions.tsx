@@ -1,6 +1,6 @@
 import { ArrowDownLeft, ArrowUpRight, MoreHorizontal } from 'lucide-react'
 import { useGetCategories } from '@/lib/HTTP/categories'
-import { useGetTransactionsByUser } from '@/lib/HTTP/transactions'
+import { useTransactionGetTransactionsByUser } from '@/lib/HTTP/transaction'
 import { COLORS } from '../constants/colors'
 import { Button, Spinner } from './ui'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
@@ -9,7 +9,7 @@ export function RecentTransactions() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const { data: transactionsData, isLoading: loadingTx } =
-    useGetTransactionsByUser(userId)
+    useTransactionGetTransactionsByUser({ userId })
   const { data: categoriesData, isLoading: loadingCat } = useGetCategories()
 
   const transactions = (transactionsData?.data || []).slice(0, 8)

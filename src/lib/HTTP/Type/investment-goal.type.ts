@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { InvestmentGoalsPostInvestmentGoalBodySchema } from '@/lib/openapi/zod/InvestmentGoals'
+import type { InvestmentGoalsCreateInvestmentGoalBodySchema } from '@/lib/openapi/zod/InvestmentGoals'
 
 export interface investmentResponse {
   name: string
@@ -12,5 +12,5 @@ export interface investmentResponse {
 }
 
 export type investmentRequest = z.infer<
-  typeof InvestmentGoalsPostInvestmentGoalBodySchema
+  typeof InvestmentGoalsCreateInvestmentGoalBodySchema
 >

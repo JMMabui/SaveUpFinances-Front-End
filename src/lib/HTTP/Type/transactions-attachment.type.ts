@@ -1,8 +1,12 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.164Z
+// Generated on: 2026-02-05T09:14:22.074Z
 import { z } from 'zod'
+import type { TransactionsAttachmentCreateTransactionAttachmentBodySchema, TransactionsAttachmentCreateTransactionAttachmentResponseSchema, TransactionsAttachmentGetTransactionAttachmentResponseSchema, TransactionsAttachmentGetTransactionAttachmentByIdResponseSchema, TransactionsAttachmentUpdateTransactionAttachmentByIdBodySchema, TransactionsAttachmentUpdateTransactionAttachmentByIdResponseSchema, TransactionsAttachmentDeleteTransactionAttachmentByIdResponseSchema } from '@/lib/openapi/zod/TransactionsAttachment'
 
-export const TransactionsAttachmentPostTransactionAttachmentBodySchema = z.object({ "fileUrl": z.string(), "fileType": z.string(), "transactionId": z.string(), "expensesId": z.union([z.string(), z.null()]).optional() })
-export type TransactionsAttachmentPostTransactionAttachmentBody = z.infer<typeof TransactionsAttachmentPostTransactionAttachmentBodySchema>
-export const TransactionsAttachmentPutTransactionAttachmentByIdBodySchema = z.object({ "fileUrl": z.string(), "fileType": z.string(), "transactionId": z.string(), "expensesId": z.union([z.string(), z.null()]).optional(), "id": z.string() })
-export type TransactionsAttachmentPutTransactionAttachmentByIdBody = z.infer<typeof TransactionsAttachmentPutTransactionAttachmentByIdBodySchema>
+export type TransactionsAttachmentCreateTransactionAttachmentResponse = z.infer<typeof TransactionsAttachmentCreateTransactionAttachmentResponseSchema>
+export type TransactionsAttachmentGetTransactionAttachmentResponse = z.infer<typeof TransactionsAttachmentGetTransactionAttachmentResponseSchema>
+export type TransactionsAttachmentGetTransactionAttachmentByIdResponse = z.infer<typeof TransactionsAttachmentGetTransactionAttachmentByIdResponseSchema>
+export type TransactionsAttachmentUpdateTransactionAttachmentByIdResponse = z.infer<typeof TransactionsAttachmentUpdateTransactionAttachmentByIdResponseSchema>
+export type TransactionsAttachmentDeleteTransactionAttachmentByIdResponse = z.infer<typeof TransactionsAttachmentDeleteTransactionAttachmentByIdResponseSchema>
+export type TransactionsAttachmentCreateTransactionAttachmentBody = z.infer<typeof TransactionsAttachmentCreateTransactionAttachmentBodySchema>
+export type TransactionsAttachmentUpdateTransactionAttachmentByIdBody = z.infer<typeof TransactionsAttachmentUpdateTransactionAttachmentByIdBodySchema>

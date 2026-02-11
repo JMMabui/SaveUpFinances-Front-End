@@ -15,12 +15,12 @@ const DebtPaymentsList = ({
   onEdit,
   onDelete,
 }: DebtPaymentsListProps) => {
-  const { request } = useApi()
+  const { execute } = useApi()
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja excluir este pagamento?')) {
       try {
-        await request(() => debtPaymentsService.delete(id))
+        await execute(() => debtPaymentsService.delete(id))
         onDelete()
       } catch (_error) {
         alert('Erro ao excluir pagamento')

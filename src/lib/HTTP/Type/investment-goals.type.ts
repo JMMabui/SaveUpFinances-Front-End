@@ -1,8 +1,11 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.156Z
+// Generated on: 2026-02-05T09:14:21.804Z
 import { z } from 'zod'
+import type { InvestmentGoalsCreateInvestmentGoalBodySchema, InvestmentGoalsCreateInvestmentGoalResponseSchema, InvestmentGoalsGetInvestmentGoalResponseSchema, InvestmentGoalsUpdateInvestmentGoalByIdBodySchema, InvestmentGoalsUpdateInvestmentGoalByIdResponseSchema, InvestmentGoalsDeleteInvestmentGoalByIdResponseSchema } from '@/lib/openapi/zod/InvestmentGoals'
 
-export const InvestmentGoalsPostInvestmentGoalBodySchema = z.object({ "name": z.string(), "targetAmount": z.number(), "currentAmount": z.number().optional(), "targetDate": z.string(), "investmentId": z.string() })
-export type InvestmentGoalsPostInvestmentGoalBody = z.infer<typeof InvestmentGoalsPostInvestmentGoalBodySchema>
-export const InvestmentGoalsPutInvestmentGoalByIdBodySchema = z.object({ "name": z.string().optional(), "targetAmount": z.number().optional(), "currentAmount": z.number().optional(), "targetDate": z.string().optional(), "investmentId": z.string().optional() })
-export type InvestmentGoalsPutInvestmentGoalByIdBody = z.infer<typeof InvestmentGoalsPutInvestmentGoalByIdBodySchema>
+export type InvestmentGoalsCreateInvestmentGoalResponse = z.infer<typeof InvestmentGoalsCreateInvestmentGoalResponseSchema>
+export type InvestmentGoalsGetInvestmentGoalResponse = z.infer<typeof InvestmentGoalsGetInvestmentGoalResponseSchema>
+export type InvestmentGoalsUpdateInvestmentGoalByIdResponse = z.infer<typeof InvestmentGoalsUpdateInvestmentGoalByIdResponseSchema>
+export type InvestmentGoalsDeleteInvestmentGoalByIdResponse = z.infer<typeof InvestmentGoalsDeleteInvestmentGoalByIdResponseSchema>
+export type InvestmentGoalsCreateInvestmentGoalBody = z.infer<typeof InvestmentGoalsCreateInvestmentGoalBodySchema>
+export type InvestmentGoalsUpdateInvestmentGoalByIdBody = z.infer<typeof InvestmentGoalsUpdateInvestmentGoalByIdBodySchema>

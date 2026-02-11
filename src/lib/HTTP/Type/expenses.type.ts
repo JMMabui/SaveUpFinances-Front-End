@@ -1,44 +1,14 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.116Z
+// Generated on: 2026-02-05T09:14:21.458Z
 import { z } from 'zod'
+import type { ExpensesCreateBodySchema, ExpensesCreateResponseSchema, ExpensesGetResponseSchema, ExpensesGetByIdResponseSchema, ExpensesUpdateByIdBodySchema, ExpensesUpdateByIdResponseSchema, ExpensesDeleteByIdResponseSchema, ExpensesGetByUserResponseSchema, ExpensesGetByCategoryResponseSchema } from '@/lib/openapi/zod/Expenses'
 
-export const ExpensesPostExpensesBodySchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  date: z.string(),
-  month: z.number(),
-  year: z.number(),
-  categoryId: z.string(),
-  accountId: z.string(),
-  userId: z.string(),
-})
-export type ExpensesPostExpensesBody = z.infer<
-  typeof ExpensesPostExpensesBodySchema
->
-export const ExpensesPutExpensesByIdBodySchema = z.object({
-  description: z.string().optional(),
-  amount: z.number().optional(),
-  date: z.string().optional(),
-  month: z.number().optional(),
-  year: z.number().optional(),
-  categoryId: z.string().optional(),
-  accountId: z.string().optional(),
-  userId: z.string().optional(),
-})
-export type ExpensesPutExpensesByIdBody = z.infer<
-  typeof ExpensesPutExpensesByIdBodySchema
->
-
-export interface ExpensesResponse {
-  id: string
-  description: string
-  amount: number
-  date: string
-  month: number
-  year: number
-  categoryId: string
-  accountId: string
-  userId: string
-  createdAt: string
-  updatedAt: string
-}
+export type ExpensesCreateResponse = z.infer<typeof ExpensesCreateResponseSchema>
+export type ExpensesGetResponse = z.infer<typeof ExpensesGetResponseSchema>
+export type ExpensesGetByIdResponse = z.infer<typeof ExpensesGetByIdResponseSchema>
+export type ExpensesUpdateByIdResponse = z.infer<typeof ExpensesUpdateByIdResponseSchema>
+export type ExpensesDeleteByIdResponse = z.infer<typeof ExpensesDeleteByIdResponseSchema>
+export type ExpensesGetByUserResponse = z.infer<typeof ExpensesGetByUserResponseSchema>
+export type ExpensesGetByCategoryResponse = z.infer<typeof ExpensesGetByCategoryResponseSchema>
+export type ExpensesCreateBody = z.infer<typeof ExpensesCreateBodySchema>
+export type ExpensesUpdateByIdBody = z.infer<typeof ExpensesUpdateByIdBodySchema>

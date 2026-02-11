@@ -12,7 +12,7 @@ interface BankModalProps {
 }
 
 const BankModal = ({ bank, onClose, onSuccess }: BankModalProps) => {
-  const { request, loading } = useApi()
+  const { execute, loading } = useApi()
   const [formData, setFormData] = useState({
     bankName: '',
     logoUrl: '',
@@ -36,9 +36,9 @@ const BankModal = ({ bank, onClose, onSuccess }: BankModalProps) => {
     e.preventDefault()
     try {
       if (bank?.id) {
-        await request(() => banksService.update(bank.id, formData))
+        await execute(() => banksService.update(bank.id, formData))
       } else {
-        await request(() => banksService.create(formData))
+        await execute(() => banksService.create(formData))
       }
       onSuccess()
     } catch (_error) {

@@ -1,14 +1,20 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.014Z
+// Generated on: 2026-02-05T09:14:19.681Z
 import { z } from 'zod'
+import type { UsersCreateBodySchema, UsersCreateResponseSchema, UsersGetResponseSchema, UsersGetByIdResponseSchema, UsersUpdateByIdBodySchema, UsersUpdateByIdResponseSchema, UsersDeleteByIdResponseSchema, UsersGetByIdProfileResponseSchema, UsersUpdateByIdProfileBodySchema, UsersUpdateByIdProfileResponseSchema, UsersCreateByIdChangePasswordBodySchema, UsersCreateByIdChangePasswordResponseSchema, UsersGetByIdSettingsResponseSchema, UsersUpdateByIdSettingsBodySchema, UsersUpdateByIdSettingsResponseSchema } from '@/lib/openapi/zod/Users'
 
-export const UsersPostUsersBodySchema = z.object({ "name": z.string(), "surname": z.string(), "email": z.string(), "password": z.string(), "contact": z.string() })
-export type UsersPostUsersBody = z.infer<typeof UsersPostUsersBodySchema>
-export const UsersPutUsersByIdBodySchema = z.object({ "name": z.string().optional(), "surname": z.string().optional(), "email": z.string().optional(), "password": z.string().optional(), "contact": z.string().optional(), "updateAt": z.string().optional() })
-export type UsersPutUsersByIdBody = z.infer<typeof UsersPutUsersByIdBodySchema>
-export const UsersPutUsersByIdProfileBodySchema = z.object({ "name": z.string().optional(), "surname": z.string().optional(), "contact": z.string().optional() })
-export type UsersPutUsersByIdProfileBody = z.infer<typeof UsersPutUsersByIdProfileBodySchema>
-export const UsersPostUsersByIdChangePasswordBodySchema = z.object({ "currentPassword": z.string(), "newPassword": z.string(), "confirmPassword": z.string() })
-export type UsersPostUsersByIdChangePasswordBody = z.infer<typeof UsersPostUsersByIdChangePasswordBodySchema>
-export const UsersPutUsersByIdSettingsBodySchema = z.object({ "language": z.enum(["pt-BR", "en-US", "es-ES"]).optional(), "currency": z.enum(["MZN", "USD", "EUR", "GBP", "BRL", "JPY", "CNY", "INR", "RUB", "AUD", "CAD"]).optional(), "theme": z.enum(["light", "dark", "auto"]).optional(), "timezone": z.string().optional(), "dateFormat": z.string().optional(), "twoFactorEnabled": z.boolean().optional() })
-export type UsersPutUsersByIdSettingsBody = z.infer<typeof UsersPutUsersByIdSettingsBodySchema>
+export type UsersCreateResponse = z.infer<typeof UsersCreateResponseSchema>
+export type UsersGetResponse = z.infer<typeof UsersGetResponseSchema>
+export type UsersGetByIdResponse = z.infer<typeof UsersGetByIdResponseSchema>
+export type UsersUpdateByIdResponse = z.infer<typeof UsersUpdateByIdResponseSchema>
+export type UsersDeleteByIdResponse = z.infer<typeof UsersDeleteByIdResponseSchema>
+export type UsersGetByIdProfileResponse = z.infer<typeof UsersGetByIdProfileResponseSchema>
+export type UsersUpdateByIdProfileResponse = z.infer<typeof UsersUpdateByIdProfileResponseSchema>
+export type UsersCreateByIdChangePasswordResponse = z.infer<typeof UsersCreateByIdChangePasswordResponseSchema>
+export type UsersGetByIdSettingsResponse = z.infer<typeof UsersGetByIdSettingsResponseSchema>
+export type UsersUpdateByIdSettingsResponse = z.infer<typeof UsersUpdateByIdSettingsResponseSchema>
+export type UsersCreateBody = z.infer<typeof UsersCreateBodySchema>
+export type UsersUpdateByIdBody = z.infer<typeof UsersUpdateByIdBodySchema>
+export type UsersUpdateByIdProfileBody = z.infer<typeof UsersUpdateByIdProfileBodySchema>
+export type UsersCreateByIdChangePasswordBody = z.infer<typeof UsersCreateByIdChangePasswordBodySchema>
+export type UsersUpdateByIdSettingsBody = z.infer<typeof UsersUpdateByIdSettingsBodySchema>

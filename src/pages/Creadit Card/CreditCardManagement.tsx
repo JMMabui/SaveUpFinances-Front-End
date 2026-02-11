@@ -6,28 +6,21 @@ import { Button } from '@/components/ui/button'
 import { COLORS } from '@/constants/colors'
 import { useGetCreditCardsByUser } from '@/lib/HTTP/credit-card'
 
-interface CreditCard {
-  id: string
-  name: string
-  limit: number
-  dueDay: number
-}
-
 export function CreditCardManagement() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const { data } = useGetCreditCardsByUser(userId)
 
-  const cards: CreditCard[] = data?.data || []
+  const cards = (data?.data || []) as any[]
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedCard, setSelectedCard] = useState<CreditCard | null>(null)
+  const [selectedCard, setSelectedCard] = useState<any | null>(null)
 
   const handleAddCard = () => {
     setSelectedCard(null)
     setIsModalOpen(true)
   }
 
-  const handleEditCard = (card: CreditCard) => {
+  const handleEditCard = (card: any) => {
     setSelectedCard(card)
     setIsModalOpen(true)
   }
@@ -51,7 +44,6 @@ export function CreditCardManagement() {
           onClose={() => setIsModalOpen(false)}
         />
       )}
-
     </MainLayout>
   )
 }

@@ -1,8 +1,8 @@
 import type { z } from 'zod'
-import type { AccountsBalancePostAccountBalanceBodySchema } from '@/lib/openapi/zod/AccountsBalance'
+import type { AccountsBalanceCreateAccountBalanceBodySchema } from '@/lib/openapi/zod/AccountsBalance'
 
 export type accountBalanceRequest = z.infer<
-  typeof AccountsBalancePostAccountBalanceBodySchema
+  typeof AccountsBalanceCreateAccountBalanceBodySchema
 >
 
 export interface accountBalanceResponse {

@@ -1,4 +1,3 @@
-import { Console } from 'console'
 import {
   AlertTriangle,
   CreditCard,
@@ -12,7 +11,7 @@ import { useGetCreditCardsByUser } from '@/lib/HTTP/credit-card'
 import { useGetDebtsByUser } from '@/lib/HTTP/debts'
 import { useGetExpensesByUser } from '@/lib/HTTP/expenses'
 import { useGetIncomeByUser } from '@/lib/HTTP/income'
-import type { accountsResponse } from '@/lib/HTTP/Type/account.type'
+import type { accountResponse } from '@/lib/HTTP/Type/account.type'
 import { formatCurrency } from '@/lib/utils'
 import { COLORS } from '../constants/colors'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
@@ -94,23 +93,23 @@ export function QuickStats() {
   const { data: incomeData, isLoading: loadingIncome } =
     useGetIncomeByUser(userId)
   const { data: expensesData, isLoading: loadingExpenses } =
-    useGetExpensesByUser(userId)
-  const { data: debtsData, isLoading: loadingDebts } = useGetDebtsByUser(userId)
+    useGetExpensesByUser({ userId })
+  const { data: debtsData, isLoading: loadingDebts } =
+    useGetDebtsByUser({ userId })
   const { data: creditCardsData, isLoading: loadingCards } =
-    useGetCreditCardsByUser(userId)
+    useGetCreditCardsByUser({ userId })
 
-  const accounts: accountsResponse = accountsData?.data || []
+  const accountsContainer = accountsData?.data as any
+  const accounts: accountResponse[] = Array.isArray(accountsContainer)
+    ? accountsContainer
+    : accountsContainer?.accounts || []
 
   console.log('Accounts', accounts)
 
-  const totalAmount = accounts?.totalAmount || 0
-
-  const totalBalance = Array.isArray(accounts)
-    ? accounts.reduce(
-      (sum: number, acc: any) => sum + (Number(acc?.balance) || 0),
-      0
-    )
-    : 0
+  const totalBalance = accounts.reduce(
+    (sum: number, acc: any) => sum + (Number(acc?.balance) || 0),
+    0
+  )
 
   console.log('Total Balance:', totalBalance)
 

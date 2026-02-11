@@ -36,7 +36,7 @@ class ApiInterceptorManager {
 
     try {
       const response = await fetch(
-        `${apiClient.config.baseURL}${endpoint}`,
+        `${apiClient.getConfig().baseURL}${endpoint}`,
         config
       )
 

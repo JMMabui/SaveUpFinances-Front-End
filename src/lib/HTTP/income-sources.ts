@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import {
-  IncomeSourcePostIncomeSourceBodySchema,
-  IncomeSourcePutIncomeSourceByIdBodySchema,
+  IncomeSourceCreateBodySchema,
+  IncomeSourceUpdateByIdBodySchema,
 } from '@/lib/openapi/zod/IncomeSource'
 import { apiService } from '../apiServices'
 import type {
@@ -35,7 +35,7 @@ export function useCreateIncomeSource() {
   return useMutation({
     mutationKey: ['income-sources', 'create'],
     mutationFn: async (data: incomeSourceRequest) => {
-      const parsed = IncomeSourcePostIncomeSourceBodySchema.parse(data)
+      const parsed = IncomeSourceCreateBodySchema.parse(data)
       return apiService.post<incomeSourceResponse>(BASE, parsed)
     },
     onSuccess: () => {
@@ -54,7 +54,7 @@ export function useUpdateIncomeSource(id: string) {
   return useMutation({
     mutationKey: ['income-sources', 'update', id],
     mutationFn: async (data: Partial<incomeSourceRequest>) => {
-      const parsed = IncomeSourcePutIncomeSourceByIdBodySchema.parse(data)
+      const parsed = IncomeSourceUpdateByIdBodySchema.parse(data)
       return apiService.put<incomeSourceResponse>(`${BASE}/${id}`, parsed)
     },
     onSuccess: () => {

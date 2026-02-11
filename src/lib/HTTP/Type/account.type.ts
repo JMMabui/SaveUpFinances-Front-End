@@ -1,8 +1,8 @@
 import type { z } from 'zod'
-import type { AccountsPostAccountsBodySchema } from '@/lib/openapi/zod/Accounts'
+import type { AccountsCreateBodySchema } from '@/lib/openapi/zod/Accounts'
 import type { accountBalanceResponse } from './account-balance.type'
 import type { accountSourceResponse } from './account-source.type'
-import type { bankResponde } from './banks.type'
+import type { BanksGetResponse } from './banks.type'
 import type { debtPaymentsResponse } from './debts-payments.type'
 import type { TransactionResponse } from './transactions.type'
 
@@ -47,7 +47,7 @@ export interface account {
 
 export interface accountsResponse {
   accounts: {
-    bank: bankResponde[]
+    bank: BanksGetResponse['data'][number][]
     AccountBalance: accountBalanceResponse[]
     AccountSource: accountSourceResponse[]
     transactions: TransactionResponse[]
@@ -72,4 +72,4 @@ export interface accountResponse {
   updatedAt: Date
 }
 
-export type accountRequest = z.infer<typeof AccountsPostAccountsBodySchema>
+export type accountRequest = z.infer<typeof AccountsCreateBodySchema>

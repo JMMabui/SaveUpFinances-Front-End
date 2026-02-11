@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import { apiService } from '../apiServices'
+import { IncomesGetIncomeResponseSchema, IncomesGetIncomeByIdResponseSchema, IncomesGetIncomeByUserResponseSchema, IncomesGetIncomeSourceByIdResponseSchema, IncomesCreateIncomeBodySchema, IncomesUpdateIncomeByIdBodySchema } from '@/lib/openapi/zod/Incomes'
 
-const _BASE = '/incomes' as const
-
-export function useIncomesPostIncome() {
+export function useIncomesCreateIncome() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.post('/income', data),
+    mutationFn: async (data: any) => { const parsed = IncomesCreateIncomeBodySchema.parse(data); let _path = '/income';
+      return apiService.post(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['incomes'] })
+      queryClient.invalidateQueries({ queryKey: ['get-incomes'] })
       success('Incomes criado com sucesso')
     },
     onError: () => {
@@ -22,28 +22,40 @@ export function useIncomesPostIncome() {
 
 export function useIncomesGetIncome() {
   return useQuery({
-    queryKey: ['incomes-get', params],
-    queryFn: async () => apiService.get('/income'),
+    queryKey: ['get-incomes', undefined],
+    queryFn: async (): Promise<any> => {
+      const _path = '/income'
+      const _url = _path
+      const res = await apiService.get(_url)
+      return IncomesGetIncomeResponseSchema.safeParse(res).success ? IncomesGetIncomeResponseSchema.parse(res) : res
+    },
     enabled: true,
   })
 }
 
 export function useIncomesGetIncomeById(params?: any) {
   return useQuery({
-    queryKey: ['incomes-get', params],
-    queryFn: async () => apiService.get('/income/{id}', params),
+    queryKey: ['get-incomes', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/income/{id}'.replace('{id}', encodeURIComponent(String((params ?? {})['id'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return IncomesGetIncomeByIdResponseSchema.safeParse(res).success ? IncomesGetIncomeByIdResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useIncomesPutIncomeById() {
+export function useIncomesUpdateIncomeById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.put('/income/{id}', data),
+    mutationFn: async (data: any) => { const parsed = IncomesUpdateIncomeByIdBodySchema.parse(data); let _path = '/income/{id}';
+      _path = _path.replace('{id}', encodeURIComponent(String((data ?? {})['id'] ?? '')))
+      return apiService.put(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['incomes'] })
+      queryClient.invalidateQueries({ queryKey: ['get-incomes'] })
       success('Incomes atualizado com sucesso')
     },
     onError: () => {
@@ -57,10 +69,9 @@ export function useIncomesDeleteIncomeById() {
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (id: string) =>
-      apiService.delete('/income/{id}'.replace('{id}', id)),
+    mutationFn: async (id: string) => apiService.delete('/income/{id}'.replace('{id}', id)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['incomes'] })
+      queryClient.invalidateQueries({ queryKey: ['get-incomes'] })
       success('Incomes deletado com sucesso')
     },
     onError: () => {
@@ -69,18 +80,28 @@ export function useIncomesDeleteIncomeById() {
   })
 }
 
-export function useIncomesGetIncomeUserByUserId(params?: any) {
+export function useIncomesGetIncomeByUser(params?: any) {
   return useQuery({
-    queryKey: ['incomes-get', params],
-    queryFn: async () => apiService.get('/income/user/{userId}', params),
+    queryKey: ['get-incomes', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/income/user/{userId}'.replace('{userId}', encodeURIComponent(String((params ?? {})['userId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return IncomesGetIncomeByUserResponseSchema.safeParse(res).success ? IncomesGetIncomeByUserResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useIncomesGetIncomeSourceBySourceId(params?: any) {
+export function useIncomesGetIncomeSourceById(params?: any) {
   return useQuery({
-    queryKey: ['incomes-get', params],
-    queryFn: async () => apiService.get('/income/source/{sourceId}', params),
+    queryKey: ['get-incomes', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/income/source/{sourceId}'.replace('{sourceId}', encodeURIComponent(String((params ?? {})['sourceId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return IncomesGetIncomeSourceByIdResponseSchema.safeParse(res).success ? IncomesGetIncomeSourceByIdResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }

@@ -1,18 +1,7 @@
-import type { z } from 'zod'
-import type { TransactionPostTransactionBodySchema } from '@/lib/openapi/zod/Transaction'
+// Auto-generated from Swagger API
+// Generated on: 2026-02-05T09:14:21.981Z
+import { z } from 'zod'
+import type { TransactionsGetTransactionByIdResponseSchema } from '@/lib/openapi/zod/Transactions'
 
-export interface TransactionResponse {
-  id: string
-  userId: string
-  accountId: string
-  date: string | Date
-  description: string
-  amount: number
-  categoryId: string
-  createdAt?: string | Date
-  updatedAt?: string | Date
-}
-
-export type TransactionRequest = z.infer<
-  typeof TransactionPostTransactionBodySchema
->
+export type TransactionsGetTransactionByIdResponse = z.infer<typeof TransactionsGetTransactionByIdResponseSchema>
+export type TransactionResponse = TransactionsGetTransactionByIdResponse['data']

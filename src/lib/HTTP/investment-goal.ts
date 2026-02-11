@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import {
-  InvestmentGoalsPostInvestmentGoalBodySchema,
-  InvestmentGoalsPutInvestmentGoalByIdBodySchema,
+  InvestmentGoalsCreateInvestmentGoalBodySchema,
+  InvestmentGoalsUpdateInvestmentGoalByIdBodySchema,
 } from '@/lib/openapi/zod/InvestmentGoals'
 import { apiService } from '../apiServices'
 import type {
@@ -35,7 +35,7 @@ export function useCreateInvestmentGoal() {
   return useMutation({
     mutationKey: ['investment-goal', 'create'],
     mutationFn: async (data: investmentRequest) => {
-      const parsed = InvestmentGoalsPostInvestmentGoalBodySchema.parse(data)
+      const parsed = InvestmentGoalsCreateInvestmentGoalBodySchema.parse(data)
       return apiService.post<investmentResponse>(BASE, parsed)
     },
     onSuccess: () => {
@@ -54,7 +54,7 @@ export function useUpdateInvestmentGoal(id: string) {
   return useMutation({
     mutationKey: ['investment-goal', 'update', id],
     mutationFn: async (data: Partial<investmentRequest>) => {
-      const parsed = InvestmentGoalsPutInvestmentGoalByIdBodySchema.parse(data)
+      const parsed = InvestmentGoalsUpdateInvestmentGoalByIdBodySchema.parse(data)
       return apiService.put<investmentResponse>(`${BASE}/${id}`, parsed)
     },
     onSuccess: () => {

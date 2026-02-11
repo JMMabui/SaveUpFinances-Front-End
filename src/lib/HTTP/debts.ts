@@ -1,72 +1,68 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import { apiService } from '../apiServices'
-import {
-  DebtsPostDebtsBodySchema,
-  DebtsPutDebtsByIdBodySchema,
-  type DebtsResponse,
-} from './Type/debts.type'
+import { DebtsGetResponseSchema, DebtsGetByIdResponseSchema, DebtsGetByUserResponseSchema, DebtsCreateBodySchema, DebtsUpdateByIdBodySchema } from '@/lib/openapi/zod/Debts'
 
-const _BASE = '/debts' as const
-
-export function useDebtsPostDebts() {
+export function useDebtsCreate() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.post('/debts', data),
+    mutationFn: async (data: any) => { const parsed = DebtsCreateBodySchema.parse(data); let _path = '/debts';
+      return apiService.post(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debts'] })
-      success('Dívida criada com sucesso')
+      queryClient.invalidateQueries({ queryKey: ['get-debts'] })
+      success('Debts criado com sucesso')
     },
     onError: () => {
-      error('Erro ao criar dívida')
+      error('Erro ao criar debts')
     },
   })
 }
 
-export function useCreateDebt() {
-  const queryClient = useQueryClient()
-  const { success, error } = useToast()
-  return useMutation({
-    mutationFn: async (data: any) => {
-      const parsed = DebtsPostDebtsBodySchema.parse(data)
-      return apiService.post('/debts', parsed)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debts'] })
-      success('Dívida criada com sucesso')
-    },
-    onError: () => {
-      error('Erro ao criar dívida')
-    },
-  })
-}
-
-export function useDebtsGetDebts(params?: any) {
+export function useDebtsGet(params?: any) {
   return useQuery({
-    queryKey: ['debts-get', params],
-    queryFn: async () => apiService.get('/debts'),
+    queryKey: ['get-debts', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/debts'
+      const _usp = new URLSearchParams()
+      if ((params ?? {})['page'] !== undefined && (params ?? {})['page'] !== null) { _usp.append('page', String((params ?? {})['page'])) }
+      if ((params ?? {})['pageSize'] !== undefined && (params ?? {})['pageSize'] !== null) { _usp.append('pageSize', String((params ?? {})['pageSize'])) }
+      if ((params ?? {})['userId'] !== undefined && (params ?? {})['userId'] !== null) { _usp.append('userId', String((params ?? {})['userId'])) }
+      if ((params ?? {})['status'] !== undefined && (params ?? {})['status'] !== null) { _usp.append('status', String((params ?? {})['status'])) }
+      if ((params ?? {})['dateFrom'] !== undefined && (params ?? {})['dateFrom'] !== null) { _usp.append('dateFrom', String((params ?? {})['dateFrom'])) }
+      if ((params ?? {})['dateTo'] !== undefined && (params ?? {})['dateTo'] !== null) { _usp.append('dateTo', String((params ?? {})['dateTo'])) }
+      const _url = _path + (_usp.toString() ? `?${_usp.toString()}` : '')
+      const res = await apiService.get(_url)
+      return DebtsGetResponseSchema.safeParse(res).success ? DebtsGetResponseSchema.parse(res) : res
+    },
     enabled: true,
   })
 }
 
-export function useDebtsGetDebtsById(params?: any) {
+export function useDebtsGetById(params?: any) {
   return useQuery({
-    queryKey: ['debts-get', params],
-    queryFn: async () => apiService.get(`/debts/${params?.id}`),
+    queryKey: ['get-debts', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/debts/{id}'.replace('{id}', encodeURIComponent(String((params ?? {})['id'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return DebtsGetByIdResponseSchema.safeParse(res).success ? DebtsGetByIdResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useDebtsPutDebtsById() {
+export function useDebtsUpdateById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.put(`/debts/${data?.id}`, data),
+    mutationFn: async (data: any) => { const parsed = DebtsUpdateByIdBodySchema.parse(data); let _path = '/debts/{id}';
+      _path = _path.replace('{id}', encodeURIComponent(String((data ?? {})['id'] ?? '')))
+      return apiService.put(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debts'] })
+      queryClient.invalidateQueries({ queryKey: ['get-debts'] })
       success('Debts atualizado com sucesso')
     },
     onError: () => {
@@ -75,32 +71,14 @@ export function useDebtsPutDebtsById() {
   })
 }
 
-export function useUpdateDebt(id: string) {
-  const queryClient = useQueryClient()
-  const { success, error } = useToast()
-  return useMutation({
-    mutationFn: async (data: any) => {
-      const parsed = DebtsPutDebtsByIdBodySchema.parse(data)
-      return apiService.put(`/debts/${id}`, parsed)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debts'] })
-      success('Dívida atualizada com sucesso')
-    },
-    onError: () => {
-      error('Erro ao atualizar dívida')
-    },
-  })
-}
-
-export function useDebtsDeleteDebtsById() {
+export function useDebtsDeleteById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (id: string) => apiService.delete(`/debts/${id}`),
+    mutationFn: async (id: string) => apiService.delete('/debts/{id}'.replace('{id}', id)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debts'] })
+      queryClient.invalidateQueries({ queryKey: ['get-debts'] })
       success('Debts deletado com sucesso')
     },
     onError: () => {
@@ -109,19 +87,23 @@ export function useDebtsDeleteDebtsById() {
   })
 }
 
-export function useDebtsGetDebtsUserByUserId(params?: any) {
+export function useDebtsGetByUser(params?: any) {
   return useQuery({
-    queryKey: ['debts-get', params],
-    queryFn: async () => apiService.get(`/debts/user/${params?.userId}`),
+    queryKey: ['get-debts', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/debts/user/{userId}'.replace('{userId}', encodeURIComponent(String((params ?? {})['userId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return DebtsGetByUserResponseSchema.safeParse(res).success ? DebtsGetByUserResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useGetDebtsByUser(userId: string) {
-  return useQuery({
-    queryKey: ['debts-by-user', userId],
-    queryFn: async () =>
-      apiService.get<DebtsResponse[]>(`/debts/user/${userId}`),
-    enabled: !!userId,
-  })
-}
+export { useDebtsCreate as useCreateDebt }
+export { useDebtsUpdateById as useUpdateDebt }
+export { useDebtsDeleteById as useDeleteDebt }
+export { useDebtsGet as useGetDebts }
+export { useDebtsGetById as useGetDebtsById }
+export { useDebtsGetById as useGetDebtById }
+export { useDebtsGetByUser as useGetDebtsByUser }

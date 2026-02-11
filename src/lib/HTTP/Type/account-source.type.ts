@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { AccountsSourcePostAccountSourceBodySchema } from '@/lib/openapi/zod/AccountsSource'
+import type { AccountsSourceCreateAccountSourceBodySchema } from '@/lib/openapi/zod/AccountsSource'
 
 export interface accountSourceResponse {
   id: string
@@ -10,5 +10,5 @@ export interface accountSourceResponse {
 }
 
 export type accountSourceRequest = z.infer<
-  typeof AccountsSourcePostAccountSourceBodySchema
+  typeof AccountsSourceCreateAccountSourceBodySchema
 >

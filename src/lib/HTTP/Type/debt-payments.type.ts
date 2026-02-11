@@ -1,8 +1,13 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.115Z
+// Generated on: 2026-02-05T09:14:21.371Z
 import { z } from 'zod'
+import type { DebtPaymentsCreateBodySchema, DebtPaymentsCreateResponseSchema, DebtPaymentsGetResponseSchema, DebtPaymentsGetByIdResponseSchema, DebtPaymentsUpdateByIdBodySchema, DebtPaymentsUpdateByIdResponseSchema, DebtPaymentsDeleteByIdResponseSchema, DebtPaymentsGetDebtByIdResponseSchema } from '@/lib/openapi/zod/DebtPayments'
 
-export const DebtPaymentsPostDebtPaymentsBodySchema = z.object({ "amount": z.number(), "date": z.string(), "debtId": z.string(), "accountId": z.union([z.string(), z.null()]).optional(), "userId": z.string(), "notes": z.union([z.string(), z.null()]).optional() })
-export type DebtPaymentsPostDebtPaymentsBody = z.infer<typeof DebtPaymentsPostDebtPaymentsBodySchema>
-export const DebtPaymentsPutDebtPaymentsByIdBodySchema = z.object({ "amount": z.number().optional(), "date": z.string().optional(), "debtId": z.string().optional(), "accountId": z.union([z.string(), z.null()]).optional(), "userId": z.string().optional(), "notes": z.union([z.string(), z.null()]).optional() })
-export type DebtPaymentsPutDebtPaymentsByIdBody = z.infer<typeof DebtPaymentsPutDebtPaymentsByIdBodySchema>
+export type DebtPaymentsCreateResponse = z.infer<typeof DebtPaymentsCreateResponseSchema>
+export type DebtPaymentsGetResponse = z.infer<typeof DebtPaymentsGetResponseSchema>
+export type DebtPaymentsGetByIdResponse = z.infer<typeof DebtPaymentsGetByIdResponseSchema>
+export type DebtPaymentsUpdateByIdResponse = z.infer<typeof DebtPaymentsUpdateByIdResponseSchema>
+export type DebtPaymentsDeleteByIdResponse = z.infer<typeof DebtPaymentsDeleteByIdResponseSchema>
+export type DebtPaymentsGetDebtByIdResponse = z.infer<typeof DebtPaymentsGetDebtByIdResponseSchema>
+export type DebtPaymentsCreateBody = z.infer<typeof DebtPaymentsCreateBodySchema>
+export type DebtPaymentsUpdateByIdBody = z.infer<typeof DebtPaymentsUpdateByIdBodySchema>

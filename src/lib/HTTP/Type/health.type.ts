@@ -1,6 +1,6 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.179Z
+// Generated on: 2026-02-05T09:14:22.348Z
 import { z } from 'zod'
+import type { HealthGetResponseSchema } from '@/lib/openapi/zod/Health'
 
-export const HealthGetHealthResponseSchema = z.object({ "status": z.string(), "uptime": z.number().optional(), "timestamp": z.number().optional(), "database": z.string().optional() })
-export type HealthGetHealthResponse = z.infer<typeof HealthGetHealthResponseSchema>
+export type HealthGetResponse = z.infer<typeof HealthGetResponseSchema>

@@ -49,13 +49,17 @@ const DebtPaymentModal = ({
 
   const loadDependencies = async () => {
     try {
+      const debtsPromise = execute(() => debtsService.getAll())
+      const accountsPromise = user?.id
+        ? execute(() => accountsService.getByUserId(user.id))
+        : Promise.resolve(null)
       const [debtsResp, accountsResp] = await Promise.all([
-        execute(() => debtsService.getAll()),
-        execute(() => accountsService.getAll()),
+        debtsPromise,
+        accountsPromise,
       ])
       if (debtsResp?.data)
         setDebts(Array.isArray(debtsResp.data) ? debtsResp.data : [])
-      if (accountsResp?.data)
+      if (accountsResp && (accountsResp as any)?.data)
         setAccounts(Array.isArray(accountsResp.data) ? accountsResp.data : [])
     } catch (error) {
       console.error('Erro ao carregar dependências:', error)
@@ -77,7 +81,7 @@ const DebtPaymentModal = ({
       const dataToSend = {
         ...formData,
         amount: parseFloat(formData.amount),
-        date: dayjs(formData.date).toISOString(),
+        date: new Date(formData.date),
         userId: user?.id,
       }
 

@@ -1,8 +1,12 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.074Z
+// Generated on: 2026-02-05T09:14:20.590Z
 import { z } from 'zod'
+import type { CategoriesCreateBodySchema, CategoriesCreateResponseSchema, CategoriesGetResponseSchema, CategoriesGetByIdResponseSchema, CategoriesUpdateByIdBodySchema, CategoriesUpdateByIdResponseSchema, CategoriesDeleteCateoriesByIdResponseSchema } from '@/lib/openapi/zod/Categories'
 
-export const CategoriesPostCategoriesBodySchema = z.object({ "categoryName": z.string(), "categoryType": z.enum(["income", "expense", "transfer", "investment", "creditCardExpense", "debtPayment", "debtIncome", "budgetExpense", "budgetIncome", "creditCardPayment", "creditCardTransfer", "creditCardIncome"]), "icon": z.union([z.string(), z.null()]).optional(), "color": z.union([z.string(), z.null()]).optional() })
-export type CategoriesPostCategoriesBody = z.infer<typeof CategoriesPostCategoriesBodySchema>
-export const CategoriesPutCategoriesByIdBodySchema = z.object({ "categoryName": z.string().optional(), "categoryType": z.enum(["income", "expense", "transfer", "investment", "creditCardExpense", "debtPayment", "debtIncome", "budgetExpense", "budgetIncome", "creditCardPayment", "creditCardTransfer", "creditCardIncome"]).optional(), "icon": z.union([z.string(), z.null()]).optional(), "color": z.union([z.string(), z.null()]).optional() })
-export type CategoriesPutCategoriesByIdBody = z.infer<typeof CategoriesPutCategoriesByIdBodySchema>
+export type CategoriesCreateResponse = z.infer<typeof CategoriesCreateResponseSchema>
+export type CategoriesGetResponse = z.infer<typeof CategoriesGetResponseSchema>
+export type CategoriesGetByIdResponse = z.infer<typeof CategoriesGetByIdResponseSchema>
+export type CategoriesUpdateByIdResponse = z.infer<typeof CategoriesUpdateByIdResponseSchema>
+export type CategoriesDeleteCateoriesByIdResponse = z.infer<typeof CategoriesDeleteCateoriesByIdResponseSchema>
+export type CategoriesCreateBody = z.infer<typeof CategoriesCreateBodySchema>
+export type CategoriesUpdateByIdBody = z.infer<typeof CategoriesUpdateByIdBodySchema>

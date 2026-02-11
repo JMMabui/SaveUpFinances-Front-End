@@ -6,14 +6,12 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { COLORS } from '@/constants/colors'
 import { useDeleteCategory, useGetCategories } from '@/lib/HTTP/categories'
-import type { CategoriesPostCategoriesBodySchema } from '@/lib/openapi/zod/Categories'
+import type { CategoriesCreateBodySchema } from '@/lib/openapi/zod/Categories'
 
 interface Category {
-  id: string
+  id?: string
   categoryName: string
-  categoryType: z.infer<
-    typeof CategoriesPostCategoriesBodySchema
-  >['categoryType']
+  categoryType: z.infer<typeof CategoriesCreateBodySchema>['categoryType']
   icon: string | null
   color: string | null
   parentId?: string | null
@@ -24,7 +22,7 @@ interface Category {
 
 export function CategoryManagement() {
   const { data } = useGetCategories()
-  const categoriesData: Category[] = data?.data || []
+  const categoriesData = (data?.data || []) as any[]
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(

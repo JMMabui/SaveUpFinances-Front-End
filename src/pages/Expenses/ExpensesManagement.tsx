@@ -7,14 +7,6 @@ import { COLORS } from '@/constants/colors'
 import { useGetCategories } from '@/lib/HTTP/categories'
 import { useDeleteExpense, useGetExpensesByUser } from '@/lib/HTTP/expenses'
 
-interface Expense {
-  id: string
-  date: string
-  description: string
-  amount: number
-  categoryId: string
-}
-
 export function ExpensesManagement() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
@@ -23,11 +15,11 @@ export function ExpensesManagement() {
   const { data: categoriesQuery } = useGetCategories()
   const deleteExpense = useDeleteExpense()
 
-  const expenses: Expense[] = expensesQuery?.data || []
-  const categories = categoriesQuery?.data || []
+  const expenses = (expensesQuery?.data || []) as any[]
+  const categories = (categoriesQuery?.data || []) as any[]
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
+  const [selectedExpense, setSelectedExpense] = useState<any | null>(null)
 
   return (
     <MainLayout>

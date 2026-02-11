@@ -1,40 +1,15 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.103Z
+// Generated on: 2026-02-05T09:14:21.153Z
 import { z } from 'zod'
+import type { DebtsCreateBodySchema, DebtsCreateResponseSchema, DebtsGetResponseSchema, DebtsGetByIdResponseSchema, DebtsUpdateByIdBodySchema, DebtsUpdateByIdResponseSchema, DebtsDeleteByIdResponseSchema, DebtsGetByUserResponseSchema } from '@/lib/openapi/zod/Debts'
 
-export const DebtsPostDebtsBodySchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  creditor: z.string(),
-  dueDate: z.string(),
-  status: z.enum(['PENDING', 'PAID']),
-  notes: z.union([z.string(), z.null()]).optional(),
-  paymentDate: z.union([z.string(), z.null()]).optional(),
-  userId: z.string(),
-})
-export type DebtsPostDebtsBody = z.infer<typeof DebtsPostDebtsBodySchema>
-export const DebtsPutDebtsByIdBodySchema = z.object({
-  description: z.string().optional(),
-  amount: z.number().optional(),
-  creditor: z.string().optional(),
-  dueDate: z.string().optional(),
-  status: z.enum(['PENDING', 'PAID']).optional(),
-  notes: z.union([z.string(), z.null()]).optional(),
-  paymentDate: z.union([z.string(), z.null()]).optional(),
-  userId: z.string().optional(),
-})
-export type DebtsPutDebtsByIdBody = z.infer<typeof DebtsPutDebtsByIdBodySchema>
-
-export interface DebtsResponse {
-  id: string
-  alertTriggered: boolean
-  amount: string
-  createdAt: string
-  creditor: string
-  description: string
-  dueDate: string
-  notes: string | null
-  paymentDate: string | null
-  status: string
-  userId: string
-}
+export type DebtsCreateResponse = z.infer<typeof DebtsCreateResponseSchema>
+export type DebtsGetResponse = z.infer<typeof DebtsGetResponseSchema>
+export type DebtsGetByIdResponse = z.infer<typeof DebtsGetByIdResponseSchema>
+export type DebtsUpdateByIdResponse = z.infer<typeof DebtsUpdateByIdResponseSchema>
+export type DebtsDeleteByIdResponse = z.infer<typeof DebtsDeleteByIdResponseSchema>
+export type DebtsGetByUserResponse = z.infer<typeof DebtsGetByUserResponseSchema>
+export type DebtsCreateBody = z.infer<typeof DebtsCreateBodySchema>
+export type DebtsUpdateByIdBody = z.infer<typeof DebtsUpdateByIdBodySchema>
+export type debtsResponse = DebtsGetResponse['data']['items'][number]
+export type debtsRequest = DebtsCreateBody

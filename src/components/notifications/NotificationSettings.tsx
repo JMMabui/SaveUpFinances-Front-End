@@ -9,7 +9,7 @@ interface NotificationSettingsProps {
 }
 
 const NotificationSettings = ({ onClose }: NotificationSettingsProps) => {
-  const { request, loading } = useApi()
+  const { execute, loading } = useApi()
   const [preferences, setPreferences] = useState({
     emailNotifications: true,
     inAppNotifications: true,
@@ -33,7 +33,7 @@ const NotificationSettings = ({ onClose }: NotificationSettingsProps) => {
 
   const loadPreferences = async () => {
     try {
-      const response = await request(() =>
+      const response = await execute(() =>
         notificationsService.getPreferences()
       )
       if (response?.data) {
@@ -51,7 +51,7 @@ const NotificationSettings = ({ onClose }: NotificationSettingsProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await request(() => notificationsService.updatePreferences(preferences))
+      await execute(() => notificationsService.updatePreferences(preferences))
       setMessage({
         type: 'success',
         text: 'Preferências atualizadas com sucesso!',

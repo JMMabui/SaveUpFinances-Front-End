@@ -1,25 +1,14 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.099Z
+// Generated on: 2026-02-05T09:14:21.059Z
 import { z } from 'zod'
+import type { CreditCardExpensesCreateBodySchema, CreditCardExpensesCreateResponseSchema, CreditCardExpensesGetResponseSchema, CreditCardExpensesGetByIdResponseSchema, CreditCardExpensesUpdateByIdBodySchema, CreditCardExpensesUpdateByIdResponseSchema, CreditCardExpensesDeleteByIdResponseSchema, CreditCardExpensesGetByCreditCardResponseSchema, CreditCardExpensesGetByCategoryResponseSchema } from '@/lib/openapi/zod/CreditCardExpenses'
 
-export const CreditCardExpensesPostCreditCardExpensesBodySchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  date: z.string(),
-  categoryId: z.string(),
-  creditCardId: z.string(),
-})
-export type CreditCardExpensesPostCreditCardExpensesBody = z.infer<
-  typeof CreditCardExpensesPostCreditCardExpensesBodySchema
->
-export const CreditCardExpensesPutCreditCardExpensesByIdBodySchema = z.object({
-  id: z.string().optional(),
-  description: z.string().optional(),
-  amount: z.number().optional(),
-  date: z.string().optional(),
-  categoryId: z.string().optional(),
-  creditCardId: z.string().optional(),
-})
-export type CreditCardExpensesPutCreditCardExpensesByIdBody = z.infer<
-  typeof CreditCardExpensesPutCreditCardExpensesByIdBodySchema
->
+export type CreditCardExpensesCreateResponse = z.infer<typeof CreditCardExpensesCreateResponseSchema>
+export type CreditCardExpensesGetResponse = z.infer<typeof CreditCardExpensesGetResponseSchema>
+export type CreditCardExpensesGetByIdResponse = z.infer<typeof CreditCardExpensesGetByIdResponseSchema>
+export type CreditCardExpensesUpdateByIdResponse = z.infer<typeof CreditCardExpensesUpdateByIdResponseSchema>
+export type CreditCardExpensesDeleteByIdResponse = z.infer<typeof CreditCardExpensesDeleteByIdResponseSchema>
+export type CreditCardExpensesGetByCreditCardResponse = z.infer<typeof CreditCardExpensesGetByCreditCardResponseSchema>
+export type CreditCardExpensesGetByCategoryResponse = z.infer<typeof CreditCardExpensesGetByCategoryResponseSchema>
+export type CreditCardExpensesCreateBody = z.infer<typeof CreditCardExpensesCreateBodySchema>
+export type CreditCardExpensesUpdateByIdBody = z.infer<typeof CreditCardExpensesUpdateByIdBodySchema>

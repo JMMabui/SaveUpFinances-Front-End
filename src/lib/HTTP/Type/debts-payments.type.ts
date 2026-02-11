@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { DebtPaymentsPostDebtPaymentsBodySchema } from '@/lib/openapi/zod/DebtPayments'
+import type { DebtPaymentsCreateBodySchema } from '@/lib/openapi/zod/DebtPayments'
 
 export interface debtPaymentsResponse {
   id: string
@@ -12,5 +12,5 @@ export interface debtPaymentsResponse {
 }
 
 export type debtPaymentsRequest = z.infer<
-  typeof DebtPaymentsPostDebtPaymentsBodySchema
+  typeof DebtPaymentsCreateBodySchema
 >

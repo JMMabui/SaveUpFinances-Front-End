@@ -1,22 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import { apiService } from '../apiServices'
-import type {
-  CreditCardExpensesPostCreditCardExpensesBody,
-  CreditCardExpensesPutCreditCardExpensesByIdBody,
-} from './Type/credit-card-expenses.type'
+import { CreditCardExpensesGetResponseSchema, CreditCardExpensesGetByIdResponseSchema, CreditCardExpensesGetByCreditCardResponseSchema, CreditCardExpensesGetByCategoryResponseSchema, CreditCardExpensesCreateBodySchema, CreditCardExpensesUpdateByIdBodySchema } from '@/lib/openapi/zod/CreditCardExpenses'
 
-const BASE = '/credit-card-expenses' as const
-
-export function useCreditCardExpensesPostCreditCardExpenses() {
+export function useCreditCardExpensesCreate() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: CreditCardExpensesPostCreditCardExpensesBody) =>
-      apiService.post('/credit-card-expenses', data),
+    mutationFn: async (data: any) => { const parsed = CreditCardExpensesCreateBodySchema.parse(data); let _path = '/credit-card-expenses';
+      return apiService.post(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['credit-card-expenses'] })
+      queryClient.invalidateQueries({ queryKey: ['get-credit-card-expenses'] })
       success('Credit card expenses criado com sucesso')
     },
     onError: () => {
@@ -25,35 +20,42 @@ export function useCreditCardExpensesPostCreditCardExpenses() {
   })
 }
 
-export function useCreditCardExpensesGetCreditCardExpenses() {
+export function useCreditCardExpensesGet() {
   return useQuery({
-    queryKey: ['credit-card-expenses-get'],
-    queryFn: async () => apiService.get('/credit-card-expenses'),
+    queryKey: ['get-credit-card-expenses', undefined],
+    queryFn: async (): Promise<any> => {
+      const _path = '/credit-card-expenses'
+      const _url = _path
+      const res = await apiService.get(_url)
+      return CreditCardExpensesGetResponseSchema.safeParse(res).success ? CreditCardExpensesGetResponseSchema.parse(res) : res
+    },
     enabled: true,
   })
 }
 
-export function useCreditCardExpensesGetCreditCardExpensesById(params?: any) {
+export function useCreditCardExpensesGetById(params?: any) {
   return useQuery({
-    queryKey: ['credit-card-expenses-get', params],
-    queryFn: async () =>
-      apiService.get('/credit-card-expenses/{id}'.replace('{id}', params.id)),
+    queryKey: ['get-credit-card-expenses', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/credit-card-expenses/{id}'.replace('{id}', encodeURIComponent(String((params ?? {})['id'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return CreditCardExpensesGetByIdResponseSchema.safeParse(res).success ? CreditCardExpensesGetByIdResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useCreditCardExpensesPutCreditCardExpensesById() {
+export function useCreditCardExpensesUpdateById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: CreditCardExpensesPutCreditCardExpensesByIdBody) =>
-      apiService.put(
-        '/credit-card-expenses/{id}'.replace('{id}', data.id || ''),
-        data
-      ),
+    mutationFn: async (data: any) => { const parsed = CreditCardExpensesUpdateByIdBodySchema.parse(data); let _path = '/credit-card-expenses/{id}';
+      _path = _path.replace('{id}', encodeURIComponent(String((data ?? {})['id'] ?? '')))
+      return apiService.put(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['credit-card-expenses'] })
+      queryClient.invalidateQueries({ queryKey: ['get-credit-card-expenses'] })
       success('Credit card expenses atualizado com sucesso')
     },
     onError: () => {
@@ -62,15 +64,14 @@ export function useCreditCardExpensesPutCreditCardExpensesById() {
   })
 }
 
-export function useCreditCardExpensesDeleteCreditCardExpensesById() {
+export function useCreditCardExpensesDeleteById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (id: string) =>
-      apiService.delete('/credit-card-expenses/{id}'.replace('{id}', id)),
+    mutationFn: async (id: string) => apiService.delete('/credit-card-expenses/{id}'.replace('{id}', id)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['credit-card-expenses'] })
+      queryClient.invalidateQueries({ queryKey: ['get-credit-card-expenses'] })
       success('Credit card expenses deletado com sucesso')
     },
     onError: () => {
@@ -79,34 +80,35 @@ export function useCreditCardExpensesDeleteCreditCardExpensesById() {
   })
 }
 
-export function useCreditCardExpensesGetCreditCardExpensesCreditCardByCreditCardId(
-  params?: any
-) {
+export function useCreditCardExpensesGetByCreditCard(params?: any) {
   return useQuery({
-    queryKey: ['credit-card-expenses-get', params],
-    queryFn: async () =>
-      apiService.get(
-        '/credit-card-expenses/credit-card/{creditCardId}'.replace(
-          '{creditCardId}',
-          params.creditCardId
-        )
-      ),
+    queryKey: ['get-credit-card-expenses', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/credit-card-expenses/credit-card/{creditCardId}'.replace('{creditCardId}', encodeURIComponent(String((params ?? {})['creditCardId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return CreditCardExpensesGetByCreditCardResponseSchema.safeParse(res).success ? CreditCardExpensesGetByCreditCardResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useCreditCardExpensesGetCreditCardExpensesCategoryByCategoryId(
-  params?: any
-) {
+export function useCreditCardExpensesGetByCategory(params?: any) {
   return useQuery({
-    queryKey: ['credit-card-expenses-get', params],
-    queryFn: async () =>
-      apiService.get(
-        '/credit-card-expenses/category/{categoryId}'.replace(
-          '{categoryId}',
-          params.categoryId
-        )
-      ),
+    queryKey: ['get-credit-card-expenses', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/credit-card-expenses/category/{categoryId}'.replace('{categoryId}', encodeURIComponent(String((params ?? {})['categoryId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return CreditCardExpensesGetByCategoryResponseSchema.safeParse(res).success ? CreditCardExpensesGetByCategoryResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
+
+export { useCreditCardExpensesCreate as useCreateCreditCardExpense }
+export { useCreditCardExpensesUpdateById as useUpdateCreditCardExpense }
+export { useCreditCardExpensesDeleteById as useDeleteCreditCardExpense }
+export { useCreditCardExpensesGet as useGetCreditCardExpenses }
+export { useCreditCardExpensesGetById as useGetCreditCardExpensesById }
+export { useCreditCardExpensesGetById as useGetCreditCardExpenseById }

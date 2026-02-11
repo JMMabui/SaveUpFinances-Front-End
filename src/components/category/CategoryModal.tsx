@@ -20,14 +20,12 @@ import {
 } from '@/components/ui/sheet'
 import { COLORS } from '@/constants/colors'
 import { useCreateCategory, useUpdateCategory } from '@/lib/HTTP/categories'
-import type { CategoriesPostCategoriesBodySchema } from '@/lib/openapi/zod/Categories'
+import type { CategoriesCreateBodySchema } from '@/lib/openapi/zod/Categories'
 
 interface Category {
-  id: string
+  id?: string
   categoryName: string
-  categoryType: z.infer<
-    typeof CategoriesPostCategoriesBodySchema
-  >['categoryType']
+  categoryType: z.infer<typeof CategoriesCreateBodySchema>['categoryType']
   icon: string | null
   color: string | null
   parentId?: string | null
@@ -58,7 +56,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
   const mainCategories = categories.filter(c => !c.parentId)
 
   const createCategory = useCreateCategory()
-  const updateCategory = useUpdateCategory(category?.id || '')
+  const updateCategory = useUpdateCategory()
 
   // Atualiza valores ao abrir modal
   useEffect(() => {
@@ -168,7 +166,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                         Nenhuma (Categoria Principal)
                       </SelectItem>
                       {mainCategories.map(cat => (
-                        <SelectItem key={cat.id} value={cat.id}>
+                        <SelectItem key={cat.id} value={cat.id ?? ''}>
                           {cat.categoryName}
                         </SelectItem>
                       ))}

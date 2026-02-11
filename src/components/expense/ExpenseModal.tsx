@@ -46,7 +46,7 @@ export function ExpenseModal({ expense, onClose }: ExpenseModalProps) {
   const categories = categoriesQuery?.data || []
 
   const createExpense = useCreateExpense()
-  const updateExpense = useUpdateExpense(expense?.id || '')
+  const updateExpense = useUpdateExpense()
 
   useEffect(() => {
     if (expense) setFormData(expense)
@@ -71,11 +71,12 @@ export function ExpenseModal({ expense, onClose }: ExpenseModalProps) {
             e.preventDefault()
             if (expense) {
               updateExpense.mutate({
+                id: expense.id,
                 date: formData.date!,
                 description: formData.description!,
                 amount: Number(formData.amount || 0),
                 categoryId: formData.categoryId!,
-              })
+              } as any)
             } else {
               createExpense.mutate({
                 date: formData.date!,

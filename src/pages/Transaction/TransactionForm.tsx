@@ -184,7 +184,7 @@ export function TransactionForm({
             <SelectValue placeholder="Selecione uma categoria" />
           </SelectTrigger>
           <SelectContent>
-            {filteredCategories.map(category => (
+            {filteredCategories.map((category: any) => (
               <SelectItem key={category.id} value={String(category.id)}>
                 {category.label}
               </SelectItem>

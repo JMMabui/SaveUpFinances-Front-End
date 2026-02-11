@@ -108,6 +108,17 @@ export const DebtList: React.FC<DebtListProps> = ({
           </div>
         </div>
       </div>
+      <div className="flex justify-end">
+        <button
+          type="button"
+          title="Nova dívida"
+          className="px-4 py-2 rounded shadow"
+          style={{ background: COLORS.blue[50], color: COLORS.blue[700] }}
+          onClick={onAdd}
+        >
+          Adicionar
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[800px] rounded-2xl shadow-lg overflow-hidden bg-white">
           <thead>
@@ -210,7 +221,7 @@ export const DebtList: React.FC<DebtListProps> = ({
                         background: COLORS.green[50],
                         color: COLORS.green[600],
                       }}
-                      onClick={() => onPay(debt.id)}
+                      onClick={() => debt.id && onPay(debt.id)}
                     >
                       <FiCheckCircle size={18} />
                     </button>

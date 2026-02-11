@@ -1,36 +1,15 @@
 import { z } from 'zod'
-export const CreditCardExpensesPostCreditCardExpensesBodySchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  date: z.string(),
-  categoryId: z.string(),
-  creditCardId: z.string(),
-})
-export const CreditCardExpensesPostCreditCardExpensesResponseSchema =
-  z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesBodySchema = z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesResponseSchema = z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesByIdBodySchema = z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesByIdResponseSchema =
-  z.unknown()
-export const CreditCardExpensesPutCreditCardExpensesByIdBodySchema = z.object({
-  description: z.string().optional(),
-  amount: z.number().optional(),
-  date: z.string().optional(),
-  categoryId: z.string().optional(),
-  creditCardId: z.string().optional(),
-})
-export const CreditCardExpensesPutCreditCardExpensesByIdResponseSchema =
-  z.unknown()
-export const CreditCardExpensesDeleteCreditCardExpensesByIdBodySchema =
-  z.unknown()
-export const CreditCardExpensesDeleteCreditCardExpensesByIdResponseSchema =
-  z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesCreditCardByCreditCardIdBodySchema =
-  z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesCreditCardByCreditCardIdResponseSchema =
-  z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesCategoryByCategoryIdBodySchema =
-  z.unknown()
-export const CreditCardExpensesGetCreditCardExpensesCategoryByCategoryIdResponseSchema =
-  z.unknown()
+export const CreditCardExpensesCreateBodySchema = z.object({ "description": z.string(), "amount": z.number(), "date": z.string(), "categoryId": z.string(), "creditCardId": z.string() })
+export const CreditCardExpensesCreateResponseSchema = z.object({ "success": z.boolean(), "message": z.string(), "data": z.object({ "description": z.string(), "amount": z.union([z.number(), z.string(), z.object({  })]), "date": z.union([z.string()]), "categoryId": z.string(), "creditCardId": z.string(), "id": z.string().optional(), "createdAt": z.union([z.string()]).optional(), "updatedAt": z.union([z.string()]).optional() }) })
+export const CreditCardExpensesGetBodySchema = z.unknown()
+export const CreditCardExpensesGetResponseSchema = z.object({ "success": z.boolean(), "message": z.string(), "data": z.array(z.object({ "description": z.string(), "amount": z.union([z.number(), z.string(), z.object({  })]), "date": z.union([z.string()]), "categoryId": z.string(), "creditCardId": z.string(), "id": z.string().optional(), "createdAt": z.union([z.string()]).optional(), "updatedAt": z.union([z.string()]).optional() })) })
+export const CreditCardExpensesGetByIdBodySchema = z.unknown()
+export const CreditCardExpensesGetByIdResponseSchema = z.object({ "success": z.boolean(), "message": z.string(), "data": z.object({ "description": z.string(), "amount": z.union([z.number(), z.string(), z.object({  })]), "date": z.union([z.string()]), "categoryId": z.string(), "creditCardId": z.string(), "id": z.string().optional(), "createdAt": z.union([z.string()]).optional(), "updatedAt": z.union([z.string()]).optional() }) })
+export const CreditCardExpensesUpdateByIdBodySchema = z.object({ "description": z.string().optional(), "amount": z.number().optional(), "date": z.string().optional(), "categoryId": z.string().optional(), "creditCardId": z.string().optional() })
+export const CreditCardExpensesUpdateByIdResponseSchema = z.object({ "success": z.boolean(), "message": z.string(), "data": z.object({ "description": z.string(), "amount": z.union([z.number(), z.string(), z.object({  })]), "date": z.union([z.string()]), "categoryId": z.string(), "creditCardId": z.string(), "id": z.string().optional(), "createdAt": z.union([z.string()]).optional(), "updatedAt": z.union([z.string()]).optional() }) })
+export const CreditCardExpensesDeleteByIdBodySchema = z.unknown()
+export const CreditCardExpensesDeleteByIdResponseSchema = z.object({ "success": z.boolean(), "message": z.string(), "data": z.null().optional() })
+export const CreditCardExpensesGetByCreditCardBodySchema = z.unknown()
+export const CreditCardExpensesGetByCreditCardResponseSchema = z.object({ "success": z.boolean(), "message": z.string(), "data": z.array(z.object({ "description": z.string(), "amount": z.union([z.number(), z.string(), z.object({  })]), "date": z.union([z.string()]), "categoryId": z.string(), "creditCardId": z.string(), "id": z.string().optional(), "createdAt": z.union([z.string()]).optional(), "updatedAt": z.union([z.string()]).optional() })) })
+export const CreditCardExpensesGetByCategoryBodySchema = z.unknown()
+export const CreditCardExpensesGetByCategoryResponseSchema = z.object({ "success": z.boolean(), "message": z.string(), "data": z.array(z.object({ "description": z.string(), "amount": z.union([z.number(), z.string(), z.object({  })]), "date": z.union([z.string()]), "categoryId": z.string(), "creditCardId": z.string(), "id": z.string().optional(), "createdAt": z.union([z.string()]).optional(), "updatedAt": z.union([z.string()]).optional() })) })

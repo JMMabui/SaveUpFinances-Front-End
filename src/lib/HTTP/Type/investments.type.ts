@@ -1,8 +1,12 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.153Z
+// Generated on: 2026-02-05T09:14:21.734Z
 import { z } from 'zod'
+import type { InvestmentsCreateInvestmentBodySchema, InvestmentsCreateInvestmentResponseSchema, InvestmentsGetInvestmentResponseSchema, InvestmentsGetInvestmentByUserResponseSchema, InvestmentsUpdateInvestmentByIdBodySchema, InvestmentsUpdateInvestmentByIdResponseSchema, InvestmentsDeleteInvestmentByIdResponseSchema } from '@/lib/openapi/zod/Investments'
 
-export const InvestmentsPostInvestmentBodySchema = z.object({ "investimentName": z.string(), "amount": z.number(), "investmentTypeId": z.string(), "investmentGoalId": z.union([z.string(), z.null()]).optional(), "notes": z.union([z.string(), z.null()]).optional(), "userId": z.string() })
-export type InvestmentsPostInvestmentBody = z.infer<typeof InvestmentsPostInvestmentBodySchema>
-export const InvestmentsPutInvestmentByIdBodySchema = z.object({ "investimentName": z.string().optional(), "amount": z.number().optional(), "investmentTypeId": z.string().optional(), "investmentGoalId": z.union([z.string(), z.null()]).optional(), "notes": z.union([z.string(), z.null()]).optional(), "userId": z.string().optional() })
-export type InvestmentsPutInvestmentByIdBody = z.infer<typeof InvestmentsPutInvestmentByIdBodySchema>
+export type InvestmentsCreateInvestmentResponse = z.infer<typeof InvestmentsCreateInvestmentResponseSchema>
+export type InvestmentsGetInvestmentResponse = z.infer<typeof InvestmentsGetInvestmentResponseSchema>
+export type InvestmentsGetInvestmentByUserResponse = z.infer<typeof InvestmentsGetInvestmentByUserResponseSchema>
+export type InvestmentsUpdateInvestmentByIdResponse = z.infer<typeof InvestmentsUpdateInvestmentByIdResponseSchema>
+export type InvestmentsDeleteInvestmentByIdResponse = z.infer<typeof InvestmentsDeleteInvestmentByIdResponseSchema>
+export type InvestmentsCreateInvestmentBody = z.infer<typeof InvestmentsCreateInvestmentBodySchema>
+export type InvestmentsUpdateInvestmentByIdBody = z.infer<typeof InvestmentsUpdateInvestmentByIdBodySchema>

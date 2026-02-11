@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import {
-  AccountsSourcePostAccountSourceBodySchema,
-  AccountsSourcePutAccountSourceByIdBodySchema,
+  AccountsSourceCreateAccountSourceBodySchema,
+  AccountsSourceUpdateAccountSourceByIdBodySchema,
 } from '@/lib/openapi/zod/AccountsSource'
 import { apiService } from '../apiServices'
 import type {
@@ -35,7 +35,7 @@ export function useCreateAccountSource() {
   return useMutation({
     mutationKey: ['account-source', 'create'],
     mutationFn: async (data: accountSourceRequest) => {
-      const parsed = AccountsSourcePostAccountSourceBodySchema.parse(data)
+      const parsed = AccountsSourceCreateAccountSourceBodySchema.parse(data)
       return apiService.post<accountSourceResponse>(BASE, parsed)
     },
     onSuccess: () => {
@@ -54,7 +54,7 @@ export function useUpdateAccountSource(id: string) {
   return useMutation({
     mutationKey: ['account-source', 'update', id],
     mutationFn: async (data: Partial<accountSourceRequest>) => {
-      const parsed = AccountsSourcePutAccountSourceByIdBodySchema.parse(data)
+      const parsed = AccountsSourceUpdateAccountSourceByIdBodySchema.parse(data)
       return apiService.put<accountSourceResponse>(`${BASE}/${id}`, parsed)
     },
     onSuccess: () => {

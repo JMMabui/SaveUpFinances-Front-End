@@ -1,12 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiService } from '../apiServices'
+import { HealthGetResponseSchema } from '@/lib/openapi/zod/Health'
 
-const _BASE = '/health' as const
-
-export function useHealthGetHealth() {
+export function useHealthGet() {
   return useQuery({
-    queryKey: ['health-get', params],
-    queryFn: async () => apiService.get('/health'),
+    queryKey: ['get-health', undefined],
+    queryFn: async (): Promise<any> => {
+      const _path = '/health'
+      const _url = _path
+      const res = await apiService.get(_url)
+      return HealthGetResponseSchema.safeParse(res).success ? HealthGetResponseSchema.parse(res) : res
+    },
     enabled: true,
   })
 }
+
+export { useHealthGet as useGetHealth }

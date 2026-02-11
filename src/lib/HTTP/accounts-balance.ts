@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import { apiService } from '../apiServices'
+import { AccountsBalanceGetAccountBalanceResponseSchema, AccountsBalanceGetAccountBalanceByIdResponseSchema, AccountsBalanceGetAccountBalanceByAccountResponseSchema, AccountsBalanceCreateAccountBalanceBodySchema, AccountsBalanceUpdateAccountBalanceByIdBodySchema } from '@/lib/openapi/zod/AccountsBalance'
 
-const _BASE = '/accountsbalance' as const
-
-export function useAccountsBalancePostAccountBalance() {
+export function useAccountsBalanceCreateAccountBalance() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.post('/account-balance', data),
+    mutationFn: async (data: any) => { const parsed = AccountsBalanceCreateAccountBalanceBodySchema.parse(data); let _path = '/account-balance';
+      return apiService.post(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['accounts-balance'] })
+      queryClient.invalidateQueries({ queryKey: ['get-accounts-balance'] })
       success('Accounts balance criado com sucesso')
     },
     onError: () => {
@@ -22,29 +22,40 @@ export function useAccountsBalancePostAccountBalance() {
 
 export function useAccountsBalanceGetAccountBalance() {
   return useQuery({
-    queryKey: ['accounts-balance-get', params],
-    queryFn: async () => apiService.get('/account-balance'),
+    queryKey: ['get-accounts-balance', undefined],
+    queryFn: async (): Promise<any> => {
+      const _path = '/account-balance'
+      const _url = _path
+      const res = await apiService.get(_url)
+      return AccountsBalanceGetAccountBalanceResponseSchema.safeParse(res).success ? AccountsBalanceGetAccountBalanceResponseSchema.parse(res) : res
+    },
     enabled: true,
   })
 }
 
 export function useAccountsBalanceGetAccountBalanceById(params?: any) {
   return useQuery({
-    queryKey: ['accounts-balance-get', params],
-    queryFn: async () => apiService.get('/account-balance/{id}', params),
+    queryKey: ['get-accounts-balance', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/account-balance/{id}'.replace('{id}', encodeURIComponent(String((params ?? {})['id'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return AccountsBalanceGetAccountBalanceByIdResponseSchema.safeParse(res).success ? AccountsBalanceGetAccountBalanceByIdResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useAccountsBalancePutAccountBalanceById() {
+export function useAccountsBalanceUpdateAccountBalanceById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) =>
-      apiService.put('/account-balance/{id}', data),
+    mutationFn: async (data: any) => { const parsed = AccountsBalanceUpdateAccountBalanceByIdBodySchema.parse(data); let _path = '/account-balance/{id}';
+      _path = _path.replace('{id}', encodeURIComponent(String((data ?? {})['id'] ?? '')))
+      return apiService.put(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['accounts-balance'] })
+      queryClient.invalidateQueries({ queryKey: ['get-accounts-balance'] })
       success('Accounts balance atualizado com sucesso')
     },
     onError: () => {
@@ -58,10 +69,9 @@ export function useAccountsBalanceDeleteAccountBalanceById() {
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (id: string) =>
-      apiService.delete('/account-balance/{id}'.replace('{id}', id)),
+    mutationFn: async (id: string) => apiService.delete('/account-balance/{id}'.replace('{id}', id)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['accounts-balance'] })
+      queryClient.invalidateQueries({ queryKey: ['get-accounts-balance'] })
       success('Accounts balance deletado com sucesso')
     },
     onError: () => {
@@ -70,13 +80,15 @@ export function useAccountsBalanceDeleteAccountBalanceById() {
   })
 }
 
-export function useAccountsBalanceGetAccountBalanceAccountByAccountId(
-  params?: any
-) {
+export function useAccountsBalanceGetAccountBalanceByAccount(params?: any) {
   return useQuery({
-    queryKey: ['accounts-balance-get', params],
-    queryFn: async () =>
-      apiService.get('/account-balance/account/{accountId}', params),
+    queryKey: ['get-accounts-balance', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/account-balance/account/{accountId}'.replace('{accountId}', encodeURIComponent(String((params ?? {})['accountId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return AccountsBalanceGetAccountBalanceByAccountResponseSchema.safeParse(res).success ? AccountsBalanceGetAccountBalanceByAccountResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }

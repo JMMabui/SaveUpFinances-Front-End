@@ -14,12 +14,12 @@ const InvestmentTypesList = ({
   onEdit,
   onDelete,
 }: InvestmentTypesListProps) => {
-  const { request } = useApi()
+  const { execute } = useApi()
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja excluir este tipo?')) {
       try {
-        await request(() => investmentTypesService.delete(id))
+        await execute(() => investmentTypesService.delete(id))
         onDelete()
       } catch (_error) {
         alert('Erro ao excluir tipo')

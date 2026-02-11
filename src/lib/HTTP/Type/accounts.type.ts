@@ -1,8 +1,15 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.050Z
+// Generated on: 2026-02-05T09:14:19.878Z
 import { z } from 'zod'
+import type { AccountsCreateBodySchema, AccountsCreateResponseSchema, AccountsGetResponseSchema, AccountsGetByIdResponseSchema, AccountsUpdateByIdBodySchema, AccountsUpdateByIdResponseSchema, AccountsDeleteByIdResponseSchema, AccountsGetByIdTransactionsResponseSchema, AccountsGetDefaultByUserResponseSchema, AccountsGetAccountByUserResponseSchema } from '@/lib/openapi/zod/Accounts'
 
-export const AccountsPostAccountsBodySchema = z.object({ "accountName": z.string(), "accountType": z.enum(["current", "savings", "salary", "digital", "joint", "investment"]), "accountHolderName": z.string(), "balance": z.number().optional(), "userId": z.string(), "bankId": z.union([z.string(), z.null()]).optional(), "currency": z.enum(["MZN", "USD", "EUR", "GBP", "BRL", "JPY", "CNY", "INR", "RUB", "AUD", "CAD"]).optional(), "isActive": z.boolean().optional(), "isDefault": z.boolean().optional(), "isJoint": z.boolean().optional() })
-export type AccountsPostAccountsBody = z.infer<typeof AccountsPostAccountsBodySchema>
-export const AccountsPutAccountsByIdBodySchema = z.object({ "accountName": z.string().optional(), "accountType": z.enum(["current", "savings", "salary", "digital", "joint", "investment"]).optional(), "accountHolderName": z.string().optional(), "balance": z.number().optional(), "userId": z.string().optional(), "bankId": z.union([z.string(), z.null()]).optional(), "currency": z.enum(["MZN", "USD", "EUR", "GBP", "BRL", "JPY", "CNY", "INR", "RUB", "AUD", "CAD"]).optional(), "isActive": z.boolean().optional(), "isDefault": z.boolean().optional(), "isJoint": z.boolean().optional(), "updateAt": z.string().optional() })
-export type AccountsPutAccountsByIdBody = z.infer<typeof AccountsPutAccountsByIdBodySchema>
+export type AccountsCreateResponse = z.infer<typeof AccountsCreateResponseSchema>
+export type AccountsGetResponse = z.infer<typeof AccountsGetResponseSchema>
+export type AccountsGetByIdResponse = z.infer<typeof AccountsGetByIdResponseSchema>
+export type AccountsUpdateByIdResponse = z.infer<typeof AccountsUpdateByIdResponseSchema>
+export type AccountsDeleteByIdResponse = z.infer<typeof AccountsDeleteByIdResponseSchema>
+export type AccountsGetByIdTransactionsResponse = z.infer<typeof AccountsGetByIdTransactionsResponseSchema>
+export type AccountsGetDefaultByUserResponse = z.infer<typeof AccountsGetDefaultByUserResponseSchema>
+export type AccountsGetAccountByUserResponse = z.infer<typeof AccountsGetAccountByUserResponseSchema>
+export type AccountsCreateBody = z.infer<typeof AccountsCreateBodySchema>
+export type AccountsUpdateByIdBody = z.infer<typeof AccountsUpdateByIdBodySchema>

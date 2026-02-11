@@ -46,8 +46,8 @@ export function ReportsDashboard() {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const { data: incomeData } = useGetIncomeByUser(userId)
-  const { data: expensesData } = useGetExpensesByUser(userId)
-  const { data: debtsData } = useGetDebtsByUser(userId)
+  const { data: expensesData } = useGetExpensesByUser({ userId })
+  const { data: debtsData } = useGetDebtsByUser({ userId })
 
   const incomes = incomeData?.data || []
   const expenses = expensesData?.data || []

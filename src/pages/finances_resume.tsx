@@ -11,7 +11,7 @@ export function FinancesResume() {
   const { data: incomeData, isLoading: loadingIncome } =
     useGetIncomeByUser(userId)
   const { data: expensesData, isLoading: loadingExpenses } =
-    useGetExpensesByUser(userId)
+    useGetExpensesByUser({ userId })
 
   const incomes = incomeData?.data || []
   const expenses = expensesData?.data || []

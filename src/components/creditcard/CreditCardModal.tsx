@@ -38,7 +38,7 @@ export function CreditCardModal({ card, onClose }: CreditCardModalProps) {
   const userId =
     typeof window !== 'undefined' ? localStorage.getItem('userId') || '' : ''
   const create = useCreateCreditCard()
-  const update = useUpdateCreditCard(card?.id || '')
+  const update = useUpdateCreditCard()
 
   return (
     <Sheet
@@ -59,6 +59,7 @@ export function CreditCardModal({ card, onClose }: CreditCardModalProps) {
             e.preventDefault()
             if (card) {
               update.mutate({
+                id: card.id,
                 name: formData.name!,
                 limit: formData.limit!,
                 dueDay: formData.dueDay!,

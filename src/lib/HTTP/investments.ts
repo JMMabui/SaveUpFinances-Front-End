@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import { apiService } from '../apiServices'
+import { InvestmentsGetInvestmentResponseSchema, InvestmentsGetInvestmentByUserResponseSchema, InvestmentsCreateInvestmentBodySchema, InvestmentsUpdateInvestmentByIdBodySchema } from '@/lib/openapi/zod/Investments'
 
-const _BASE = '/investments' as const
-
-export function useInvestmentsPostInvestment() {
+export function useInvestmentsCreateInvestment() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.post('/investment', data),
+    mutationFn: async (data: any) => { const parsed = InvestmentsCreateInvestmentBodySchema.parse(data); let _path = '/investment';
+      return apiService.post(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investments'] })
+      queryClient.invalidateQueries({ queryKey: ['get-investments'] })
       success('Investments criado com sucesso')
     },
     onError: () => {
@@ -22,28 +22,40 @@ export function useInvestmentsPostInvestment() {
 
 export function useInvestmentsGetInvestment() {
   return useQuery({
-    queryKey: ['investments-get', params],
-    queryFn: async () => apiService.get('/investment'),
+    queryKey: ['get-investments', undefined],
+    queryFn: async (): Promise<any> => {
+      const _path = '/investment'
+      const _url = _path
+      const res = await apiService.get(_url)
+      return InvestmentsGetInvestmentResponseSchema.safeParse(res).success ? InvestmentsGetInvestmentResponseSchema.parse(res) : res
+    },
     enabled: true,
   })
 }
 
-export function useInvestmentsGetInvestmentUserByUserId(params?: any) {
+export function useInvestmentsGetInvestmentByUser(params?: any) {
   return useQuery({
-    queryKey: ['investments-get', params],
-    queryFn: async () => apiService.get('/investment/user/{userId}', params),
+    queryKey: ['get-investments', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/investment/user/{userId}'.replace('{userId}', encodeURIComponent(String((params ?? {})['userId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return InvestmentsGetInvestmentByUserResponseSchema.safeParse(res).success ? InvestmentsGetInvestmentByUserResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useInvestmentsPutInvestmentById() {
+export function useInvestmentsUpdateInvestmentById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.put('/investment/{id}', data),
+    mutationFn: async (data: any) => { const parsed = InvestmentsUpdateInvestmentByIdBodySchema.parse(data); let _path = '/investment/{id}';
+      _path = _path.replace('{id}', encodeURIComponent(String((data ?? {})['id'] ?? '')))
+      return apiService.put(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investments'] })
+      queryClient.invalidateQueries({ queryKey: ['get-investments'] })
       success('Investments atualizado com sucesso')
     },
     onError: () => {
@@ -57,10 +69,9 @@ export function useInvestmentsDeleteInvestmentById() {
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (id: string) =>
-      apiService.delete('/investment/{id}'.replace('{id}', id)),
+    mutationFn: async (id: string) => apiService.delete('/investment/{id}'.replace('{id}', id)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investments'] })
+      queryClient.invalidateQueries({ queryKey: ['get-investments'] })
       success('Investments deletado com sucesso')
     },
     onError: () => {

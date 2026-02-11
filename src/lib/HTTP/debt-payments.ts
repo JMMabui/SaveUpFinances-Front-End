@@ -1,17 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import { apiService } from '../apiServices'
+import { DebtPaymentsGetResponseSchema, DebtPaymentsGetByIdResponseSchema, DebtPaymentsGetDebtByIdResponseSchema, DebtPaymentsCreateBodySchema, DebtPaymentsUpdateByIdBodySchema } from '@/lib/openapi/zod/DebtPayments'
 
-const _BASE = '/debtpayments' as const
-
-export function useDebtPaymentsPostDebtPayments() {
+export function useDebtPaymentsCreate() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) => apiService.post('/debt-payments', data),
+    mutationFn: async (data: any) => { const parsed = DebtPaymentsCreateBodySchema.parse(data); let _path = '/debt-payments';
+      return apiService.post(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debt-payments'] })
+      queryClient.invalidateQueries({ queryKey: ['get-debt-payments'] })
       success('Debt payments criado com sucesso')
     },
     onError: () => {
@@ -20,31 +20,42 @@ export function useDebtPaymentsPostDebtPayments() {
   })
 }
 
-export function useDebtPaymentsGetDebtPayments() {
+export function useDebtPaymentsGet() {
   return useQuery({
-    queryKey: ['debt-payments-get', params],
-    queryFn: async () => apiService.get('/debt-payments'),
+    queryKey: ['get-debt-payments', undefined],
+    queryFn: async (): Promise<any> => {
+      const _path = '/debt-payments'
+      const _url = _path
+      const res = await apiService.get(_url)
+      return DebtPaymentsGetResponseSchema.safeParse(res).success ? DebtPaymentsGetResponseSchema.parse(res) : res
+    },
     enabled: true,
   })
 }
 
-export function useDebtPaymentsGetDebtPaymentsById(params?: any) {
+export function useDebtPaymentsGetById(params?: any) {
   return useQuery({
-    queryKey: ['debt-payments-get', params],
-    queryFn: async () => apiService.get('/debt-payments/{id}', params),
+    queryKey: ['get-debt-payments', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/debt-payments/{id}'.replace('{id}', encodeURIComponent(String((params ?? {})['id'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return DebtPaymentsGetByIdResponseSchema.safeParse(res).success ? DebtPaymentsGetByIdResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
 
-export function useDebtPaymentsPutDebtPaymentsById() {
+export function useDebtPaymentsUpdateById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (data: any) =>
-      apiService.put('/debt-payments/{id}', data),
+    mutationFn: async (data: any) => { const parsed = DebtPaymentsUpdateByIdBodySchema.parse(data); let _path = '/debt-payments/{id}';
+      _path = _path.replace('{id}', encodeURIComponent(String((data ?? {})['id'] ?? '')))
+      return apiService.put(_path, parsed) },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debt-payments'] })
+      queryClient.invalidateQueries({ queryKey: ['get-debt-payments'] })
       success('Debt payments atualizado com sucesso')
     },
     onError: () => {
@@ -53,15 +64,14 @@ export function useDebtPaymentsPutDebtPaymentsById() {
   })
 }
 
-export function useDebtPaymentsDeleteDebtPaymentsById() {
+export function useDebtPaymentsDeleteById() {
   const queryClient = useQueryClient()
   const { success, error } = useToast()
 
   return useMutation({
-    mutationFn: async (id: string) =>
-      apiService.delete('/debt-payments/{id}'.replace('{id}', id)),
+    mutationFn: async (id: string) => apiService.delete('/debt-payments/{id}'.replace('{id}', id)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['debt-payments'] })
+      queryClient.invalidateQueries({ queryKey: ['get-debt-payments'] })
       success('Debt payments deletado com sucesso')
     },
     onError: () => {
@@ -70,10 +80,22 @@ export function useDebtPaymentsDeleteDebtPaymentsById() {
   })
 }
 
-export function useDebtPaymentsGetDebtPaymentsDebtByDebtId(params?: any) {
+export function useDebtPaymentsGetDebtById(params?: any) {
   return useQuery({
-    queryKey: ['debt-payments-get', params],
-    queryFn: async () => apiService.get('/debt-payments/debt/{debtId}', params),
+    queryKey: ['get-debt-payments', params],
+    queryFn: async (): Promise<any> => {
+      const _path = '/debt-payments/debt/{debtId}'.replace('{debtId}', encodeURIComponent(String((params ?? {})['debtId'] ?? '')))
+      const _url = _path
+      const res = await apiService.get(_url)
+      return DebtPaymentsGetDebtByIdResponseSchema.safeParse(res).success ? DebtPaymentsGetDebtByIdResponseSchema.parse(res) : res
+    },
     enabled: Object.values(params || {}).every(Boolean),
   })
 }
+
+export { useDebtPaymentsCreate as useCreateDebtPayment }
+export { useDebtPaymentsUpdateById as useUpdateDebtPayment }
+export { useDebtPaymentsDeleteById as useDeleteDebtPayment }
+export { useDebtPaymentsGet as useGetDebtPayments }
+export { useDebtPaymentsGetById as useGetDebtPaymentsById }
+export { useDebtPaymentsGetById as useGetDebtPaymentById }

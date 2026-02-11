@@ -16,7 +16,7 @@ const InvestmentTypeModal = ({
   onClose,
   onSuccess,
 }: InvestmentTypeModalProps) => {
-  const { request, loading } = useApi()
+  const { execute, loading } = useApi()
   const [formData, setFormData] = useState({
     categoryName: '',
     categoryType: 'investment',
@@ -46,9 +46,9 @@ const InvestmentTypeModal = ({
     e.preventDefault()
     try {
       if (type?.id) {
-        await request(() => investmentTypesService.update(type.id, formData))
+        await execute(() => investmentTypesService.update(type.id, formData))
       } else {
-        await request(() => investmentTypesService.create(formData))
+        await execute(() => investmentTypesService.create(formData))
       }
       onSuccess()
     } catch (_error) {
@@ -86,7 +86,7 @@ const InvestmentTypeModal = ({
               value={formData.icon}
               onChange={handleChange}
               placeholder="📈"
-              maxLength="2"
+              maxLength={2}
             />
           </div>
 

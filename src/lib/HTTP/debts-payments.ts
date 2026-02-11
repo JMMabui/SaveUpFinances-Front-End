@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/components/ui/toast'
 import {
-  DebtPaymentsPostDebtPaymentsBodySchema,
-  DebtPaymentsPutDebtPaymentsByIdBodySchema,
+  DebtPaymentsCreateBodySchema,
+  DebtPaymentsUpdateByIdBodySchema,
 } from '@/lib/openapi/zod/DebtPayments'
 import { apiService } from '../apiServices'
 import type {
@@ -35,7 +35,7 @@ export function useCreateDebtPayment() {
   return useMutation({
     mutationKey: ['debts-payments', 'create'],
     mutationFn: async (data: debtPaymentsRequest) => {
-      const parsed = DebtPaymentsPostDebtPaymentsBodySchema.parse(data)
+      const parsed = DebtPaymentsCreateBodySchema.parse(data)
       return apiService.post<debtPaymentsResponse>(BASE, parsed)
     },
     onSuccess: () => {
@@ -54,7 +54,7 @@ export function useUpdateDebtPayment(id: string) {
   return useMutation({
     mutationKey: ['debts-payments', 'update', id],
     mutationFn: async (data: Partial<debtPaymentsRequest>) => {
-      const parsed = DebtPaymentsPutDebtPaymentsByIdBodySchema.parse(data)
+      const parsed = DebtPaymentsUpdateByIdBodySchema.parse(data)
       return apiService.put<debtPaymentsResponse>(`${BASE}/${id}`, parsed)
     },
     onSuccess: () => {

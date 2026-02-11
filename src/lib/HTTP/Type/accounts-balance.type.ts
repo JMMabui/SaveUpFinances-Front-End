@@ -1,8 +1,13 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.059Z
+// Generated on: 2026-02-05T09:14:20.112Z
 import { z } from 'zod'
+import type { AccountsBalanceCreateAccountBalanceBodySchema, AccountsBalanceCreateAccountBalanceResponseSchema, AccountsBalanceGetAccountBalanceResponseSchema, AccountsBalanceGetAccountBalanceByIdResponseSchema, AccountsBalanceUpdateAccountBalanceByIdBodySchema, AccountsBalanceUpdateAccountBalanceByIdResponseSchema, AccountsBalanceDeleteAccountBalanceByIdResponseSchema, AccountsBalanceGetAccountBalanceByAccountResponseSchema } from '@/lib/openapi/zod/AccountsBalance'
 
-export const AccountsBalancePostAccountBalanceBodySchema = z.object({ "accountId": z.string(), "date": z.string(), "balance": z.number() })
-export type AccountsBalancePostAccountBalanceBody = z.infer<typeof AccountsBalancePostAccountBalanceBodySchema>
-export const AccountsBalancePutAccountBalanceByIdBodySchema = z.object({ "accountId": z.string().optional(), "date": z.string().optional(), "balance": z.number().optional() })
-export type AccountsBalancePutAccountBalanceByIdBody = z.infer<typeof AccountsBalancePutAccountBalanceByIdBodySchema>
+export type AccountsBalanceCreateAccountBalanceResponse = z.infer<typeof AccountsBalanceCreateAccountBalanceResponseSchema>
+export type AccountsBalanceGetAccountBalanceResponse = z.infer<typeof AccountsBalanceGetAccountBalanceResponseSchema>
+export type AccountsBalanceGetAccountBalanceByIdResponse = z.infer<typeof AccountsBalanceGetAccountBalanceByIdResponseSchema>
+export type AccountsBalanceUpdateAccountBalanceByIdResponse = z.infer<typeof AccountsBalanceUpdateAccountBalanceByIdResponseSchema>
+export type AccountsBalanceDeleteAccountBalanceByIdResponse = z.infer<typeof AccountsBalanceDeleteAccountBalanceByIdResponseSchema>
+export type AccountsBalanceGetAccountBalanceByAccountResponse = z.infer<typeof AccountsBalanceGetAccountBalanceByAccountResponseSchema>
+export type AccountsBalanceCreateAccountBalanceBody = z.infer<typeof AccountsBalanceCreateAccountBalanceBodySchema>
+export type AccountsBalanceUpdateAccountBalanceByIdBody = z.infer<typeof AccountsBalanceUpdateAccountBalanceByIdBodySchema>

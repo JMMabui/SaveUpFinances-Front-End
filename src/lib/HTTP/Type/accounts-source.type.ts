@@ -1,8 +1,13 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.062Z
+// Generated on: 2026-02-05T09:14:20.236Z
 import { z } from 'zod'
+import type { AccountsSourceCreateAccountSourceBodySchema, AccountsSourceCreateAccountSourceResponseSchema, AccountsSourceGetAccountSourceResponseSchema, AccountsSourceGetAccountSourceByIdResponseSchema, AccountsSourceUpdateAccountSourceByIdBodySchema, AccountsSourceUpdateAccountSourceByIdResponseSchema, AccountsSourceDeleteAccountSourceByIdResponseSchema, AccountsSourceGetAccountSourceByAccountResponseSchema } from '@/lib/openapi/zod/AccountsSource'
 
-export const AccountsSourcePostAccountSourceBodySchema = z.object({ "accountId": z.string(), "source": z.string() })
-export type AccountsSourcePostAccountSourceBody = z.infer<typeof AccountsSourcePostAccountSourceBodySchema>
-export const AccountsSourcePutAccountSourceByIdBodySchema = z.object({ "accountId": z.string().optional(), "source": z.string().optional() })
-export type AccountsSourcePutAccountSourceByIdBody = z.infer<typeof AccountsSourcePutAccountSourceByIdBodySchema>
+export type AccountsSourceCreateAccountSourceResponse = z.infer<typeof AccountsSourceCreateAccountSourceResponseSchema>
+export type AccountsSourceGetAccountSourceResponse = z.infer<typeof AccountsSourceGetAccountSourceResponseSchema>
+export type AccountsSourceGetAccountSourceByIdResponse = z.infer<typeof AccountsSourceGetAccountSourceByIdResponseSchema>
+export type AccountsSourceUpdateAccountSourceByIdResponse = z.infer<typeof AccountsSourceUpdateAccountSourceByIdResponseSchema>
+export type AccountsSourceDeleteAccountSourceByIdResponse = z.infer<typeof AccountsSourceDeleteAccountSourceByIdResponseSchema>
+export type AccountsSourceGetAccountSourceByAccountResponse = z.infer<typeof AccountsSourceGetAccountSourceByAccountResponseSchema>
+export type AccountsSourceCreateAccountSourceBody = z.infer<typeof AccountsSourceCreateAccountSourceBodySchema>
+export type AccountsSourceUpdateAccountSourceByIdBody = z.infer<typeof AccountsSourceUpdateAccountSourceByIdBodySchema>

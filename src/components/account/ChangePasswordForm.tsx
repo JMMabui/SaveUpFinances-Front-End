@@ -10,7 +10,7 @@ interface ChangePasswordFormProps {
 }
 
 const ChangePasswordForm = ({ userId }: ChangePasswordFormProps) => {
-  const { request, loading } = useApi()
+  const { execute, loading } = useApi()
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -43,7 +43,7 @@ const ChangePasswordForm = ({ userId }: ChangePasswordFormProps) => {
     }
 
     try {
-      await request(() =>
+      await execute(() =>
         userProfileService.changePassword(userId, {
           currentPassword: formData.currentPassword,
           newPassword: formData.newPassword,

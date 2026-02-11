@@ -10,12 +10,12 @@ interface BanksListProps {
 }
 
 const BanksList = ({ banks, onEdit, onDelete }: BanksListProps) => {
-  const { request } = useApi()
+  const { execute } = useApi()
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja excluir este banco?')) {
       try {
-        await request(() => banksService.delete(id))
+        await execute(() => banksService.delete(id))
         onDelete()
       } catch (_error) {
         alert('Erro ao excluir banco')

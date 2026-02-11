@@ -1,8 +1,13 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.080Z
+// Generated on: 2026-02-05T09:14:20.927Z
 import { z } from 'zod'
+import type { CreditCardsCreateBodySchema, CreditCardsCreateResponseSchema, CreditCardsGetResponseSchema, CreditCardsGetByIdResponseSchema, CreditCardsUpdateByIdBodySchema, CreditCardsUpdateByIdResponseSchema, CreditCardsDeleteByIdResponseSchema, CreditCardsGetByUserResponseSchema } from '@/lib/openapi/zod/CreditCards'
 
-export const CreditCardsPostCreditCardsBodySchema = z.object({ "name": z.string(), "limit": z.number(), "dueDay": z.number(), "userId": z.string() })
-export type CreditCardsPostCreditCardsBody = z.infer<typeof CreditCardsPostCreditCardsBodySchema>
-export const CreditCardsPutCreditCardsByIdBodySchema = z.object({ "name": z.string().optional(), "limit": z.number().optional(), "dueDay": z.number().optional(), "userId": z.string().optional() })
-export type CreditCardsPutCreditCardsByIdBody = z.infer<typeof CreditCardsPutCreditCardsByIdBodySchema>
+export type CreditCardsCreateResponse = z.infer<typeof CreditCardsCreateResponseSchema>
+export type CreditCardsGetResponse = z.infer<typeof CreditCardsGetResponseSchema>
+export type CreditCardsGetByIdResponse = z.infer<typeof CreditCardsGetByIdResponseSchema>
+export type CreditCardsUpdateByIdResponse = z.infer<typeof CreditCardsUpdateByIdResponseSchema>
+export type CreditCardsDeleteByIdResponse = z.infer<typeof CreditCardsDeleteByIdResponseSchema>
+export type CreditCardsGetByUserResponse = z.infer<typeof CreditCardsGetByUserResponseSchema>
+export type CreditCardsCreateBody = z.infer<typeof CreditCardsCreateBodySchema>
+export type CreditCardsUpdateByIdBody = z.infer<typeof CreditCardsUpdateByIdBodySchema>

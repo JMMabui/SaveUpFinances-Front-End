@@ -30,7 +30,7 @@ export const DebtForm: React.FC<DebtFormProps> = ({
   onCancel,
 }) => {
   const [descricao, setDescricao] = useState(initialDebt?.description || '')
-  const [valor, setValor] = useState(initialDebt?.amount || 0)
+  const [valor, setValor] = useState<number>(Number(initialDebt?.amount ?? 0))
   const [credor, setCredor] = useState(initialDebt?.creditor || '')
   const [dataVencimento, setDataVencimento] = useState(
     (initialDebt?.dueDate as any as string) || ''
@@ -56,8 +56,8 @@ export const DebtForm: React.FC<DebtFormProps> = ({
       creditor: credor,
       dueDate: dataVencimento,
       status: status === 'paga' ? 'PAID' : 'PENDING',
-      notes: observacoes || null,
-      paymentDate: status === 'paga' ? new Date().toISOString() : null,
+      notes: observacoes || undefined,
+      paymentDate: status === 'paga' ? new Date().toISOString() : undefined,
       userId: '', // será preenchido em DebtManagement ao criar
     })
   }

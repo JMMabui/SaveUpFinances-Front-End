@@ -1,8 +1,13 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.065Z
+// Generated on: 2026-02-05T09:14:20.432Z
 import { z } from 'zod'
+import type { BanksCreateBodySchema, BanksCreateResponseSchema, BanksGetResponseSchema, BanksGetByIdResponseSchema, BanksUpdateByIdBodySchema, BanksUpdateByIdResponseSchema, BanksDeleteByIdResponseSchema } from '@/lib/openapi/zod/Banks'
 
-export const BanksPostBanksBodySchema = z.object({ "bankName": z.string(), "logoUrl": z.union([z.string(), z.null()]).optional() })
-export type BanksPostBanksBody = z.infer<typeof BanksPostBanksBodySchema>
-export const BanksPutBanksByIdBodySchema = z.object({ "bankName": z.string().optional(), "logoUrl": z.union([z.string(), z.null()]).optional() })
-export type BanksPutBanksByIdBody = z.infer<typeof BanksPutBanksByIdBodySchema>
+export type BanksCreateResponse = z.infer<typeof BanksCreateResponseSchema>
+export type BanksGetResponse = z.infer<typeof BanksGetResponseSchema>
+export type BanksGetByIdResponse = z.infer<typeof BanksGetByIdResponseSchema>
+export type BanksUpdateByIdResponse = z.infer<typeof BanksUpdateByIdResponseSchema>
+export type BanksDeleteByIdResponse = z.infer<typeof BanksDeleteByIdResponseSchema>
+export type BanksCreateBody = z.infer<typeof BanksCreateBodySchema>
+export type BanksUpdateByIdBody = z.infer<typeof BanksUpdateByIdBodySchema>
+export type bankResponse = BanksGetResponse['data'][number]

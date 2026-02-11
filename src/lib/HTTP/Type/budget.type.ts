@@ -1,8 +1,14 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.079Z
+// Generated on: 2026-02-05T09:14:20.812Z
 import { z } from 'zod'
+import type { BudgetCreateBodySchema, BudgetCreateResponseSchema, BudgetGetResponseSchema, BudgetGetByIdResponseSchema, BudgetUpdateByIdBodySchema, BudgetUpdateByIdResponseSchema, BudgetDeleteByIdResponseSchema, BudgetGetByUserResponseSchema } from '@/lib/openapi/zod/Budget'
 
-export const BudgetPostBudgetBodySchema = z.object({ "userId": z.string(), "categoryId": z.string(), "month": z.number(), "year": z.number(), "limit": z.number() })
-export type BudgetPostBudgetBody = z.infer<typeof BudgetPostBudgetBodySchema>
-export const BudgetPutBudgetByIdBodySchema = z.object({ "userId": z.string().optional(), "categoryId": z.string().optional(), "month": z.number().optional(), "year": z.number().optional(), "limit": z.number().optional() })
-export type BudgetPutBudgetByIdBody = z.infer<typeof BudgetPutBudgetByIdBodySchema>
+export type BudgetCreateResponse = z.infer<typeof BudgetCreateResponseSchema>
+export type BudgetGetResponse = z.infer<typeof BudgetGetResponseSchema>
+export type BudgetGetByIdResponse = z.infer<typeof BudgetGetByIdResponseSchema>
+export type BudgetUpdateByIdResponse = z.infer<typeof BudgetUpdateByIdResponseSchema>
+export type BudgetDeleteByIdResponse = z.infer<typeof BudgetDeleteByIdResponseSchema>
+export type BudgetGetByUserResponse = z.infer<typeof BudgetGetByUserResponseSchema>
+export type BudgetCreateBody = z.infer<typeof BudgetCreateBodySchema>
+export type BudgetUpdateByIdBody = z.infer<typeof BudgetUpdateByIdBodySchema>
+export type budgetResponse = BudgetGetResponse['data'][number]

@@ -20,7 +20,7 @@ export function DebtManagement() {
   const { data } = useGetDebtsByUser(userId)
   const createDebt = useCreateDebt()
   const [editingDebt, setEditingDebt] = useState<debtsResponse | null>(null)
-  const updateDebt = useUpdateDebt(editingDebt?.id || '')
+  const updateDebt = useUpdateDebt()
   const createPayment = useCreateDebtPayment()
 
   const debtsApi: debtsResponse[] = data?.data || []

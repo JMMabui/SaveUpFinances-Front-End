@@ -1,8 +1,16 @@
 // Auto-generated from Swagger API
-// Generated on: 2026-01-28T12:59:52.165Z
+// Generated on: 2026-02-05T09:14:22.136Z
 import { z } from 'zod'
+import type { NotificationsGetResponseSchema, NotificationsDeleteResponseSchema, NotificationsGetUnreadCountResponseSchema, NotificationsGetByIdResponseSchema, NotificationsDeleteByIdResponseSchema, NotificationsUpdateByIdReadBodySchema, NotificationsUpdateByIdReadResponseSchema, NotificationsUpdateReadAllResponseSchema, NotificationsGetPreferencesResponseSchema, NotificationsUpdatePreferencesBodySchema, NotificationsUpdatePreferencesResponseSchema } from '@/lib/openapi/zod/Notifications'
 
-export const NotificationsPutNotificationsByIdReadBodySchema = z.object({ "isRead": z.boolean() })
-export type NotificationsPutNotificationsByIdReadBody = z.infer<typeof NotificationsPutNotificationsByIdReadBodySchema>
-export const NotificationsPutNotificationsPreferencesBodySchema = z.object({ "emailNotifications": z.boolean().optional(), "inAppNotifications": z.boolean().optional(), "notifyExpenses": z.boolean().optional(), "notifyIncomes": z.boolean().optional(), "notifyDebts": z.boolean().optional(), "notifyBudgetAlerts": z.boolean().optional(), "notifyInvestmentAlerts": z.boolean().optional(), "notifyAccountTransfers": z.boolean().optional(), "dailyDigest": z.boolean().optional(), "digestTime": z.string().optional() })
-export type NotificationsPutNotificationsPreferencesBody = z.infer<typeof NotificationsPutNotificationsPreferencesBodySchema>
+export type NotificationsGetResponse = z.infer<typeof NotificationsGetResponseSchema>
+export type NotificationsDeleteResponse = z.infer<typeof NotificationsDeleteResponseSchema>
+export type NotificationsGetUnreadCountResponse = z.infer<typeof NotificationsGetUnreadCountResponseSchema>
+export type NotificationsGetByIdResponse = z.infer<typeof NotificationsGetByIdResponseSchema>
+export type NotificationsDeleteByIdResponse = z.infer<typeof NotificationsDeleteByIdResponseSchema>
+export type NotificationsUpdateByIdReadResponse = z.infer<typeof NotificationsUpdateByIdReadResponseSchema>
+export type NotificationsUpdateReadAllResponse = z.infer<typeof NotificationsUpdateReadAllResponseSchema>
+export type NotificationsGetPreferencesResponse = z.infer<typeof NotificationsGetPreferencesResponseSchema>
+export type NotificationsUpdatePreferencesResponse = z.infer<typeof NotificationsUpdatePreferencesResponseSchema>
+export type NotificationsUpdateByIdReadBody = z.infer<typeof NotificationsUpdateByIdReadBodySchema>
+export type NotificationsUpdatePreferencesBody = z.infer<typeof NotificationsUpdatePreferencesBodySchema>
